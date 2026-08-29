@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.vinext/
+.wrangler/
+dist/
+*.log
+
+game-hub/node_modules/
+game-hub/.next/
+game-hub/.vinext/
+game-hub/.wrangler/
+game-hub/dist/
+game-hub/next-env.d.ts

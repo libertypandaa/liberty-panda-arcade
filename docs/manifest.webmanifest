@@ -1,0 +1,22 @@
+{
+  "name": "Liberty Panda Arcade",
+  "short_name": "Panda Arcade",
+  "description": "Единый хаб для браузерных игр, аккаунтов, прогресса и достижений.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7fbff",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
