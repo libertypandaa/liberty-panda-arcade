@@ -62,6 +62,37 @@
       .button { min-height: 46px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; font-weight: 800; }
       .primary { background: var(--teal); color: white; }
       .secondary { background: #fff; border: 1px solid var(--line); color: var(--ink); }
+      .check-button {
+        min-height: 42px;
+        border: 0;
+        border-radius: 8px;
+        padding: 0 14px;
+        background: var(--teal);
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .build-check {
+        display: grid;
+        gap: 12px;
+      }
+      .build-result {
+        min-height: 86px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .build-result strong {
+        color: var(--ink);
+      }
+      .build-actions {
+        display: flex;
+        gap: 8px;
+      }
       .side { display: grid; gap: 16px; }
       .card { border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 20px; box-shadow: 0 12px 30px rgba(15,23,42,.055); }
       .card img { width: 84px; height: 84px; object-fit: cover; border-radius: 8px; }
@@ -142,6 +173,21 @@
             <h2>Integration plan</h2>
             <p>Сначала внешняя ссылка, затем общий домен хаба, потом аккаунт, сохранения, очки и достижения через GameHub SDK.</p>
           </section>
+          <section class="card build-check">
+            <p class="kicker">Test tool</p>
+            <h2>Live build check</h2>
+            <p>
+              Проверяет опубликованную версию Crystal Front на GitHub Pages
+              без перехода в репозиторий.
+            </p>
+            <div class="build-actions">
+              <button class="check-button" type="button" id="check-build">Check version</button>
+              <button class="check-button" type="button" id="reload-game">Reload game</button>
+            </div>
+            <div class="build-result" id="build-result">
+              Нажми Check version, чтобы увидеть дату последнего обновления и ETag.
+            </div>
+          </section>
         </aside>
       </section>
 
@@ -159,5 +205,46 @@
         ></iframe>
       </section>
     </main>
+    <script>
+      const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
+      const result = document.querySelector("#build-result");
+      const frame = document.querySelector(".game-frame");
+
+      function formatHeader(value) {
+        return value || "not provided";
+      }
+
+      document.querySelector("#check-build").addEventListener("click", async () => {
+        result.innerHTML = "Checking live GitHub Pages build...";
+
+        try {
+          const response = await fetch(`${gameUrl}?check=${Date.now()}`, {
+            cache: "no-store",
+            method: "HEAD",
+          });
+          const lastModified = response.headers.get("last-modified");
+          const etag = response.headers.get("etag");
+          const checkedAt = new Date().toLocaleString();
+
+          result.innerHTML = `
+            <strong>Status:</strong> ${response.status} ${response.statusText}<br>
+            <strong>Last-Modified:</strong> ${formatHeader(lastModified)}<br>
+            <strong>ETag:</strong> ${formatHeader(etag)}<br>
+            <strong>Checked:</strong> ${checkedAt}
+          `;
+        } catch (error) {
+          result.innerHTML = `
+            <strong>Check failed.</strong><br>
+            ${error.message}<br>
+            Open original can still be used as a fallback.
+          `;
+        }
+      });
+
+      document.querySelector("#reload-game").addEventListener("click", () => {
+        frame.src = `${gameUrl}?reload=${Date.now()}`;
+        result.innerHTML = "Embedded game reloaded with a fresh URL.";
+      });
+    </script>
   </body>
 </html>
