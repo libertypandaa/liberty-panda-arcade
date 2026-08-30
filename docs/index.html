@@ -203,7 +203,7 @@
 
       .feature-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 260px;
+        grid-template-columns: 1fr;
         gap: 20px;
       }
 
@@ -546,10 +546,6 @@
         .feature-grid {
           grid-template-columns: 1fr;
         }
-
-        .quick-stack {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
       }
 
       @media (max-width: 1040px) {
@@ -641,14 +637,6 @@
           grid-template-columns: 1fr;
         }
 
-        .mobile-strip {
-          display: grid;
-          gap: 12px;
-          padding: 18px 16px 28px;
-          border-top: 1px solid var(--line);
-          background: white;
-        }
-
         .actions {
           flex-direction: column;
         }
@@ -714,7 +702,7 @@
         }
 
         .feature-grid {
-          grid-template-columns: minmax(0, 1fr) 260px;
+          grid-template-columns: 1fr;
         }
 
         .feature,
@@ -794,30 +782,18 @@
       </aside>
 
       <section class="main">
-        <header class="topline">
-          <div>
-            <p class="kicker">Game hub</p>
-            <h1>Play. Continue. Discover.</h1>
-          </div>
-          <div class="filters" aria-label="Game filters">
-            <button class="filter" type="button">All</button>
-            <button class="filter" type="button">Strategy</button>
-            <button class="filter" type="button">Action</button>
-          </div>
-        </header>
-
-        <section class="feature-grid" aria-label="Featured game">
+        <section class="feature-grid" aria-label="Last played game">
           <article class="feature">
             <img
               src="./assets/games/crystal-front-feature.png"
               alt="Crystal Front Demo preview"
             />
             <div class="feature-content">
-              <span class="pill">✦ Featured game</span>
+              <span class="pill">↻ Last played</span>
               <h2>Crystal Front Demo</h2>
               <p>
-                Тактическая кристальная дуэль. Первая игра, которую подключаем
-                к общему аккаунту, сохранениям и будущим достижениям.
+                Продолжить тактическую кристальную дуэль с того места, где
+                игрок остановился в прошлый раз.
               </p>
               <div class="actions">
                 <a
@@ -830,33 +806,15 @@
               </div>
             </div>
           </article>
-
-          <div class="quick-stack">
-            <article class="card quick-card">
-              <span class="quick-icon">☁</span>
-              <h3>Cloud Saves</h3>
-              <p>Sync layer planned for all games.</p>
-            </article>
-            <article class="card quick-card">
-              <span class="quick-icon">★</span>
-              <h3>Achievements</h3>
-              <p>Shared profile goals across the catalog.</p>
-            </article>
-            <article class="card quick-card">
-              <span class="quick-icon">▣</span>
-              <h3>Browser Launch</h3>
-              <p>Open games instantly from the hub.</p>
-            </article>
-          </div>
         </section>
 
         <section id="library" class="library">
           <div class="library-head">
             <div>
               <p class="kicker">Library</p>
-              <h2>Game catalog</h2>
+              <h2>Recommended for you</h2>
             </div>
-            <a href="#library" class="kicker">View all →</a>
+            <a href="#library" class="kicker">All games →</a>
           </div>
 
           <div class="games">
@@ -935,14 +893,21 @@
             <span class="avatar">♟</span>
             <div>
               <h2>PandaDev</h2>
-              <p class="muted">Future shared account</p>
+              <p class="muted">Player profile</p>
             </div>
           </div>
           <div class="metrics">
-            <div class="metric"><strong>3</strong><span>Games</span></div>
-            <div class="metric"><strong>Soon</strong><span>Saves</span></div>
-            <div class="metric"><strong>Beta</strong><span>Ranks</span></div>
+            <div class="metric"><strong>1,620</strong><span>Points</span></div>
+            <div class="metric"><strong>14h</strong><span>Play time</span></div>
+            <div class="metric"><strong>#2</strong><span>Rank</span></div>
           </div>
+        </section>
+
+        <section class="card side-card">
+          <h3>Player status</h3>
+          <div class="rank-row"><span>Last game</span><strong>Crystal Front</strong></div>
+          <div class="rank-row"><span>Session</span><strong>Ready</strong></div>
+          <div class="rank-row"><span>Library</span><strong>3 games</strong></div>
         </section>
 
         <section id="leaderboard" class="card side-card">
@@ -979,10 +944,5 @@
       </aside>
     </main>
 
-    <section class="mobile-strip" aria-label="Platform features">
-      <article class="card quick-card"><h3>One Account</h3><p>Один профиль для всех игр.</p></article>
-      <article class="card quick-card"><h3>Cloud Saves</h3><p>Сохранения между устройствами.</p></article>
-      <article class="card quick-card"><h3>Browser Launch</h3><p>Запуск игр прямо из хаба.</p></article>
-    </section>
   </body>
 </html>
