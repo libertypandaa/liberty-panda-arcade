@@ -89,6 +89,7 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        transition: opacity 220ms ease, transform 220ms ease;
       }
 
       .brand-mark {
@@ -97,15 +98,77 @@
         border-radius: 8px;
         display: grid;
         place-items: center;
-        background: var(--ink);
-        color: white;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: var(--ink);
         box-shadow: var(--shadow);
+        cursor: pointer;
       }
 
       .brand-mark svg {
-        width: 34px;
-        height: 34px;
+        width: 48px;
+        height: 48px;
         display: block;
+      }
+
+      .brand-mark .ear,
+      .brand-mark .inner-ear,
+      .brand-mark .eye,
+      .brand-mark .eye-shine,
+      .brand-mark .nose,
+      .brand-mark .mouth,
+      .brand-mark .play-accent {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      .brand-mark.is-spinning svg {
+        animation: mascot-spin 620ms cubic-bezier(.2, .8, .2, 1) both;
+      }
+
+      .brand-mark.is-winking .eye-right {
+        animation: mascot-wink 320ms ease both;
+      }
+
+      .brand-mark.is-winking .play-accent {
+        animation: mascot-play-pop 320ms ease both;
+      }
+
+      .brand-mark:focus-visible {
+        outline: 3px solid rgba(15, 118, 110, 0.34);
+        outline-offset: 3px;
+      }
+
+      @keyframes mascot-spin {
+        0% { transform: rotate(0deg) scale(1); }
+        68% { transform: rotate(360deg) scale(1.06); }
+        100% { transform: rotate(360deg) scale(1); }
+      }
+
+      @keyframes mascot-wink {
+        0%, 100% { transform: scaleY(1); }
+        45%, 72% { transform: scaleY(0.16); }
+      }
+
+      @keyframes mascot-play-pop {
+        0%, 100% { transform: translateX(0) scale(1); opacity: .92; }
+        50% { transform: translateX(4px) scale(1.16); opacity: 1; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .brand,
+        .brand-title,
+        .brand-mark .ear,
+        .brand-mark .inner-ear,
+        .brand-mark .eye,
+        .brand-mark .eye-shine,
+        .brand-mark .nose,
+        .brand-mark .mouth,
+        .brand-mark .play-accent {
+          transition: none;
+          animation: none;
+        }
       }
 
       .brand-title {
@@ -113,6 +176,7 @@
         line-height: 1.04;
         font-weight: 820;
         letter-spacing: 0;
+        transition: opacity 220ms ease, transform 220ms ease;
       }
 
       .menu-toggle {
@@ -719,13 +783,13 @@
         }
 
         .brand-mark {
-          width: 42px;
-          height: 42px;
+          width: 48px;
+          height: 48px;
         }
 
         .brand-mark svg {
-          width: 30px;
-          height: 30px;
+          width: 48px;
+          height: 48px;
         }
 
         .brand-title {
@@ -758,6 +822,18 @@
 
         .sidebar.menu-open .nav {
           display: grid;
+        }
+
+        .sidebar.menu-open .brand {
+          opacity: 0;
+          transform: translateX(-24px);
+          pointer-events: none;
+        }
+
+        .sidebar.menu-open .brand-title {
+          opacity: 0;
+          transform: translateX(-22px);
+          pointer-events: none;
         }
 
         .sidebar .studio-card {
@@ -891,20 +967,25 @@
     <main class="app">
       <aside class="sidebar">
         <div class="brand-row">
-          <a href="./" class="brand">
-            <span class="brand-mark" aria-hidden="true">
-              <svg viewBox="0 0 64 64" role="img" focusable="false">
-                <circle cx="20" cy="18" r="11" fill="#fff" />
-                <circle cx="44" cy="18" r="11" fill="#fff" />
-                <circle cx="32" cy="34" r="24" fill="#fff" />
-                <circle cx="24" cy="31" r="5" fill="#0f172a" />
-                <circle cx="40" cy="31" r="5" fill="#0f172a" />
-                <path d="M25 43c4 4 10 4 14 0" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
-                <path d="M32 36l-5-6h10z" fill="#0f172a" />
+          <div class="brand">
+            <button class="brand-mark" type="button" aria-label="Animate Liberty Panda mascot">
+              <svg viewBox="0 0 150 140" role="img" aria-label="Liberty Panda Arcade mascot" focusable="false">
+                <path class="ear ear-left" d="M38 20l22 18-24 22-22-18Z" fill="#0f172a" />
+                <path class="ear ear-right" d="M112 20l24 22-22 18-24-22Z" fill="#0f172a" />
+                <path class="inner-ear inner-ear-left" d="M39 32l10 8-11 10-10-8Z" fill="#0f766e" />
+                <path class="inner-ear inner-ear-right" d="M111 32l11 10-10 8-11-10Z" fill="#0f766e" />
+                <path class="face" d="M29 70c5-25 24-40 46-40s41 15 46 40c4 25-14 47-46 47S25 95 29 70Z" fill="#fff" stroke="#0f172a" stroke-width="7" />
+                <path class="eye eye-left" d="M48 61l21 10-16 21-18-12Z" fill="#0f172a" />
+                <path class="eye eye-right" d="M102 61L81 71l16 21 18-12Z" fill="#0f172a" />
+                <circle class="eye-shine eye-shine-left" cx="53" cy="70" r="4" fill="#fff" />
+                <circle class="eye-shine eye-shine-right" cx="97" cy="70" r="4" fill="#fff" />
+                <path class="nose" d="M75 83l-9-7h18Z" fill="#0f172a" />
+                <path class="mouth" d="M63 92c7 6 17 6 24 0" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+                <path class="play-accent" d="M123 78l17 10-17 10Z" fill="#0f766e" opacity=".92" />
               </svg>
-            </span>
-            <span class="brand-title">Liberty Panda Arcade</span>
-          </a>
+            </button>
+            <a href="#home" class="brand-title">Liberty Panda Arcade</a>
+          </div>
           <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
@@ -1128,6 +1209,7 @@
       const closeButton = document.querySelector("#close-game");
       const sidebar = document.querySelector(".sidebar");
       const menuToggle = document.querySelector(".menu-toggle");
+      const mascotButton = document.querySelector(".brand-mark");
       const navLinks = document.querySelectorAll(".nav a");
       const viewPanels = document.querySelectorAll(".view-panel");
 
@@ -1183,6 +1265,20 @@
       menuToggle.addEventListener("click", () => {
         const isOpen = sidebar.classList.toggle("menu-open");
         menuToggle.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      mascotButton.addEventListener("click", () => {
+        mascotButton.classList.remove("is-spinning", "is-winking");
+        void mascotButton.offsetWidth;
+        mascotButton.classList.add("is-spinning");
+
+        window.setTimeout(() => {
+          mascotButton.classList.add("is-winking");
+        }, 620);
+
+        window.setTimeout(() => {
+          mascotButton.classList.remove("is-spinning", "is-winking");
+        }, 1080);
       });
 
       document.querySelectorAll(".nav a").forEach((link) => {
