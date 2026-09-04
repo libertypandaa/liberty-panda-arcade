@@ -827,7 +827,7 @@
                 >
                   ▶ Play in Hub
                 </a>
-                <button class="button secondary copy-game-link" type="button">Copy phone link</button>
+                <a class="button secondary" href="./games/crystal-front/#install">Add to phone</a>
                 <a class="button secondary" href="./games/crystal-front/">Game page →</a>
               </div>
             </div>
@@ -864,7 +864,7 @@
                   <div class="bar"><div class="fill" style="width: 60%"></div></div>
                 </div>
                 <a class="button primary" href="./games/crystal-front/">Play in Hub</a>
-                <button class="button secondary copy-game-link" type="button">Copy phone link</button>
+                <a class="button secondary" href="./games/crystal-front/#install">Add to phone</a>
               </div>
             </article>
 
@@ -970,30 +970,5 @@
         </section>
       </aside>
     </main>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script>
-      const crystalFrontUrl = "https://libertypandaa.github.io/crystal-front-demo/";
-      const toast = document.querySelector("#toast");
-
-      function showToast(message) {
-        toast.innerHTML = message;
-        toast.classList.add("show");
-        window.clearTimeout(showToast.timeoutId);
-        showToast.timeoutId = window.setTimeout(() => {
-          toast.classList.remove("show");
-        }, 5200);
-      }
-
-      document.querySelectorAll(".copy-game-link").forEach((button) => {
-        button.addEventListener("click", async () => {
-          try {
-            await navigator.clipboard.writeText(crystalFrontUrl);
-            showToast(`<strong>Direct game link copied.</strong><br>${crystalFrontUrl}<br>Теперь можно открыть ссылку на телефоне и добавить её на главный экран через меню браузера.`);
-          } catch (error) {
-            showToast(`<strong>Direct game link:</strong><br>${crystalFrontUrl}<br>Если копирование заблокировано браузером, выдели и скопируй ссылку вручную.`);
-          }
-        });
-      });
-    </script>
   </body>
 </html>

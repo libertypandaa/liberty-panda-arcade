@@ -73,9 +73,28 @@
         font-weight: 800;
         cursor: pointer;
       }
+      .install-panel,
       .build-check {
         display: grid;
         gap: 12px;
+      }
+      .install-panel {
+        border-color: rgba(15, 118, 110, 0.22);
+        background: linear-gradient(180deg, #ffffff, #ecfdf5);
+      }
+      .install-panel .check-button {
+        min-height: 48px;
+        width: 100%;
+        font-size: 15px;
+      }
+      .install-note {
+        border: 1px solid rgba(15, 118, 110, 0.18);
+        border-radius: 8px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.72);
+        color: #405064;
+        font-size: 13px;
+        line-height: 1.55;
       }
       .build-result {
         min-height: 86px;
@@ -180,7 +199,24 @@
             <h2>Integration plan</h2>
             <p>Сначала внешняя ссылка, затем общий домен хаба, потом аккаунт, сохранения, очки и достижения через GameHub SDK.</p>
           </section>
-          <section id="shortcut" class="card build-check">
+          <section id="install" class="card install-panel">
+            <p class="kicker">Phone install</p>
+            <h2>Install Crystal Front</h2>
+            <p>
+              Добавь ярлык игры на главный экран телефона. На Android Chrome
+              кнопка может открыть системное окно установки.
+            </p>
+            <div class="build-actions">
+              <button class="check-button" type="button" id="install-shortcut">Add to phone</button>
+              <button class="check-button secondary-action" type="button" id="copy-direct-link">Copy direct link</button>
+            </div>
+            <div class="install-note" id="install-result">
+              Если браузер не откроет окно установки: Android Chrome — меню
+              браузера → Add to Home screen / Install app. iPhone Safari —
+              Share → Add to Home Screen.
+            </div>
+          </section>
+          <section class="card build-check">
             <p class="kicker">Test tool</p>
             <h2>Live build check</h2>
             <p>
@@ -190,13 +226,9 @@
             <div class="build-actions">
               <button class="check-button" type="button" id="check-build">Check version</button>
               <button class="check-button" type="button" id="reload-game">Reload game</button>
-              <button class="check-button" type="button" id="install-shortcut">Phone shortcut</button>
-              <button class="check-button secondary-action" type="button" id="copy-direct-link">Copy direct link</button>
             </div>
             <div class="build-result" id="build-result">
               Нажми Check version, чтобы увидеть дату последнего обновления и ETag.
-              Phone shortcut добавит ярлык этой страницы игры на телефон, а
-              Copy direct link скопирует прямую ссылку на саму игру.
             </div>
           </section>
         </aside>
@@ -219,6 +251,7 @@
     <script>
       const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
       const result = document.querySelector("#build-result");
+      const installResult = document.querySelector("#install-result");
       const frame = document.querySelector(".game-frame");
       const installButton = document.querySelector("#install-shortcut");
       const copyButton = document.querySelector("#copy-direct-link");
@@ -271,15 +304,15 @@
           installPrompt.prompt();
           const choice = await installPrompt.userChoice;
           installPrompt = null;
-          result.innerHTML = `
-            <strong>Phone shortcut:</strong> ${choice.outcome}<br>
+          installResult.innerHTML = `
+            <strong>Install prompt:</strong> ${choice.outcome}<br>
             Если ярлык появился на телефоне, он будет открывать страницу Crystal Front в хабе.
           `;
           return;
         }
 
-        result.innerHTML = `
-          <strong>Phone shortcut</strong><br>
+        installResult.innerHTML = `
+          <strong>Install from browser menu</strong><br>
           Android Chrome: открой меню браузера и выбери Add to Home screen или Install app.<br>
           iPhone Safari: нажми Share и выбери Add to Home Screen.<br>
           Ярлык откроет эту страницу Crystal Front в Liberty Panda Arcade.
@@ -289,12 +322,12 @@
       copyButton.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(gameUrl);
-          result.innerHTML = `
+          installResult.innerHTML = `
             <strong>Direct game link copied:</strong><br>
             ${gameUrl}
           `;
         } catch (error) {
-          result.innerHTML = `
+          installResult.innerHTML = `
             <strong>Direct game link:</strong><br>
             ${gameUrl}
           `;
