@@ -170,7 +170,9 @@
         .brand-mark .nose,
         .brand-mark .mouth,
         .brand-mark .play-accent,
-        .brand-title .letter {
+        .brand-title .letter,
+        .sidebar .nav,
+        .menu-toggle {
           transition: none;
           animation: none;
         }
@@ -186,8 +188,10 @@
 
       .brand-title .letter {
         display: inline-block;
-        transition: opacity 220ms ease, transform 260ms ease;
-        transition-delay: calc(var(--in-i) * 18ms);
+        transition:
+          opacity 260ms ease,
+          transform 320ms cubic-bezier(.2, .8, .2, 1);
+        transition-delay: calc(var(--in-i) * 14ms + 120ms);
       }
 
       .brand-title .space {
@@ -819,10 +823,11 @@
         .menu-toggle {
           display: inline-grid;
           place-items: center;
+          transition: transform 320ms ease, box-shadow 320ms ease;
         }
 
         .sidebar .nav {
-          display: none;
+          display: grid;
           position: absolute;
           top: calc(12px + env(safe-area-inset-top));
           right: 70px;
@@ -835,23 +840,44 @@
           padding: 8px;
           background: rgba(255, 255, 255, 0.96);
           box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+          clip-path: inset(0 0 0 100%);
+          transform: translateX(20px) scale(.98);
+          transform-origin: right center;
+          transition:
+            opacity 420ms ease,
+            transform 520ms cubic-bezier(.2, .8, .2, 1),
+            clip-path 520ms cubic-bezier(.2, .8, .2, 1),
+            visibility 0ms linear 520ms;
         }
 
         .sidebar.menu-open .nav {
-          display: grid;
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+          clip-path: inset(0 0 0 0);
+          transform: translateX(0) scale(1);
+          transition-delay: 120ms, 80ms, 80ms, 0ms;
+        }
+
+        .sidebar.menu-open .menu-toggle {
+          transform: scale(.96);
+          box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
         }
 
         .sidebar.menu-open .brand-mark {
           opacity: 0;
           transform: translateX(-18px) scale(.92);
           pointer-events: none;
-          transition-delay: 280ms;
+          transition-delay: 360ms;
         }
 
         .sidebar.menu-open .brand-title .letter {
           opacity: 0;
           transform: translateX(-16px);
-          transition-delay: calc(var(--out-i) * 18ms);
+          transition-delay: calc(var(--out-i) * 14ms);
         }
 
         .sidebar .studio-card {
@@ -1011,7 +1037,7 @@
           </button>
         </div>
 
-        <nav class="nav" aria-label="Main navigation">
+        <nav class="nav" aria-label="Main navigation" aria-hidden="true">
           <a class="active" href="#home"><span>⌂</span>Home</a>
           <a href="#library"><span>▦</span>Library</a>
           <a href="#profile"><span>◉</span>Profile</a>
@@ -1302,6 +1328,7 @@
       menuToggle.addEventListener("click", () => {
         const isOpen = sidebar.classList.toggle("menu-open");
         menuToggle.setAttribute("aria-expanded", String(isOpen));
+        document.querySelector(".nav").setAttribute("aria-hidden", String(!isOpen));
       });
 
       mascotButton.addEventListener("click", () => {
@@ -1324,6 +1351,7 @@
           const href = link.getAttribute("href");
           sidebar.classList.remove("menu-open");
           menuToggle.setAttribute("aria-expanded", "false");
+          document.querySelector(".nav").setAttribute("aria-hidden", "true");
           if (window.location.hash === href) {
             showView(href);
           } else {
@@ -1336,6 +1364,7 @@
         if (!sidebar.contains(event.target)) {
           sidebar.classList.remove("menu-open");
           menuToggle.setAttribute("aria-expanded", "false");
+          document.querySelector(".nav").setAttribute("aria-hidden", "true");
         }
       });
 
