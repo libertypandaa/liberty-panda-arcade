@@ -124,32 +124,38 @@
       .card img { width: 84px; height: 84px; object-fit: cover; border-radius: 8px; }
       .studio img { width: 100%; height: 120px; object-fit: cover; }
       .kicker { color: var(--teal); font-size: 12px; font-weight: 820; text-transform: uppercase; }
-      .play-panel {
-        margin-top: 24px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        overflow: hidden;
-        background: #0f172a;
-        box-shadow: var(--shadow);
+      .game-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: #020617;
       }
-      .play-head {
-        min-height: 58px;
-        padding: 0 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        background: #fff;
-        border-bottom: 1px solid var(--line);
+      .game-overlay[hidden] {
+        display: none;
       }
-      .play-head h2 { margin: 0; font-size: 20px; }
-      .play-head a { color: var(--teal); font-weight: 800; }
-      .game-frame {
-        width: 100%;
-        height: 720px;
+      .game-overlay iframe {
+        width: 100vw;
+        height: 100vh;
         display: block;
         border: 0;
-        background: #0f172a;
+        background: #020617;
+      }
+      .close-game {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 2;
+        min-height: 44px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        padding: 0 14px;
+        background: rgba(15, 23, 42, 0.84);
+        color: #fff;
+        font-weight: 820;
+        cursor: pointer;
+      }
+      body.game-open {
+        overflow: hidden;
       }
       @media (max-width: 900px) {
         .grid { grid-template-columns: 1fr; }
@@ -178,7 +184,7 @@
               можно запустить прямо на странице хаба.
             </p>
             <div class="actions">
-              <a class="button primary" href="#play">▶ Play here</a>
+              <button class="button primary play-game" type="button">▶ Play fullscreen</button>
               <a class="button secondary" href="https://libertypandaa.github.io/crystal-front-demo/">Open original</a>
             </div>
           </div>
@@ -225,7 +231,6 @@
             </p>
             <div class="build-actions">
               <button class="check-button" type="button" id="check-build">Check version</button>
-              <button class="check-button" type="button" id="reload-game">Reload game</button>
             </div>
             <div class="build-result" id="build-result">
               Нажми Check version, чтобы увидеть дату последнего обновления и ETag.
@@ -234,25 +239,22 @@
         </aside>
       </section>
 
-      <section id="play" class="play-panel" aria-label="Crystal Front embedded game">
-        <div class="play-head">
-          <h2>Crystal Front Demo</h2>
-          <a href="https://libertypandaa.github.io/crystal-front-demo/">Open in separate tab →</a>
-        </div>
-        <iframe
-          class="game-frame"
-          title="Crystal Front Demo"
-          src="https://libertypandaa.github.io/crystal-front-demo/"
-          allow="fullscreen; autoplay; gamepad"
-          loading="lazy"
-        ></iframe>
-      </section>
     </main>
+    <section class="game-overlay" id="game-overlay" hidden aria-label="Crystal Front fullscreen player">
+      <button class="close-game" type="button" id="close-game">Close</button>
+      <iframe
+        id="game-frame"
+        title="Crystal Front Demo"
+        allow="fullscreen; autoplay; gamepad"
+      ></iframe>
+    </section>
     <script>
       const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
       const result = document.querySelector("#build-result");
       const installResult = document.querySelector("#install-result");
-      const frame = document.querySelector(".game-frame");
+      const overlay = document.querySelector("#game-overlay");
+      const frame = document.querySelector("#game-frame");
+      const closeButton = document.querySelector("#close-game");
       const installButton = document.querySelector("#install-shortcut");
       const copyButton = document.querySelector("#copy-direct-link");
       let installPrompt = null;
@@ -292,11 +294,6 @@
             Open original can still be used as a fallback.
           `;
         }
-      });
-
-      document.querySelector("#reload-game").addEventListener("click", () => {
-        frame.src = `${gameUrl}?reload=${Date.now()}`;
-        result.innerHTML = "Embedded game reloaded with a fresh URL.";
       });
 
       installButton.addEventListener("click", async () => {
@@ -339,6 +336,34 @@
           navigator.serviceWorker.register("./service-worker.js").catch(() => {});
         });
       }
+
+      async function openGameFullscreen() {
+        frame.src = `${gameUrl}?launch=${Date.now()}`;
+        overlay.hidden = false;
+        document.body.classList.add("game-open");
+
+        try {
+          await overlay.requestFullscreen();
+        } catch (error) {
+          // Some mobile browsers reject fullscreen, so the overlay still fills the page.
+        }
+      }
+
+      async function closeGame() {
+        frame.src = "about:blank";
+        overlay.hidden = true;
+        document.body.classList.remove("game-open");
+
+        if (document.fullscreenElement) {
+          await document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      document.querySelectorAll(".play-game").forEach((button) => {
+        button.addEventListener("click", openGameFullscreen);
+      });
+
+      closeButton.addEventListener("click", closeGame);
     </script>
   </body>
 </html>

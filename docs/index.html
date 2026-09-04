@@ -295,29 +295,42 @@
         color: var(--ink);
       }
 
-      .toast {
+      .game-overlay {
         position: fixed;
-        right: 24px;
-        bottom: 24px;
-        z-index: 20;
-        max-width: 360px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 14px 16px;
-        background: #ffffff;
-        color: var(--ink);
-        box-shadow: var(--shadow);
-        font-size: 14px;
-        line-height: 1.5;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(10px);
-        transition: opacity 160ms ease, transform 160ms ease;
+        inset: 0;
+        z-index: 50;
+        background: #020617;
       }
 
-      .toast.show {
-        opacity: 1;
-        transform: translateY(0);
+      .game-overlay[hidden] {
+        display: none;
+      }
+
+      .game-overlay iframe {
+        width: 100vw;
+        height: 100vh;
+        display: block;
+        border: 0;
+        background: #020617;
+      }
+
+      .close-game {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 2;
+        min-height: 44px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        padding: 0 14px;
+        background: rgba(15, 23, 42, 0.84);
+        color: #fff;
+        font-weight: 820;
+        cursor: pointer;
+      }
+
+      body.game-open {
+        overflow: hidden;
       }
 
       .quick-stack {
@@ -821,12 +834,9 @@
                 игрок остановился в прошлый раз.
               </p>
               <div class="actions">
-                <a
-                  class="button primary"
-                  href="./games/crystal-front/"
-                >
+                <button class="button primary play-game" type="button">
                   ▶ Play in Hub
-                </a>
+                </button>
                 <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
                 <a class="button secondary" href="./games/crystal-front/">Game page →</a>
               </div>
@@ -863,7 +873,7 @@
                   <div class="progress-row"><span>Hub readiness</span><span>60%</span></div>
                   <div class="bar"><div class="fill" style="width: 60%"></div></div>
                 </div>
-                <a class="button primary" href="./games/crystal-front/">Play in Hub</a>
+                <button class="button primary play-game" type="button">Play in Hub</button>
                 <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
               </div>
             </article>
@@ -970,5 +980,47 @@
         </section>
       </aside>
     </main>
+    <section class="game-overlay" id="game-overlay" hidden aria-label="Crystal Front fullscreen player">
+      <button class="close-game" type="button" id="close-game">Close</button>
+      <iframe
+        id="game-frame"
+        title="Crystal Front Demo"
+        allow="fullscreen; autoplay; gamepad"
+      ></iframe>
+    </section>
+    <script>
+      const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
+      const overlay = document.querySelector("#game-overlay");
+      const frame = document.querySelector("#game-frame");
+      const closeButton = document.querySelector("#close-game");
+
+      async function openGameFullscreen() {
+        frame.src = `${gameUrl}?launch=${Date.now()}`;
+        overlay.hidden = false;
+        document.body.classList.add("game-open");
+
+        try {
+          await overlay.requestFullscreen();
+        } catch (error) {
+          // Some mobile browsers reject fullscreen, so the overlay still fills the page.
+        }
+      }
+
+      async function closeGame() {
+        frame.src = "about:blank";
+        overlay.hidden = true;
+        document.body.classList.remove("game-open");
+
+        if (document.fullscreenElement) {
+          await document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      document.querySelectorAll(".play-game").forEach((button) => {
+        button.addEventListener("click", openGameFullscreen);
+      });
+
+      closeButton.addEventListener("click", closeGame);
+    </script>
   </body>
 </html>
