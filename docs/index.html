@@ -295,6 +295,31 @@
         color: var(--ink);
       }
 
+      .toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 20;
+        max-width: 360px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px 16px;
+        background: #ffffff;
+        color: var(--ink);
+        box-shadow: var(--shadow);
+        font-size: 14px;
+        line-height: 1.5;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px);
+        transition: opacity 160ms ease, transform 160ms ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
       .quick-stack {
         display: grid;
         gap: 14px;
@@ -802,7 +827,7 @@
                 >
                   ▶ Play in Hub
                 </a>
-                <a class="button secondary" href="./games/crystal-front/#shortcut">Phone shortcut</a>
+                <button class="button secondary copy-game-link" type="button">Copy phone link</button>
                 <a class="button secondary" href="./games/crystal-front/">Game page →</a>
               </div>
             </div>
@@ -839,7 +864,7 @@
                   <div class="bar"><div class="fill" style="width: 60%"></div></div>
                 </div>
                 <a class="button primary" href="./games/crystal-front/">Play in Hub</a>
-                <a class="button secondary" href="./games/crystal-front/#shortcut">Phone shortcut</a>
+                <button class="button secondary copy-game-link" type="button">Copy phone link</button>
               </div>
             </article>
 
@@ -945,6 +970,30 @@
         </section>
       </aside>
     </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script>
+      const crystalFrontUrl = "https://libertypandaa.github.io/crystal-front-demo/";
+      const toast = document.querySelector("#toast");
 
+      function showToast(message) {
+        toast.innerHTML = message;
+        toast.classList.add("show");
+        window.clearTimeout(showToast.timeoutId);
+        showToast.timeoutId = window.setTimeout(() => {
+          toast.classList.remove("show");
+        }, 5200);
+      }
+
+      document.querySelectorAll(".copy-game-link").forEach((button) => {
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(crystalFrontUrl);
+            showToast(`<strong>Direct game link copied.</strong><br>${crystalFrontUrl}<br>Теперь можно открыть ссылку на телефоне и добавить её на главный экран через меню браузера.`);
+          } catch (error) {
+            showToast(`<strong>Direct game link:</strong><br>${crystalFrontUrl}<br>Если копирование заблокировано браузером, выдели и скопируй ссылку вручную.`);
+          }
+        });
+      });
+    </script>
   </body>
 </html>
