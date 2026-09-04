@@ -665,10 +665,11 @@
           position: sticky;
           top: 0;
           z-index: 12;
+          overflow: visible;
           min-height: 0;
           border-right: 0;
           border-bottom: 1px solid var(--line);
-          padding: calc(12px + env(safe-area-inset-top)) 14px 12px;
+          padding: calc(12px + env(safe-area-inset-top)) 14px 14px;
           background: rgba(255, 255, 255, 0.94);
           backdrop-filter: blur(18px);
         }
@@ -696,9 +697,10 @@
         }
 
         .brand-title {
-          max-width: 185px;
-          font-size: 17px;
+          max-width: 220px;
+          font-size: 20px;
           line-height: 1.08;
+          color: var(--ink);
         }
 
         .menu-toggle {
@@ -708,12 +710,15 @@
 
         .sidebar .nav {
           display: none;
-          margin-top: 12px;
-          grid-template-columns: repeat(5, minmax(0, 1fr));
+          position: absolute;
+          top: calc(66px + env(safe-area-inset-top));
+          right: 14px;
+          width: min(300px, calc(100vw - 28px));
+          grid-template-columns: 1fr;
           gap: 6px;
           border: 1px solid var(--line);
           border-radius: 8px;
-          padding: 7px;
+          padding: 8px;
           background: #fff;
           box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
         }
@@ -728,12 +733,12 @@
 
         .nav a {
           min-height: 50px;
-          padding: 6px;
-          justify-content: center;
-          flex-direction: column;
-          gap: 2px;
-          font-size: 11px;
-          line-height: 1.1;
+          padding: 0 12px;
+          justify-content: flex-start;
+          flex-direction: row;
+          gap: 10px;
+          font-size: 14px;
+          line-height: 1;
         }
 
         .main {
@@ -839,191 +844,6 @@
         }
       }
 
-      @media (max-width: 760px) {
-        body {
-          min-width: 0;
-          overflow-x: hidden;
-          padding-bottom: calc(84px + env(safe-area-inset-bottom));
-        }
-
-        .app {
-          width: 100%;
-          min-width: 0;
-          display: block;
-        }
-
-        .sidebar {
-          position: sticky;
-          top: 0;
-          z-index: 12;
-          min-height: 0;
-          border-right: 0;
-          border-bottom: 1px solid var(--line);
-          padding: calc(12px + env(safe-area-inset-top)) 14px 12px;
-          background: rgba(255, 255, 255, 0.94);
-          backdrop-filter: blur(18px);
-        }
-
-        .brand {
-          gap: 10px;
-        }
-
-        .brand-mark {
-          width: 40px;
-          height: 40px;
-          font-size: 18px;
-        }
-
-        .brand-title {
-          max-width: 150px;
-          font-size: 16px;
-          line-height: 1.08;
-        }
-
-        .sidebar .studio-card {
-          display: none;
-        }
-
-        .sidebar .nav {
-          position: fixed;
-          left: 10px;
-          right: 10px;
-          bottom: calc(10px + env(safe-area-inset-bottom));
-          z-index: 20;
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 6px;
-          border: 1px solid var(--line);
-          border-radius: 8px;
-          padding: 7px;
-          background: rgba(255, 255, 255, 0.96);
-          box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
-        }
-
-        .nav a {
-          min-height: 50px;
-          padding: 6px;
-          justify-content: center;
-          flex-direction: column;
-          gap: 2px;
-          font-size: 11px;
-          line-height: 1.1;
-        }
-
-        .nav a[href="#settings"] {
-          display: none;
-        }
-
-        .main {
-          padding: 14px 14px 18px;
-        }
-
-        .feature {
-          min-height: 440px;
-        }
-
-        .feature::after {
-          background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.99) 0%,
-            rgba(255, 255, 255, 0.9) 54%,
-            rgba(255, 255, 255, 0.16) 100%
-          );
-        }
-
-        .feature-content {
-          min-height: 440px;
-          padding: 22px;
-          justify-content: flex-start;
-        }
-
-        .feature h2 {
-          font-size: 40px;
-        }
-
-        .feature p {
-          max-width: 100%;
-          font-size: 15px;
-          line-height: 1.55;
-        }
-
-        .actions {
-          flex-direction: column;
-        }
-
-        .button {
-          width: 100%;
-          min-height: 48px;
-        }
-
-        .library-head {
-          margin: 22px 0 12px;
-          align-items: start;
-        }
-
-        .library-head h2 {
-          font-size: 26px;
-        }
-
-        .games {
-          grid-template-columns: 1fr;
-          gap: 12px;
-        }
-
-        .game-card {
-          display: grid;
-          grid-template-columns: 112px minmax(0, 1fr);
-          min-height: 180px;
-        }
-
-        .cover {
-          aspect-ratio: auto;
-          min-height: 100%;
-        }
-
-        .game-body {
-          padding: 14px;
-        }
-
-        .game-body .button + .button,
-        .game-body .button + button,
-        .game-body button + .button {
-          margin-top: 8px;
-        }
-
-        .game-body h3 {
-          font-size: 20px;
-        }
-
-        .rail {
-          display: grid;
-          border-left: 0;
-          padding: 0 14px 18px;
-          background: transparent;
-        }
-
-        .profile,
-        .side-card {
-          padding: 16px;
-        }
-
-        .studio-block {
-          display: none;
-        }
-
-        .metrics {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
-        .metric strong {
-          font-size: 16px;
-        }
-
-        .close-game {
-          top: calc(12px + env(safe-area-inset-top));
-          right: 12px;
-        }
-      }
     </style>
   </head>
   <body>
@@ -1222,6 +1042,20 @@
       menuToggle.addEventListener("click", () => {
         const isOpen = sidebar.classList.toggle("menu-open");
         menuToggle.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll(".nav a").forEach((link) => {
+        link.addEventListener("click", () => {
+          sidebar.classList.remove("menu-open");
+          menuToggle.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!sidebar.contains(event.target)) {
+          sidebar.classList.remove("menu-open");
+          menuToggle.setAttribute("aria-expanded", "false");
+        }
       });
     </script>
   </body>
