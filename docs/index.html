@@ -87,7 +87,9 @@
 
       .brand {
         display: flex;
+        flex-direction: row;
         align-items: center;
+        flex-wrap: nowrap;
         gap: 12px;
         transition: opacity 220ms ease, transform 220ms ease;
         min-width: 0;
@@ -185,7 +187,7 @@
       .brand-title .letter {
         display: inline-block;
         transition: opacity 220ms ease, transform 260ms ease;
-        transition-delay: calc(var(--i) * 18ms);
+        transition-delay: calc(var(--in-i) * 18ms);
       }
 
       .brand-title .space {
@@ -786,6 +788,8 @@
         .brand {
           gap: 10px;
           align-items: center;
+          flex-direction: row;
+          flex-wrap: nowrap;
         }
 
         .brand-row {
@@ -847,6 +851,7 @@
         .sidebar.menu-open .brand-title .letter {
           opacity: 0;
           transform: translateX(-16px);
+          transition-delay: calc(var(--out-i) * 18ms);
         }
 
         .sidebar .studio-card {
@@ -1232,10 +1237,13 @@
         brandTitle.setAttribute("aria-label", text);
         brandTitle.textContent = "";
 
-        [...text].forEach((char, index) => {
+        const letters = [...text];
+
+        letters.forEach((char, index) => {
           const span = document.createElement("span");
           span.className = char === " " ? "letter space" : "letter";
-          span.style.setProperty("--i", index);
+          span.style.setProperty("--in-i", index);
+          span.style.setProperty("--out-i", letters.length - index - 1);
           span.textContent = char === " " ? "\u00a0" : char;
           span.setAttribute("aria-hidden", "true");
           brandTitle.appendChild(span);
