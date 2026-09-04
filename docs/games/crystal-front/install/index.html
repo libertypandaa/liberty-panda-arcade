@@ -140,16 +140,48 @@
         gap: 10px;
       }
 
-      .secondary-actions {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
       .link-button {
         border: 1px solid var(--line);
         background: #fff;
         color: var(--ink);
+      }
+
+      .game-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: #020617;
+      }
+
+      .game-overlay[hidden] {
+        display: none;
+      }
+
+      .game-overlay iframe {
+        width: 100vw;
+        height: 100vh;
+        display: block;
+        border: 0;
+        background: #020617;
+      }
+
+      .close-game {
+        position: absolute;
+        top: calc(12px + env(safe-area-inset-top));
+        right: 12px;
+        z-index: 2;
+        min-height: 44px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        padding: 0 14px;
+        background: rgba(15, 23, 42, 0.84);
+        color: #fff;
+        font-weight: 820;
+        cursor: pointer;
+      }
+
+      body.game-open {
+        overflow: hidden;
       }
 
       .note {
@@ -192,9 +224,6 @@
           padding: 18px;
         }
 
-        .secondary-actions {
-          grid-template-columns: 1fr;
-        }
       }
     </style>
   </head>
@@ -213,10 +242,7 @@
         <div class="body">
           <div class="actions">
             <button class="install-button" type="button" id="install-button">Add to phone</button>
-            <div class="secondary-actions">
-              <a class="link-button" href="https://libertypandaa.github.io/crystal-front-demo/">Open game</a>
-              <a class="link-button" href="../">Game page</a>
-            </div>
+            <button class="link-button play-game" type="button">Play</button>
           </div>
 
           <div class="note">
@@ -232,10 +258,22 @@
         </div>
       </section>
     </main>
+    <section class="game-overlay" id="game-overlay" hidden aria-label="Crystal Front fullscreen player">
+      <button class="close-game" type="button" id="close-game">Close</button>
+      <iframe
+        id="game-frame"
+        title="Crystal Front Demo"
+        allow="fullscreen; autoplay; gamepad"
+      ></iframe>
+    </section>
 
     <script>
+      const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
       const statusBox = document.querySelector("#status");
       const installButton = document.querySelector("#install-button");
+      const overlay = document.querySelector("#game-overlay");
+      const frame = document.querySelector("#game-frame");
+      const closeButton = document.querySelector("#close-game");
       let installPrompt = null;
 
       function setStatus(message) {
@@ -269,6 +307,34 @@
           navigator.serviceWorker.register("../service-worker.js").catch(() => {});
         });
       }
+
+      async function openGameFullscreen() {
+        frame.src = `${gameUrl}?launch=${Date.now()}`;
+        overlay.hidden = false;
+        document.body.classList.add("game-open");
+
+        try {
+          await overlay.requestFullscreen();
+        } catch (error) {
+          // If fullscreen is blocked, the overlay still fills the visible page.
+        }
+      }
+
+      async function closeGame() {
+        frame.src = "about:blank";
+        overlay.hidden = true;
+        document.body.classList.remove("game-open");
+
+        if (document.fullscreenElement) {
+          await document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      document.querySelectorAll(".play-game").forEach((button) => {
+        button.addEventListener("click", openGameFullscreen);
+      });
+
+      closeButton.addEventListener("click", closeGame);
     </script>
   </body>
 </html>

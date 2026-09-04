@@ -201,6 +201,18 @@
         box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
       }
 
+      .planned-label {
+        width: fit-content;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 14px;
+        background: #fff;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 800;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      }
+
       .feature-grid {
         display: grid;
         grid-template-columns: 1fr;
@@ -1021,10 +1033,9 @@
               </p>
               <div class="actions">
                 <button class="button primary play-game" type="button">
-                  ▶ Play in Hub
+                  ▶ Play
                 </button>
                 <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
-                <a class="button secondary" href="./games/crystal-front/">Game page →</a>
               </div>
             </div>
           </article>
@@ -1059,7 +1070,7 @@
                   <div class="progress-row"><span>Hub readiness</span><span>60%</span></div>
                   <div class="bar"><div class="fill" style="width: 60%"></div></div>
                 </div>
-                <button class="button primary play-game" type="button">Play in Hub</button>
+                <button class="button primary play-game" type="button">Play</button>
                 <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
               </div>
             </article>
@@ -1080,7 +1091,7 @@
                   <div class="progress-row"><span>Hub readiness</span><span>20%</span></div>
                   <div class="bar"><div class="fill" style="width: 20%"></div></div>
                 </div>
-                <button class="filter" type="button">Planned</button>
+                <span class="planned-label">Planned</span>
               </div>
             </article>
 
@@ -1103,7 +1114,7 @@
                   <div class="progress-row"><span>Hub readiness</span><span>35%</span></div>
                   <div class="bar"><div class="fill" style="width: 35%"></div></div>
                 </div>
-                <button class="filter" type="button">Planned</button>
+                <span class="planned-label">Planned</span>
               </div>
             </article>
           </div>
