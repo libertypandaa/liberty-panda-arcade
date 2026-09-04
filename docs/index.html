@@ -422,6 +422,35 @@
         gap: 16px;
       }
 
+      .view-panel {
+        display: none;
+      }
+
+      .view-panel.is-active {
+        display: block;
+      }
+
+      .dashboard-panel {
+        display: grid;
+        gap: 16px;
+      }
+
+      .page-title {
+        margin-bottom: 18px;
+      }
+
+      .page-title h2 {
+        margin-top: 4px;
+        font-size: 42px;
+        line-height: 1.05;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
       .game-card {
         overflow: hidden;
         transition: transform 160ms ease, box-shadow 160ms ease;
@@ -715,7 +744,7 @@
           right: 70px;
           z-index: 3;
           width: min(430px, calc(100vw - 94px));
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(5, minmax(0, 1fr));
           gap: 6px;
           border: 1px solid var(--line);
           border-radius: 8px;
@@ -740,10 +769,6 @@
           gap: 2px;
           font-size: 11px;
           line-height: 1.1;
-        }
-
-        .nav a[href="#settings"] {
-          display: none;
         }
 
         .main {
@@ -844,6 +869,14 @@
           margin-top: 8px;
         }
 
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .page-title h2 {
+          font-size: 36px;
+        }
+
         .rail {
           display: none;
         }
@@ -877,7 +910,7 @@
         </div>
 
         <nav class="nav" aria-label="Main navigation">
-          <a class="active" href="#"><span>⌂</span>Home</a>
+          <a class="active" href="#home"><span>⌂</span>Home</a>
           <a href="#library"><span>▦</span>Library</a>
           <a href="#profile"><span>◉</span>Profile</a>
           <a href="#leaderboard"><span>▥</span>Leaderboard</a>
@@ -896,106 +929,183 @@
       </aside>
 
       <section class="main">
-        <section class="feature-grid" aria-label="Last played game">
-          <article class="feature">
-            <img
-              src="./assets/games/crystal-front-feature.png"
-              alt="Crystal Front Demo preview"
-            />
-            <div class="feature-content">
-              <span class="pill">↻ Last played</span>
-              <h2>Crystal Front Demo</h2>
-              <p>
-                Продолжить тактическую кристальную дуэль с того места, где
-                игрок остановился в прошлый раз.
-              </p>
-              <div class="actions">
-                <button class="button primary play-game" type="button">
-                  ▶ Play
-                </button>
-                <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
+        <section id="home" class="view-panel is-active">
+          <section class="feature-grid" aria-label="Last played game">
+            <article class="feature">
+              <img
+                src="./assets/games/crystal-front-feature.png"
+                alt="Crystal Front Demo preview"
+              />
+              <div class="feature-content">
+                <span class="pill">↻ Last played</span>
+                <h2>Crystal Front Demo</h2>
+                <p>
+                  Продолжить тактическую кристальную дуэль с того места, где
+                  игрок остановился в прошлый раз.
+                </p>
+                <div class="actions">
+                  <button class="button primary play-game" type="button">
+                    ▶ Play
+                  </button>
+                  <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
+                </div>
               </div>
+            </article>
+          </section>
+
+          <section id="library" class="library">
+            <div class="library-head">
+              <div>
+                <p class="kicker">Library</p>
+                <h2>Recommended for you</h2>
+              </div>
+              <a href="#library" class="kicker">All games →</a>
             </div>
-          </article>
+
+            <div class="games">
+              <article class="card game-card">
+                <div class="cover">
+                  <img
+                    src="./assets/games/crystal-front-feature.png"
+                    alt="Crystal Front Demo cover"
+                  />
+                  <span class="status">Playable demo</span>
+                </div>
+                <div class="game-body">
+                  <p class="kicker">Lieberman Games</p>
+                  <h3>Crystal Front Demo</h3>
+                  <p class="genre">Strategy · Tactical</p>
+                  <p class="muted">
+                    Тактическая кристальная дуэль и первый тайтл хаба.
+                  </p>
+                  <div class="progress">
+                    <div class="progress-row"><span>Hub readiness</span><span>60%</span></div>
+                    <div class="bar"><div class="fill" style="width: 60%"></div></div>
+                  </div>
+                  <button class="button primary play-game" type="button">Play</button>
+                  <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
+                </div>
+              </article>
+
+              <article class="card game-card">
+                <div class="cover">
+                  <img src="./assets/games/fightern-cover.png" alt="Fightern cover" />
+                  <span class="status">Concept slot</span>
+                </div>
+                <div class="game-body">
+                  <p class="kicker">Lieberman Games</p>
+                  <h3>Fightern</h3>
+                  <p class="genre">Action · Arena</p>
+                  <p class="muted">
+                    Арена для коротких боевых сессий в будущей библиотеке.
+                  </p>
+                  <div class="progress">
+                    <div class="progress-row"><span>Hub readiness</span><span>20%</span></div>
+                    <div class="bar"><div class="fill" style="width: 20%"></div></div>
+                  </div>
+                  <span class="planned-label">Planned</span>
+                </div>
+              </article>
+
+              <article class="card game-card">
+                <div class="cover">
+                  <img
+                    src="./assets/games/castle-siege-cover.png"
+                    alt="Осада замка cover"
+                  />
+                  <span class="status">Concept slot</span>
+                </div>
+                <div class="game-body">
+                  <p class="kicker">Lieberman Games</p>
+                  <h3>Осада замка</h3>
+                  <p class="genre">Strategy · Defense</p>
+                  <p class="muted">
+                    Средневековая защита крепости и развитие обороны.
+                  </p>
+                  <div class="progress">
+                    <div class="progress-row"><span>Hub readiness</span><span>35%</span></div>
+                    <div class="bar"><div class="fill" style="width: 35%"></div></div>
+                  </div>
+                  <span class="planned-label">Planned</span>
+                </div>
+              </article>
+            </div>
+          </section>
         </section>
 
-        <section id="library" class="library">
-          <div class="library-head">
-            <div>
-              <p class="kicker">Library</p>
-              <h2>Recommended for you</h2>
+        <section id="profile" class="view-panel dashboard-panel">
+          <div class="page-title">
+            <p class="kicker">Player</p>
+            <h2>Profile</h2>
+          </div>
+          <section class="card profile">
+            <div class="profile-top">
+              <span class="avatar">LP</span>
+              <div>
+                <h2>PandaDev</h2>
+                <p class="muted">Тестовый профиль игрока для будущей авторизации.</p>
+              </div>
             </div>
-            <a href="#library" class="kicker">All games →</a>
+            <div class="metrics">
+              <div class="metric"><strong>1,620</strong><span>Points</span></div>
+              <div class="metric"><strong>14h</strong><span>Play time</span></div>
+              <div class="metric"><strong>#2</strong><span>Rank</span></div>
+            </div>
+          </section>
+          <section class="dashboard-grid">
+            <article class="card side-card">
+              <h3>Player status</h3>
+              <div class="rank-row"><span>Last game</span><strong>Crystal Front</strong></div>
+              <div class="rank-row"><span>Session</span><strong>Ready</strong></div>
+              <div class="rank-row"><span>Library</span><strong>3 games</strong></div>
+            </article>
+            <article class="card side-card">
+              <h3>Recent achievements</h3>
+              <div class="achievement">
+                <span class="badge">★</span>
+                <div><strong>First Sync</strong><p class="muted">Save your first run</p></div>
+              </div>
+              <div class="achievement">
+                <span class="badge">◆</span>
+                <div><strong>Crystal Signal</strong><p class="muted">Open Crystal Front</p></div>
+              </div>
+            </article>
+          </section>
+        </section>
+
+        <section id="leaderboard" class="view-panel dashboard-panel">
+          <div class="page-title">
+            <p class="kicker">Competition</p>
+            <h2>Leaderboard</h2>
           </div>
+          <section class="card side-card">
+            <h3>Crystal Front Demo</h3>
+            <div class="rank-row"><span>1. CrystalFox</span><strong>2450</strong></div>
+            <div class="rank-row"><span>2. PandaDev</span><strong>1620</strong></div>
+            <div class="rank-row"><span>3. FrontRunner</span><strong>1180</strong></div>
+            <div class="rank-row"><span>4. CastleWatch</span><strong>940</strong></div>
+          </section>
+        </section>
 
-          <div class="games">
-            <article class="card game-card">
-              <div class="cover">
-                <img
-                  src="./assets/games/crystal-front-feature.png"
-                  alt="Crystal Front Demo cover"
-                />
-                <span class="status">Playable demo</span>
-              </div>
-              <div class="game-body">
-                <p class="kicker">Lieberman Games</p>
-                <h3>Crystal Front Demo</h3>
-                <p class="genre">Strategy · Tactical</p>
-                <p class="muted">
-                  Тактическая кристальная дуэль и первый тайтл хаба.
-                </p>
-                <div class="progress">
-                  <div class="progress-row"><span>Hub readiness</span><span>60%</span></div>
-                  <div class="bar"><div class="fill" style="width: 60%"></div></div>
-                </div>
-                <button class="button primary play-game" type="button">Play</button>
-                <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
-              </div>
-            </article>
-
-            <article class="card game-card">
-              <div class="cover">
-                <img src="./assets/games/fightern-cover.png" alt="Fightern cover" />
-                <span class="status">Concept slot</span>
-              </div>
-              <div class="game-body">
-                <p class="kicker">Lieberman Games</p>
-                <h3>Fightern</h3>
-                <p class="genre">Action · Arena</p>
-                <p class="muted">
-                  Арена для коротких боевых сессий в будущей библиотеке.
-                </p>
-                <div class="progress">
-                  <div class="progress-row"><span>Hub readiness</span><span>20%</span></div>
-                  <div class="bar"><div class="fill" style="width: 20%"></div></div>
-                </div>
-                <span class="planned-label">Planned</span>
-              </div>
-            </article>
-
-            <article class="card game-card">
-              <div class="cover">
-                <img
-                  src="./assets/games/castle-siege-cover.png"
-                  alt="Осада замка cover"
-                />
-                <span class="status">Concept slot</span>
-              </div>
-              <div class="game-body">
-                <p class="kicker">Lieberman Games</p>
-                <h3>Осада замка</h3>
-                <p class="genre">Strategy · Defense</p>
-                <p class="muted">
-                  Средневековая защита крепости и развитие обороны.
-                </p>
-                <div class="progress">
-                  <div class="progress-row"><span>Hub readiness</span><span>35%</span></div>
-                  <div class="bar"><div class="fill" style="width: 35%"></div></div>
-                </div>
-                <span class="planned-label">Planned</span>
-              </div>
-            </article>
+        <section id="settings" class="view-panel dashboard-panel">
+          <div class="page-title">
+            <p class="kicker">Account</p>
+            <h2>Settings</h2>
           </div>
+          <section class="dashboard-grid">
+            <article class="card side-card">
+              <h3>Profile settings</h3>
+              <div class="rank-row"><span>Nickname</span><strong>PandaDev</strong></div>
+              <div class="rank-row"><span>Language</span><strong>Русский</strong></div>
+              <div class="rank-row"><span>Account</span><strong>Guest</strong></div>
+            </article>
+            <article class="card side-card">
+              <h3>Game preferences</h3>
+              <div class="rank-row"><span>Fullscreen launch</span><strong>On</strong></div>
+              <div class="rank-row"><span>Phone install</span><strong>Enabled</strong></div>
+              <div class="rank-row"><span>Notifications</span><strong>Later</strong></div>
+            </article>
+          </section>
         </section>
       </section>
 
@@ -1015,6 +1125,8 @@
       const closeButton = document.querySelector("#close-game");
       const sidebar = document.querySelector(".sidebar");
       const menuToggle = document.querySelector(".menu-toggle");
+      const navLinks = document.querySelectorAll(".nav a");
+      const viewPanels = document.querySelectorAll(".view-panel");
 
       async function openGameFullscreen() {
         frame.src = `${gameUrl}?launch=${Date.now()}`;
@@ -1044,6 +1156,27 @@
 
       closeButton.addEventListener("click", closeGame);
 
+      function showView(hash) {
+        const target = hash || "#home";
+        const viewId = target === "#library" ? "home" : target.slice(1);
+        const activePanel = document.getElementById(viewId) || document.getElementById("home");
+
+        viewPanels.forEach((panel) => {
+          panel.classList.toggle("is-active", panel === activePanel);
+        });
+
+        navLinks.forEach((link) => {
+          const href = link.getAttribute("href");
+          link.classList.toggle("active", href === target || (target === "#library" && href === "#library"));
+        });
+
+        if (target === "#library") {
+          document.getElementById("library").scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+
       menuToggle.addEventListener("click", () => {
         const isOpen = sidebar.classList.toggle("menu-open");
         menuToggle.setAttribute("aria-expanded", String(isOpen));
@@ -1053,6 +1186,7 @@
         link.addEventListener("click", () => {
           sidebar.classList.remove("menu-open");
           menuToggle.setAttribute("aria-expanded", "false");
+          showView(link.getAttribute("href"));
         });
       });
 
@@ -1062,6 +1196,9 @@
           menuToggle.setAttribute("aria-expanded", "false");
         }
       });
+
+      window.addEventListener("hashchange", () => showView(window.location.hash));
+      showView(window.location.hash);
     </script>
   </body>
 </html>
