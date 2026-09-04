@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../../../assets/games/crystal-front-icon.png" />
+    <title>Install Crystal Front — Liberty Panda Arcade</title>
+    <style>
+      :root {
+        --bg: #f7fbff;
+        --card: #ffffff;
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #dbe6ee;
+        --teal: #0f766e;
+        --teal-dark: #115e59;
+        --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        width: min(920px, 100%);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 18px;
+        display: grid;
+        place-items: center;
+      }
+
+      .card {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--card);
+        box-shadow: var(--shadow);
+      }
+
+      .cover {
+        position: relative;
+        min-height: 330px;
+        display: grid;
+        align-items: end;
+        padding: 28px;
+        overflow: hidden;
+      }
+
+      .cover img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .cover::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.97));
+      }
+
+      .cover-content {
+        position: relative;
+        z-index: 1;
+        max-width: 620px;
+      }
+
+      .kicker {
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 820;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 10px;
+        font-size: clamp(38px, 8vw, 68px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .body {
+        padding: 24px;
+        display: grid;
+        gap: 16px;
+      }
+
+      .install-button,
+      .link-button {
+        min-height: 52px;
+        border: 0;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        font-weight: 820;
+        cursor: pointer;
+      }
+
+      .install-button {
+        width: 100%;
+        background: var(--teal);
+        color: #fff;
+        font-size: 16px;
+      }
+
+      .actions {
+        display: grid;
+        gap: 10px;
+      }
+
+      .secondary-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .link-button {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+      }
+
+      .note {
+        border: 1px solid rgba(15, 118, 110, 0.18);
+        border-radius: 8px;
+        padding: 14px;
+        background: #ecfdf5;
+        color: #405064;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .status {
+        min-height: 78px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .status strong {
+        color: var(--ink);
+      }
+
+      @media (max-width: 620px) {
+        .page {
+          padding: 12px;
+          place-items: start center;
+        }
+
+        .cover {
+          min-height: 300px;
+          padding: 22px;
+        }
+
+        .body {
+          padding: 18px;
+        }
+
+        .secondary-actions {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <div class="cover">
+          <img src="../../../assets/games/crystal-front-feature.png" alt="Crystal Front Demo preview" />
+          <div class="cover-content">
+            <p class="kicker">Liberty Panda Arcade</p>
+            <h1>Install Crystal Front</h1>
+            <p>Добавь игру на главный экран телефона и запускай её по прямой ссылке.</p>
+          </div>
+        </div>
+
+        <div class="body">
+          <div class="actions">
+            <button class="install-button" type="button" id="install-button">Add to phone</button>
+            <div class="secondary-actions">
+              <a class="link-button" href="https://libertypandaa.github.io/crystal-front-demo/">Open game</a>
+              <a class="link-button" href="../">Game page</a>
+            </div>
+          </div>
+
+          <div class="note">
+            Android Chrome: нажми Add to phone. Если системное окно не появится,
+            открой меню браузера и выбери Add to Home screen или Install app.
+            iPhone Safari: Share → Add to Home Screen.
+          </div>
+
+          <div class="status" id="status">
+            Нажми Add to phone. Если браузер поддерживает установку веб-приложений,
+            появится системное предложение добавить Crystal Front на экран.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const statusBox = document.querySelector("#status");
+      const installButton = document.querySelector("#install-button");
+      let installPrompt = null;
+
+      function setStatus(message) {
+        statusBox.innerHTML = message;
+      }
+
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        installPrompt = event;
+        setStatus("<strong>Готово к установке.</strong><br>Нажми Add to phone, чтобы открыть системное окно браузера.");
+      });
+
+      installButton.addEventListener("click", async () => {
+        if (installPrompt) {
+          installPrompt.prompt();
+          const choice = await installPrompt.userChoice;
+          installPrompt = null;
+          setStatus(`<strong>Install prompt:</strong> ${choice.outcome}<br>Если выбрал install, ярлык появится на главном экране.`);
+          return;
+        }
+
+        setStatus(`
+          <strong>Открой установку через меню браузера.</strong><br>
+          Android Chrome: меню ⋮ → Add to Home screen / Install app.<br>
+          iPhone Safari: Share → Add to Home Screen.
+        `);
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("../service-worker.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>
