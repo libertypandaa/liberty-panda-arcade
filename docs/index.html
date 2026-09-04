@@ -33,8 +33,8 @@
 
       body {
         margin: 0;
-        min-width: 1240px;
-        overflow-x: auto;
+        min-width: 0;
+        overflow-x: hidden;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(247, 251, 255, 0.92)),
           var(--bg);
@@ -64,11 +64,11 @@
       }
 
       .app {
-        width: min(1600px, 100%);
+        width: min(1220px, 100%);
         min-height: 100vh;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: 250px minmax(0, 1fr) 350px;
+        grid-template-columns: 250px minmax(0, 1fr);
       }
 
       .sidebar,
@@ -99,8 +99,13 @@
         place-items: center;
         background: var(--ink);
         color: white;
-        font-size: 23px;
         box-shadow: var(--shadow);
+      }
+
+      .brand-mark svg {
+        width: 34px;
+        height: 34px;
+        display: block;
       }
 
       .brand-title {
@@ -108,6 +113,23 @@
         line-height: 1.04;
         font-weight: 820;
         letter-spacing: 0;
+      }
+
+      .menu-toggle {
+        display: none;
+        width: 48px;
+        height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0;
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+      }
+
+      .menu-toggle svg {
+        width: 24px;
+        height: 24px;
       }
 
       .nav {
@@ -584,11 +606,7 @@
 
       @media (max-width: 1240px) {
         .app {
-          grid-template-columns: 220px minmax(0, 1fr) 300px;
-        }
-
-        .rail {
-          padding: 20px 14px;
+          grid-template-columns: 220px minmax(0, 1fr);
         }
 
         .main {
@@ -634,174 +652,190 @@
       }
 
       @media (max-width: 760px) {
+        body {
+          padding-bottom: 0;
+        }
+
         .app {
+          width: 100%;
           display: block;
         }
 
         .sidebar {
           position: sticky;
           top: 0;
-          z-index: 10;
-          min-height: auto;
+          z-index: 12;
+          min-height: 0;
           border-right: 0;
           border-bottom: 1px solid var(--line);
-          display: block;
-          padding: 16px;
+          padding: calc(12px + env(safe-area-inset-top)) 14px 12px;
+          background: rgba(255, 255, 255, 0.94);
+          backdrop-filter: blur(18px);
         }
 
         .brand {
-          flex-direction: row;
+          gap: 10px;
           align-items: center;
         }
 
-        .sidebar .nav,
-        .sidebar .studio-card,
-        .rail,
-        .topline {
-          display: none;
-        }
-
-        .main {
-          padding: 20px 16px 28px;
-        }
-
-        .feature,
-        .feature-content {
-          min-height: 560px;
-        }
-
-        .feature::after {
-          background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.98) 0%,
-            rgba(255, 255, 255, 0.88) 52%,
-            rgba(255, 255, 255, 0.2) 100%
-          );
-        }
-
-        .feature-content {
-          justify-content: flex-start;
-          padding: 24px;
-        }
-
-        .quick-stack,
-        .mobile-strip {
-          grid-template-columns: 1fr;
-        }
-
-        .actions {
-          flex-direction: column;
-        }
-
-        .button {
-          width: 100%;
-        }
-      }
-
-      /* Current review build is browser-only: keep the approved dashboard layout
-         even inside a narrow preview panel instead of collapsing to a phone view. */
-      @media (max-width: 9999px) {
-        body {
-          min-width: 1240px;
-          overflow-x: auto;
-        }
-
-        .app {
-          width: min(1600px, 100%);
-          min-width: 1240px;
-          min-height: 100vh;
-          margin: 0 auto;
-          display: grid;
-          grid-template-columns: 250px minmax(640px, 1fr) 350px;
-        }
-
-        .sidebar {
-          position: static;
-          min-height: 100vh;
-          border-right: 1px solid var(--line);
-          border-bottom: 0;
+        .brand-row {
           display: flex;
-          flex-direction: column;
-          gap: 34px;
-          padding: 24px 20px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
         }
 
-        .brand {
-          flex-direction: row;
-          align-items: center;
+        .brand-mark {
+          width: 42px;
+          height: 42px;
+        }
+
+        .brand-mark svg {
+          width: 30px;
+          height: 30px;
         }
 
         .brand-title {
-          font-size: 24px;
+          max-width: 185px;
+          font-size: 17px;
+          line-height: 1.08;
+        }
+
+        .menu-toggle {
+          display: inline-grid;
+          place-items: center;
         }
 
         .sidebar .nav {
+          display: none;
+          margin-top: 12px;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 6px;
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          padding: 7px;
+          background: #fff;
+          box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        .sidebar.menu-open .nav {
           display: grid;
         }
 
         .sidebar .studio-card {
-          display: block;
+          display: none;
+        }
+
+        .nav a {
+          min-height: 50px;
+          padding: 6px;
+          justify-content: center;
+          flex-direction: column;
+          gap: 2px;
+          font-size: 11px;
+          line-height: 1.1;
         }
 
         .main {
-          padding: 24px 28px 36px;
+          padding: 18px 14px 28px;
         }
 
         .topline {
-          display: flex;
-          align-items: end;
-          flex-direction: row;
+          display: none;
         }
 
         .feature-grid {
           grid-template-columns: 1fr;
         }
 
-        .feature,
-        .feature-content {
-          min-height: 470px;
+        .feature {
+          min-height: 680px;
         }
 
         .feature::after {
           background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0.99) 0%,
-            rgba(255, 255, 255, 0.91) 38%,
-            rgba(255, 255, 255, 0.38) 72%,
-            rgba(255, 255, 255, 0.12) 100%
+            180deg,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(255, 255, 255, 0.9) 54%,
+            rgba(255, 255, 255, 0.16) 100%
           );
         }
 
         .feature-content {
-          justify-content: center;
-          padding: 42px;
+          min-height: 680px;
+          justify-content: flex-start;
+          padding: 28px 24px;
         }
 
-        .quick-stack {
-          grid-template-columns: 1fr;
+        .feature h2 {
+          margin-top: 28px;
+          font-size: 48px;
         }
 
-        .games {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
-        .rail {
-          display: flex;
-          flex-direction: column;
-          border-left: 1px solid var(--line);
-          padding: 24px 20px;
-        }
-
-        .mobile-strip {
-          display: none;
+        .feature p {
+          max-width: 100%;
+          font-size: 18px;
+          line-height: 1.65;
         }
 
         .actions {
-          flex-direction: row;
+          margin-top: 34px;
+          flex-direction: column;
         }
 
         .button {
-          width: auto;
+          width: 100%;
+          min-height: 62px;
+          font-size: 18px;
+        }
+
+        .library-head {
+          margin: 26px 8px 14px;
+          align-items: start;
+        }
+
+        .library-head h2 {
+          font-size: 36px;
+          line-height: 1.08;
+        }
+
+        .games {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .game-card {
+          display: grid;
+          grid-template-columns: 132px minmax(0, 1fr);
+          min-height: 188px;
+        }
+
+        .cover {
+          aspect-ratio: auto;
+          min-height: 100%;
+        }
+
+        .game-body {
+          padding: 16px;
+        }
+
+        .game-body h3 {
+          font-size: 22px;
+        }
+
+        .game-body .button {
+          min-height: 48px;
+          font-size: 14px;
+        }
+
+        .game-body .button + .button,
+        .game-body .button + a.button,
+        .game-body button + .button {
+          margin-top: 8px;
+        }
+
+        .rail {
+          display: none;
         }
       }
 
@@ -995,15 +1029,32 @@
   <body>
     <main class="app">
       <aside class="sidebar">
-        <a href="./" class="brand">
-          <span class="brand-mark">▶</span>
-          <span class="brand-title">Liberty Panda Arcade</span>
-        </a>
+        <div class="brand-row">
+          <a href="./" class="brand">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 64 64" role="img" focusable="false">
+                <circle cx="20" cy="18" r="11" fill="#fff" />
+                <circle cx="44" cy="18" r="11" fill="#fff" />
+                <circle cx="32" cy="34" r="24" fill="#fff" />
+                <circle cx="24" cy="31" r="5" fill="#0f172a" />
+                <circle cx="40" cy="31" r="5" fill="#0f172a" />
+                <path d="M25 43c4 4 10 4 14 0" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
+                <path d="M32 36l-5-6h10z" fill="#0f172a" />
+              </svg>
+            </span>
+            <span class="brand-title">Liberty Panda Arcade</span>
+          </a>
+          <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
 
         <nav class="nav" aria-label="Main navigation">
           <a class="active" href="#"><span>⌂</span>Home</a>
           <a href="#library"><span>▦</span>Library</a>
-          <a href="#achievements"><span>★</span>Achievements</a>
+          <a href="#profile"><span>◉</span>Profile</a>
           <a href="#leaderboard"><span>▥</span>Leaderboard</a>
           <a href="#settings"><span>⚙</span>Settings</a>
         </nav>
@@ -1123,61 +1174,6 @@
         </section>
       </section>
 
-      <aside class="rail">
-        <section class="card profile">
-          <div class="profile-top">
-            <span class="avatar">♟</span>
-            <div>
-              <h2>PandaDev</h2>
-              <p class="muted">Player profile</p>
-            </div>
-          </div>
-          <div class="metrics">
-            <div class="metric"><strong>1,620</strong><span>Points</span></div>
-            <div class="metric"><strong>14h</strong><span>Play time</span></div>
-            <div class="metric"><strong>#2</strong><span>Rank</span></div>
-          </div>
-        </section>
-
-        <section class="card side-card">
-          <h3>Player status</h3>
-          <div class="rank-row"><span>Last game</span><strong>Crystal Front</strong></div>
-          <div class="rank-row"><span>Session</span><strong>Ready</strong></div>
-          <div class="rank-row"><span>Library</span><strong>3 games</strong></div>
-        </section>
-
-        <section id="leaderboard" class="card side-card">
-          <h3>Leaderboard</h3>
-          <div class="rank-row"><span>1. CrystalFox</span><strong>2450</strong></div>
-          <div class="rank-row"><span>2. PandaDev</span><strong>1620</strong></div>
-          <div class="rank-row"><span>3. FrontRunner</span><strong>1180</strong></div>
-        </section>
-
-        <section id="achievements" class="card side-card">
-          <h3>Recent achievements</h3>
-          <div class="achievement">
-            <span class="badge">★</span>
-            <div><strong>First Sync</strong><p class="muted">Save your first run</p></div>
-          </div>
-          <div class="achievement">
-            <span class="badge">◆</span>
-            <div><strong>Crystal Signal</strong><p class="muted">Open Crystal Front</p></div>
-          </div>
-          <div class="achievement">
-            <span class="badge">▲</span>
-            <div><strong>Castle Watch</strong><p class="muted">Follow a planned game</p></div>
-          </div>
-        </section>
-
-        <section class="card studio-block">
-          <img src="./assets/lieberman-games-logo.png" alt="Lieberman Games lighthouse logo" />
-          <p class="studio-kicker">Lieberman Games</p>
-          <p class="muted">
-            Студия-разработчик игр. Liberty Panda Arcade — общий хаб для
-            запуска, прогресса и будущих игровых профилей.
-          </p>
-        </section>
-      </aside>
     </main>
     <section class="game-overlay" id="game-overlay" hidden aria-label="Crystal Front fullscreen player">
       <button class="close-game" type="button" id="close-game">Close</button>
@@ -1192,6 +1188,8 @@
       const overlay = document.querySelector("#game-overlay");
       const frame = document.querySelector("#game-frame");
       const closeButton = document.querySelector("#close-game");
+      const sidebar = document.querySelector(".sidebar");
+      const menuToggle = document.querySelector(".menu-toggle");
 
       async function openGameFullscreen() {
         frame.src = `${gameUrl}?launch=${Date.now()}`;
@@ -1220,6 +1218,11 @@
       });
 
       closeButton.addEventListener("click", closeGame);
+
+      menuToggle.addEventListener("click", () => {
+        const isOpen = sidebar.classList.toggle("menu-open");
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+      });
     </script>
   </body>
 </html>
