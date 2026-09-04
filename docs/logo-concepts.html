@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Liberty Panda Arcade Logo Concepts</title>
+    <style>
+      :root {
+        --bg: #f7fbff;
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #dbe6ee;
+        --teal: #0f766e;
+        --teal-soft: #9de9df;
+        --card: #fff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 34px 0 44px;
+      }
+
+      header {
+        margin-bottom: 22px;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+        line-height: 1.08;
+      }
+
+      header p {
+        margin-top: 8px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .version-pill {
+        width: fit-content;
+        margin-bottom: 12px;
+        border: 1px solid rgba(15, 118, 110, 0.2);
+        border-radius: 8px;
+        padding: 8px 10px;
+        background: #ecfdf5;
+        color: var(--teal);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .sheet {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .concept {
+        min-height: 360px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 22px;
+        background: var(--card);
+        box-shadow: 0 18px 44px rgba(15, 23, 42, 0.07);
+      }
+
+      .concept h2 {
+        color: var(--teal);
+        font-size: 13px;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .logo-row {
+        min-height: 250px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        min-width: 0;
+      }
+
+      .panda {
+        width: 164px;
+        height: 164px;
+        flex: 0 0 auto;
+      }
+
+      .wordmark {
+        min-width: 0;
+        color: var(--ink);
+        font-size: 34px;
+        line-height: 1;
+        font-weight: 850;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .wordmark .accent {
+        color: var(--teal);
+      }
+
+      .concept:nth-child(2) .panda {
+        width: 176px;
+        height: 176px;
+      }
+
+      .concept:nth-child(3) .panda {
+        width: 178px;
+        height: 162px;
+      }
+
+      .concept:nth-child(4) .panda {
+        width: 144px;
+        height: 144px;
+      }
+
+      .note {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .ear,
+      .inner-ear,
+      .eye,
+      .eye-shine,
+      .brow,
+      .tuft,
+      .cheek,
+      .nose,
+      .mouth,
+      .play-accent {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      .concept:hover .ear {
+        transform: translateY(-2px);
+      }
+
+      .concept:hover .brow {
+        transform: translateY(-1px);
+      }
+
+      .concept:hover .tuft {
+        transform: rotate(-4deg) translateY(-2px);
+      }
+
+      .concept:hover .eye {
+        transform: scaleY(0.72);
+      }
+
+      .concept:hover .cheek {
+        opacity: 0.9;
+      }
+
+      .concept:hover .play-accent {
+        transform: translateX(3px);
+      }
+
+      .ear,
+      .inner-ear,
+      .eye,
+      .eye-shine,
+      .brow,
+      .tuft,
+      .cheek,
+      .play-accent {
+        transition: transform 180ms ease, opacity 180ms ease;
+      }
+
+      @media (max-width: 760px) {
+        main {
+          width: min(100% - 24px, 520px);
+          padding-top: 24px;
+        }
+
+        .sheet {
+          grid-template-columns: 1fr;
+        }
+
+        .concept {
+          min-height: 280px;
+          padding: 18px;
+        }
+
+        .logo-row {
+          min-height: 178px;
+          gap: 16px;
+        }
+
+        .panda {
+          width: 112px;
+          height: 112px;
+        }
+
+        .wordmark {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="version-pill">Panda Mascot Lab v2</div>
+        <h1>Liberty Panda Arcade Logo Concepts</h1>
+        <p>
+          Фокус здесь на самой панде: это не картинка, а маскот из отдельных
+          SVG-частей. Уши, глаза, брови, щеки, нос, рот и игровой акцент можно
+          анимировать независимо от надписи.
+        </p>
+      </header>
+
+      <section class="sheet" aria-label="Logo concepts">
+        <article class="concept">
+          <h2>Concept 1 · Calm Premium</h2>
+          <div class="logo-row">
+            <svg class="panda" viewBox="0 0 120 120" role="img" aria-label="Minimal panda mascot">
+              <circle class="ear" cx="31" cy="28" r="20" fill="#0f172a" />
+              <circle class="ear" cx="89" cy="28" r="20" fill="#0f172a" />
+              <circle class="inner-ear" cx="31" cy="28" r="11" fill="#0f766e" />
+              <circle class="inner-ear" cx="89" cy="28" r="11" fill="#0f766e" />
+              <ellipse cx="60" cy="65" rx="46" ry="38" fill="#fff" stroke="#0f172a" stroke-width="7" />
+              <path class="brow" d="M37 48c5-4 11-4 16 0" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" opacity=".55" />
+              <path class="brow" d="M67 48c5-4 11-4 16 0" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" opacity=".55" />
+              <ellipse class="eye" cx="44" cy="63" rx="12" ry="16" fill="#0f172a" />
+              <ellipse class="eye" cx="76" cy="63" rx="12" ry="16" fill="#0f172a" />
+              <circle class="eye-shine" cx="48" cy="57" r="4" fill="#fff" />
+              <circle class="eye-shine" cx="80" cy="57" r="4" fill="#fff" />
+              <ellipse class="nose" cx="60" cy="72" rx="8" ry="6" fill="#0f172a" />
+              <path class="mouth" d="M49 80c6 8 16 8 22 0" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+            </svg>
+            <div class="wordmark" aria-label="Liberty Panda Arcade wordmark">Liberty Panda <span class="accent">Arcade</span></div>
+          </div>
+          <p class="note">Спокойная панда для премиального вида. Хороша как основной бренд, меньше всего шумит.</p>
+        </article>
+
+        <article class="concept">
+          <h2>Concept 2 · Alive Header</h2>
+          <div class="logo-row">
+            <svg class="panda" viewBox="0 0 120 120" role="img" aria-label="Compact panda mascot">
+              <circle class="ear" cx="33" cy="32" r="18" fill="#0f172a" />
+              <circle class="ear" cx="87" cy="32" r="18" fill="#0f172a" />
+              <circle class="inner-ear" cx="33" cy="32" r="9" fill="#0f766e" />
+              <circle class="inner-ear" cx="87" cy="32" r="9" fill="#0f766e" />
+              <path d="M24 67c0-27 18-43 36-43s36 16 36 43c0 24-17 37-36 37S24 91 24 67Z" fill="#fff" stroke="#0f172a" stroke-width="7" />
+              <path class="tuft" d="M51 28c8-11 18-11 25-2-9-2-15 1-21 8Z" fill="#0f766e" />
+              <path class="brow" d="M38 48c5-5 12-5 17-1" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+              <path class="brow" d="M65 47c5-4 12-4 17 1" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+              <path class="eye" d="M39 58c-8 9-6 24 4 28 12 4 21-10 16-22-3-9-13-13-20-6Z" fill="#0f172a" />
+              <path class="eye" d="M81 58c8 9 6 24-4 28-12 4-21-10-16-22 3-9 13-13 20-6Z" fill="#0f172a" />
+              <circle class="eye-shine" cx="47" cy="63" r="4" fill="#fff" />
+              <circle class="eye-shine" cx="73" cy="63" r="4" fill="#fff" />
+              <circle class="eye-shine" cx="51" cy="70" r="2" fill="#9de9df" />
+              <circle class="eye-shine" cx="69" cy="70" r="2" fill="#9de9df" />
+              <ellipse class="cheek" cx="37" cy="80" rx="9" ry="5" fill="#9de9df" />
+              <ellipse class="cheek" cx="83" cy="80" rx="9" ry="5" fill="#9de9df" />
+              <ellipse class="nose" cx="60" cy="74" rx="8" ry="6" fill="#0f172a" />
+              <path class="mouth" d="M50 82c5 8 15 8 20 0" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+            </svg>
+            <div class="wordmark" aria-label="Liberty Panda Arcade wordmark">Liberty Panda <span class="accent">Arcade</span></div>
+          </div>
+          <p class="note">Ближе к понравившемуся второму варианту: живее, но всё ещё собрана из независимых деталей.</p>
+        </article>
+
+        <article class="concept">
+          <h2>Concept 3 · Smart Play</h2>
+          <div class="logo-row">
+            <svg class="panda" viewBox="0 0 132 120" role="img" aria-label="Panda mascot with play accent">
+              <circle class="ear" cx="32" cy="28" r="19" fill="#0f172a" />
+              <circle class="ear" cx="88" cy="28" r="19" fill="#0f172a" />
+              <circle class="inner-ear" cx="32" cy="28" r="10" fill="#0f766e" />
+              <circle class="inner-ear" cx="88" cy="28" r="10" fill="#0f766e" />
+              <ellipse cx="60" cy="64" rx="44" ry="37" fill="#fff" stroke="#0f172a" stroke-width="7" />
+              <path class="brow" d="M39 49l15-4" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+              <path class="brow" d="M66 45l15 4" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+              <ellipse class="eye" cx="45" cy="64" rx="12" ry="16" fill="#0f172a" />
+              <ellipse class="eye" cx="75" cy="64" rx="12" ry="16" fill="#0f172a" />
+              <circle class="eye-shine" cx="48" cy="58" r="4" fill="#fff" />
+              <circle class="eye-shine" cx="78" cy="58" r="4" fill="#fff" />
+              <ellipse class="cheek" cx="35" cy="78" rx="8" ry="5" fill="#9de9df" />
+              <ellipse class="cheek" cx="85" cy="78" rx="8" ry="5" fill="#9de9df" />
+              <ellipse class="nose" cx="60" cy="73" rx="8" ry="6" fill="#0f172a" />
+              <path class="mouth" d="M50 82c5 7 15 7 20 0" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+              <path class="play-accent" d="M106 52l20 12-20 12Z" fill="#0f766e" opacity=".92" />
+            </svg>
+            <div class="wordmark" aria-label="Liberty Panda Arcade wordmark">Liberty Panda <span class="accent">Arcade</span></div>
+          </div>
+          <p class="note">Игровой сигнал есть, но он отдельный от текста и от лица, его можно включать только в hover/loading.</p>
+        </article>
+
+        <article class="concept">
+          <h2>Concept 4 · Ultra Compact System</h2>
+          <div class="logo-row">
+            <svg class="panda" viewBox="0 0 120 120" role="img" aria-label="Compact modular panda mascot">
+              <circle class="ear" cx="33" cy="31" r="17" fill="#0f172a" />
+              <circle class="ear" cx="87" cy="31" r="17" fill="#0f172a" />
+              <circle class="inner-ear" cx="33" cy="31" r="9" fill="#0f766e" />
+              <circle class="inner-ear" cx="87" cy="31" r="9" fill="#0f766e" />
+              <ellipse cx="60" cy="64" rx="40" ry="34" fill="#fff" stroke="#0f172a" stroke-width="7" />
+              <path class="brow" d="M40 50c4-3 9-3 13 0" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" opacity=".65" />
+              <path class="brow" d="M67 50c4-3 9-3 13 0" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" opacity=".65" />
+              <ellipse class="eye" cx="46" cy="63" rx="10" ry="14" fill="#0f172a" />
+              <ellipse class="eye" cx="74" cy="63" rx="10" ry="14" fill="#0f172a" />
+              <circle class="eye-shine" cx="49" cy="58" r="3.5" fill="#fff" />
+              <circle class="eye-shine" cx="77" cy="58" r="3.5" fill="#fff" />
+              <ellipse class="nose" cx="60" cy="72" rx="7" ry="5" fill="#0f172a" />
+              <path class="mouth" d="M53 80c4 4 10 4 14 0" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round" />
+            </svg>
+            <div class="wordmark" aria-label="Liberty Panda Arcade wordmark">Liberty Panda <span class="accent">Arcade</span></div>
+          </div>
+          <p class="note">Самый удобный для шапки сайта: меньше высота, проще масштабируется, всё ещё можно анимировать.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
