@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=1240" />
     <meta name="theme-color" content="#0f172a" />
+    <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="../../icon-192.png" />
     <title>Crystal Front Demo — Liberty Panda Arcade</title>
     <style>
@@ -91,7 +92,13 @@
       }
       .build-actions {
         display: flex;
+        flex-wrap: wrap;
         gap: 8px;
+      }
+      .check-button.secondary-action {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
       }
       .side { display: grid; gap: 16px; }
       .card { border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 20px; box-shadow: 0 12px 30px rgba(15,23,42,.055); }
@@ -183,9 +190,13 @@
             <div class="build-actions">
               <button class="check-button" type="button" id="check-build">Check version</button>
               <button class="check-button" type="button" id="reload-game">Reload game</button>
+              <button class="check-button" type="button" id="install-shortcut">Phone shortcut</button>
+              <button class="check-button secondary-action" type="button" id="copy-direct-link">Copy direct link</button>
             </div>
             <div class="build-result" id="build-result">
               Нажми Check version, чтобы увидеть дату последнего обновления и ETag.
+              Phone shortcut добавит ярлык этой страницы игры на телефон, а
+              Copy direct link скопирует прямую ссылку на саму игру.
             </div>
           </section>
         </aside>
@@ -209,6 +220,15 @@
       const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
       const result = document.querySelector("#build-result");
       const frame = document.querySelector(".game-frame");
+      const installButton = document.querySelector("#install-shortcut");
+      const copyButton = document.querySelector("#copy-direct-link");
+      let installPrompt = null;
+
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        installPrompt = event;
+        installButton.disabled = false;
+      });
 
       function formatHeader(value) {
         return value || "not provided";
@@ -245,6 +265,47 @@
         frame.src = `${gameUrl}?reload=${Date.now()}`;
         result.innerHTML = "Embedded game reloaded with a fresh URL.";
       });
+
+      installButton.addEventListener("click", async () => {
+        if (installPrompt) {
+          installPrompt.prompt();
+          const choice = await installPrompt.userChoice;
+          installPrompt = null;
+          result.innerHTML = `
+            <strong>Phone shortcut:</strong> ${choice.outcome}<br>
+            Если ярлык появился на телефоне, он будет открывать страницу Crystal Front в хабе.
+          `;
+          return;
+        }
+
+        result.innerHTML = `
+          <strong>Phone shortcut</strong><br>
+          Android Chrome: открой меню браузера и выбери Add to Home screen или Install app.<br>
+          iPhone Safari: нажми Share и выбери Add to Home Screen.<br>
+          Ярлык откроет эту страницу Crystal Front в Liberty Panda Arcade.
+        `;
+      });
+
+      copyButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(gameUrl);
+          result.innerHTML = `
+            <strong>Direct game link copied:</strong><br>
+            ${gameUrl}
+          `;
+        } catch (error) {
+          result.innerHTML = `
+            <strong>Direct game link:</strong><br>
+            ${gameUrl}
+          `;
+        }
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+        });
+      }
     </script>
   </body>
 </html>
