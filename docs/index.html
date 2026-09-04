@@ -711,15 +711,16 @@
         .sidebar .nav {
           display: none;
           position: absolute;
-          top: calc(66px + env(safe-area-inset-top));
-          right: 14px;
-          width: min(300px, calc(100vw - 28px));
-          grid-template-columns: 1fr;
+          top: calc(12px + env(safe-area-inset-top));
+          right: 70px;
+          z-index: 3;
+          width: min(430px, calc(100vw - 94px));
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 6px;
           border: 1px solid var(--line);
           border-radius: 8px;
           padding: 8px;
-          background: #fff;
+          background: rgba(255, 255, 255, 0.96);
           box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
         }
 
@@ -733,12 +734,16 @@
 
         .nav a {
           min-height: 50px;
-          padding: 0 12px;
-          justify-content: flex-start;
-          flex-direction: row;
-          gap: 10px;
-          font-size: 14px;
-          line-height: 1;
+          padding: 6px;
+          justify-content: center;
+          flex-direction: column;
+          gap: 2px;
+          font-size: 11px;
+          line-height: 1.1;
+        }
+
+        .nav a[href="#settings"] {
+          display: none;
         }
 
         .main {
