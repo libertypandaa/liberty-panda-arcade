@@ -431,8 +431,11 @@
       }
 
       .dashboard-panel {
-        display: grid;
         gap: 16px;
+      }
+
+      .dashboard-panel.is-active {
+        display: grid;
       }
 
       .page-title {
@@ -1183,10 +1186,16 @@
       });
 
       document.querySelectorAll(".nav a").forEach((link) => {
-        link.addEventListener("click", () => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          const href = link.getAttribute("href");
           sidebar.classList.remove("menu-open");
           menuToggle.setAttribute("aria-expanded", "false");
-          showView(link.getAttribute("href"));
+          if (window.location.hash === href) {
+            showView(href);
+          } else {
+            window.location.hash = href;
+          }
         });
       });
 
