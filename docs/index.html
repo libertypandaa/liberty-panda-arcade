@@ -90,20 +90,22 @@
         align-items: center;
         gap: 12px;
         transition: opacity 220ms ease, transform 220ms ease;
+        min-width: 0;
       }
 
       .brand-mark {
         width: 48px;
         height: 48px;
-        border-radius: 8px;
+        border-radius: 0;
         display: grid;
         place-items: center;
         border: 0;
         padding: 0;
         background: transparent;
         color: var(--ink);
-        box-shadow: var(--shadow);
+        box-shadow: none;
         cursor: pointer;
+        transition: opacity 260ms ease, transform 260ms ease;
       }
 
       .brand-mark svg {
@@ -165,7 +167,8 @@
         .brand-mark .eye-shine,
         .brand-mark .nose,
         .brand-mark .mouth,
-        .brand-mark .play-accent {
+        .brand-mark .play-accent,
+        .brand-title .letter {
           transition: none;
           animation: none;
         }
@@ -176,7 +179,17 @@
         line-height: 1.04;
         font-weight: 820;
         letter-spacing: 0;
-        transition: opacity 220ms ease, transform 220ms ease;
+        white-space: nowrap;
+      }
+
+      .brand-title .letter {
+        display: inline-block;
+        transition: opacity 220ms ease, transform 260ms ease;
+        transition-delay: calc(var(--i) * 18ms);
+      }
+
+      .brand-title .space {
+        width: .28em;
       }
 
       .menu-toggle {
@@ -794,7 +807,7 @@
 
         .brand-title {
           max-width: 220px;
-          font-size: 20px;
+          font-size: clamp(16px, 4.8vw, 20px);
           line-height: 1.08;
           color: var(--ink);
         }
@@ -824,16 +837,16 @@
           display: grid;
         }
 
-        .sidebar.menu-open .brand {
+        .sidebar.menu-open .brand-mark {
           opacity: 0;
-          transform: translateX(-24px);
+          transform: translateX(-18px) scale(.92);
           pointer-events: none;
+          transition-delay: 280ms;
         }
 
-        .sidebar.menu-open .brand-title {
+        .sidebar.menu-open .brand-title .letter {
           opacity: 0;
-          transform: translateX(-22px);
-          pointer-events: none;
+          transform: translateX(-16px);
         }
 
         .sidebar .studio-card {
@@ -1210,8 +1223,24 @@
       const sidebar = document.querySelector(".sidebar");
       const menuToggle = document.querySelector(".menu-toggle");
       const mascotButton = document.querySelector(".brand-mark");
+      const brandTitle = document.querySelector(".brand-title");
       const navLinks = document.querySelectorAll(".nav a");
       const viewPanels = document.querySelectorAll(".view-panel");
+
+      function buildAnimatedWordmark() {
+        const text = brandTitle.textContent.trim();
+        brandTitle.setAttribute("aria-label", text);
+        brandTitle.textContent = "";
+
+        [...text].forEach((char, index) => {
+          const span = document.createElement("span");
+          span.className = char === " " ? "letter space" : "letter";
+          span.style.setProperty("--i", index);
+          span.textContent = char === " " ? "\u00a0" : char;
+          span.setAttribute("aria-hidden", "true");
+          brandTitle.appendChild(span);
+        });
+      }
 
       async function openGameFullscreen() {
         frame.src = `${gameUrl}?launch=${Date.now()}`;
@@ -1303,6 +1332,7 @@
       });
 
       window.addEventListener("hashchange", () => showView(window.location.hash));
+      buildAnimatedWordmark();
       showView(window.location.hash);
     </script>
   </body>
