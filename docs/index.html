@@ -1257,6 +1257,7 @@
       const brandTitle = document.querySelector(".brand-title");
       const navLinks = document.querySelectorAll(".nav a");
       const viewPanels = document.querySelectorAll(".view-panel");
+      let refreshingAfterUpdate = false;
 
       function buildAnimatedWordmark() {
         const text = brandTitle.textContent.trim();
@@ -1273,6 +1274,41 @@
           span.textContent = char === " " ? "\u00a0" : char;
           span.setAttribute("aria-hidden", "true");
           brandTitle.appendChild(span);
+        });
+      }
+
+      function registerUpdatingServiceWorker(path) {
+        if (!("serviceWorker" in navigator)) {
+          return;
+        }
+
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register(path).then((registration) => {
+            registration.update();
+
+            registration.addEventListener("updatefound", () => {
+              const worker = registration.installing;
+
+              if (!worker) {
+                return;
+              }
+
+              worker.addEventListener("statechange", () => {
+                if (worker.state === "installed" && navigator.serviceWorker.controller) {
+                  worker.postMessage({ type: "SKIP_WAITING" });
+                }
+              });
+            });
+          }).catch(() => {});
+        });
+
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshingAfterUpdate) {
+            return;
+          }
+
+          refreshingAfterUpdate = true;
+          window.location.reload();
         });
       }
 
@@ -1369,6 +1405,7 @@
       });
 
       window.addEventListener("hashchange", () => showView(window.location.hash));
+      registerUpdatingServiceWorker("./service-worker.js");
       buildAnimatedWordmark();
       showView(window.location.hash);
     </script>

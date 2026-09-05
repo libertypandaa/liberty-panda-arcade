@@ -1,12 +1,12 @@
-const CACHE_VERSION = "crystal-front-shell-2026-09-05-1";
+const CACHE_VERSION = "liberty-panda-arcade-shell-2026-09-05-1";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./install/",
-  "./install/index.html",
   "./manifest.webmanifest",
-  "../../assets/games/crystal-front-icon-192.png",
-  "../../assets/games/crystal-front-icon.png",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./assets/games/crystal-front-feature.png",
+  "./assets/games/crystal-front-icon-192.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -22,7 +22,7 @@ self.addEventListener("activate", (event) => {
     caches.keys()
       .then((keys) => Promise.all(
         keys
-          .filter((key) => key.startsWith("crystal-front-shell-") && key !== CACHE_VERSION)
+          .filter((key) => key.startsWith("liberty-panda-arcade-shell-") && key !== CACHE_VERSION)
           .map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())

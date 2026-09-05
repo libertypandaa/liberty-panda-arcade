@@ -276,6 +276,42 @@
       const frame = document.querySelector("#game-frame");
       const closeButton = document.querySelector("#close-game");
       let installPrompt = null;
+      let refreshingAfterUpdate = false;
+
+      function registerUpdatingServiceWorker(path) {
+        if (!("serviceWorker" in navigator)) {
+          return;
+        }
+
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register(path).then((registration) => {
+            registration.update();
+
+            registration.addEventListener("updatefound", () => {
+              const worker = registration.installing;
+
+              if (!worker) {
+                return;
+              }
+
+              worker.addEventListener("statechange", () => {
+                if (worker.state === "installed" && navigator.serviceWorker.controller) {
+                  worker.postMessage({ type: "SKIP_WAITING" });
+                }
+              });
+            });
+          }).catch(() => {});
+        });
+
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshingAfterUpdate) {
+            return;
+          }
+
+          refreshingAfterUpdate = true;
+          window.location.reload();
+        });
+      }
 
       function setStatus(message) {
         statusBox.innerHTML = message;
@@ -304,9 +340,7 @@
       });
 
       if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("../service-worker.js").catch(() => {});
-        });
+        registerUpdatingServiceWorker("../service-worker.js");
       }
 
       async function openGameFullscreen() {
