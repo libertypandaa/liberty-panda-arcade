@@ -301,6 +301,7 @@
     <script>
       const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
       const statusBox = document.querySelector("#status");
+      const installNote = document.querySelector(".note");
       const installButton = document.querySelector("#install-button");
       const overlay = document.querySelector("#game-overlay");
       const frame = document.querySelector("#game-frame");
@@ -411,6 +412,14 @@
 
         if (installed) {
           installButton.textContent = "Installed";
+          installNote.innerHTML = `
+            Crystal Front уже открыта как установленное веб-приложение.
+            Если после публикации появится новая версия, здесь появится кнопка Update app.
+          `;
+          setStatus(`
+            <strong>Crystal Front уже установлена.</strong><br>
+            Можно запускать игру кнопкой Play или ярлыком на главном экране.
+          `);
         }
       }
 
@@ -450,6 +459,14 @@
       window.addEventListener("appinstalled", () => {
         installState.textContent = "Yes";
         installButton.textContent = "Installed";
+        installNote.innerHTML = `
+          Crystal Front уже добавлена на главный экран.
+          Если после публикации появится новая версия, здесь появится кнопка Update app.
+        `;
+        setStatus(`
+          <strong>Crystal Front установлена.</strong><br>
+          Теперь можно запускать игру с главного экрана телефона.
+        `);
       });
 
       async function openGameFullscreen() {

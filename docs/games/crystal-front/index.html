@@ -456,6 +456,10 @@
 
         if (installed) {
           installButton.textContent = "Installed";
+          setInstallResult(`
+            <strong>Crystal Front уже установлена.</strong><br>
+            Можно запускать игру кнопкой Play или ярлыком на главном экране.
+          `);
         }
       }
 
@@ -494,6 +498,10 @@
       window.addEventListener("appinstalled", () => {
         installState.textContent = "Yes";
         installButton.textContent = "Installed";
+        setInstallResult(`
+          <strong>Crystal Front установлена.</strong><br>
+          Теперь можно запускать игру с главного экрана телефона.
+        `);
       });
 
       async function openGameFullscreen() {

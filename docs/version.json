@@ -1,6 +1,6 @@
 {
-  "version": "2026.09.08.1",
-  "build": "pwa-install-state",
+  "version": "2026.09.08.2",
+  "build": "installed-ui-copy",
   "releasedAt": "2026-09-08T00:00:00+03:00",
   "name": "Liberty Panda Arcade"
 }

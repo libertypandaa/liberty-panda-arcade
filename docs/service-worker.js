@@ -1,4 +1,4 @@
-const CACHE_VERSION = "liberty-panda-arcade-shell-2026-09-08-3";
+const CACHE_VERSION = "liberty-panda-arcade-shell-2026-09-08-4";
 const APP_SHELL = [
   "./",
   "./index.html",
