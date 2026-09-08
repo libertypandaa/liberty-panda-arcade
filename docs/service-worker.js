@@ -1,8 +1,9 @@
-const CACHE_VERSION = "liberty-panda-arcade-shell-2026-09-08-2";
+const CACHE_VERSION = "liberty-panda-arcade-shell-2026-09-08-3";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./version.json",
   "./icon-192.png",
   "./icon-512.png",
   "./assets/games/crystal-front-feature.png",
@@ -55,6 +56,7 @@ self.addEventListener("fetch", (event) => {
     request.mode === "navigate" ||
     acceptsHtml ||
     url.pathname.endsWith("/manifest.webmanifest") ||
+    url.pathname.endsWith("/version.json") ||
     url.pathname.endsWith("/service-worker.js");
 
   if (shouldPreferNetwork) {

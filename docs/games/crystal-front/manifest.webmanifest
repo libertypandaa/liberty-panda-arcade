@@ -4,6 +4,7 @@
   "description": "Запуск Crystal Front Demo через Liberty Panda Arcade.",
   "start_url": "./?launch=phone-shortcut",
   "scope": "./",
+  "id": "/liberty-panda-arcade/games/crystal-front/",
   "display": "standalone",
   "background_color": "#f7fbff",
   "theme_color": "#0f172a",

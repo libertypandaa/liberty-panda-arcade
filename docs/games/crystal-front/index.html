@@ -96,6 +96,26 @@
         font-size: 13px;
         line-height: 1.55;
       }
+      .app-status {
+        margin-top: 12px;
+        display: grid;
+        gap: 8px;
+      }
+      .status-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-top: 1px solid rgba(15, 118, 110, 0.14);
+        padding-top: 8px;
+      }
+      .status-row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+      .status-row strong {
+        color: var(--teal);
+      }
       .build-actions {
         display: flex;
         flex-wrap: wrap;
@@ -299,6 +319,11 @@
               Если браузер не откроет окно установки: Android Chrome — меню
               браузера → Add to Home screen / Install app. iPhone Safari —
               Share → Add to Home Screen.
+              <div class="app-status" aria-label="App install and version status">
+                <div class="status-row"><span>Installed</span><strong id="install-state">Checking</strong></div>
+                <div class="status-row"><span>Version</span><strong id="app-version">Checking</strong></div>
+                <div class="status-row"><span>Update</span><strong id="update-state">Checking</strong></div>
+              </div>
             </div>
           </section>
         </aside>
@@ -321,8 +346,14 @@
       const closeButton = document.querySelector("#close-game");
       const installButton = document.querySelector("#install-shortcut");
       const params = new URLSearchParams(window.location.search);
+      const installState = document.querySelector("#install-state");
+      const appVersion = document.querySelector("#app-version");
+      const updateState = document.querySelector("#update-state");
+      const versionUrl = "../../version.json";
+      const versionStorageKey = "liberty-panda-arcade:installed-version";
       let installPrompt = null;
       let refreshingAfterUpdate = false;
+      let updateAvailable = false;
 
       function registerUpdatingServiceWorker(path) {
         if (!("serviceWorker" in navigator)) {
@@ -362,32 +393,108 @@
       window.addEventListener("beforeinstallprompt", (event) => {
         event.preventDefault();
         installPrompt = event;
+        installButton.textContent = "Add to phone";
         installButton.disabled = false;
       });
 
+      function setInstallResult(message) {
+        const appStatus = document.querySelector(".app-status");
+        installResult.innerHTML = message;
+
+        if (appStatus) {
+          installResult.appendChild(appStatus);
+        }
+      }
+
       installButton.addEventListener("click", async () => {
+        if (updateAvailable) {
+          await refreshApp();
+          return;
+        }
+
         if (installPrompt) {
           installPrompt.prompt();
           const choice = await installPrompt.userChoice;
           installPrompt = null;
-          installResult.innerHTML = `
+          installButton.textContent = choice.outcome === "accepted" ? "Installed" : "Add to phone";
+          setInstallResult(`
             <strong>Install prompt:</strong> ${choice.outcome}<br>
             Если ярлык появился на телефоне, он будет сразу открывать Crystal Front.
-          `;
+          `);
           return;
         }
 
-        installResult.innerHTML = `
+        setInstallResult(`
           <strong>Install from browser menu</strong><br>
           Android Chrome: открой меню браузера и выбери Add to Home screen или Install app.<br>
           iPhone Safari: нажми Share и выбери Add to Home Screen.<br>
           Ярлык будет сразу открывать Crystal Front.
-        `;
+        `);
       });
 
       if ("serviceWorker" in navigator) {
         registerUpdatingServiceWorker("./service-worker.js");
       }
+
+      function isStandaloneApp() {
+        return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      }
+
+      async function detectInstalledState() {
+        let installed = isStandaloneApp();
+
+        if (!installed && "getInstalledRelatedApps" in navigator) {
+          try {
+            const relatedApps = await navigator.getInstalledRelatedApps();
+            installed = relatedApps.length > 0;
+          } catch (error) {
+            installed = false;
+          }
+        }
+
+        installState.textContent = installed ? "Yes" : "Not detected";
+
+        if (installed) {
+          installButton.textContent = "Installed";
+        }
+      }
+
+      async function checkAppVersion() {
+        try {
+          const response = await fetch(`${versionUrl}?t=${Date.now()}`, { cache: "no-store" });
+          const info = await response.json();
+          const previousVersion = localStorage.getItem(versionStorageKey);
+          updateAvailable = Boolean(previousVersion && previousVersion !== info.version);
+
+          appVersion.textContent = info.version;
+          updateState.textContent = updateAvailable ? "Available" : "Current";
+          localStorage.setItem(versionStorageKey, info.version);
+
+          if (updateAvailable) {
+            installButton.textContent = "Update app";
+          }
+        } catch (error) {
+          appVersion.textContent = "Unknown";
+          updateState.textContent = "Offline";
+        }
+      }
+
+      async function refreshApp() {
+        if ("serviceWorker" in navigator) {
+          const registration = await navigator.serviceWorker.getRegistration();
+
+          if (registration) {
+            await registration.update();
+          }
+        }
+
+        window.location.reload();
+      }
+
+      window.addEventListener("appinstalled", () => {
+        installState.textContent = "Yes";
+        installButton.textContent = "Installed";
+      });
 
       async function openGameFullscreen() {
         frame.src = `${gameUrl}?launch=${Date.now()}`;
@@ -422,6 +529,9 @@
           openGameFullscreen();
         });
       }
+
+      detectInstalledState();
+      checkAppVersion();
     </script>
   </body>
 </html>

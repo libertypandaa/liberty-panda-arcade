@@ -675,6 +675,22 @@
         padding: 20px;
       }
 
+      .app-health {
+        border-color: rgba(15, 118, 110, 0.22);
+        background: linear-gradient(180deg, #ffffff, #f0fdfa);
+      }
+
+      .update-button {
+        width: 100%;
+        margin-top: 16px;
+        background: var(--teal);
+        color: #fff;
+      }
+
+      .update-button[hidden] {
+        display: none;
+      }
+
       .rank-row,
       .achievement {
         display: flex;
@@ -1075,7 +1091,7 @@
                   <button class="button primary play-game" type="button">
                     ▶ Play
                   </button>
-                  <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
+                  <a class="button secondary" data-install-link href="./games/crystal-front/install/">Add to phone</a>
                 </div>
               </div>
             </article>
@@ -1111,7 +1127,7 @@
                     <div class="bar"><div class="fill" style="width: 60%"></div></div>
                   </div>
                   <button class="button primary play-game" type="button">Play</button>
-                  <a class="button secondary" href="./games/crystal-front/install/">Add to phone</a>
+                  <a class="button secondary" data-install-link href="./games/crystal-front/install/">Add to phone</a>
                 </div>
               </article>
 
@@ -1233,6 +1249,13 @@
               <div class="rank-row"><span>Phone install</span><strong>Enabled</strong></div>
               <div class="rank-row"><span>Notifications</span><strong>Later</strong></div>
             </article>
+            <article class="card side-card app-health">
+              <h3>App status</h3>
+              <div class="rank-row"><span>Installed</span><strong id="install-state">Checking</strong></div>
+              <div class="rank-row"><span>Version</span><strong id="app-version">Checking</strong></div>
+              <div class="rank-row"><span>Update</span><strong id="update-state">Checking</strong></div>
+              <button class="button update-button" type="button" id="update-app" hidden>Update app</button>
+            </article>
           </section>
         </section>
       </section>
@@ -1257,7 +1280,15 @@
       const brandTitle = document.querySelector(".brand-title");
       const navLinks = document.querySelectorAll(".nav a");
       const viewPanels = document.querySelectorAll(".view-panel");
+      const installState = document.querySelector("#install-state");
+      const appVersion = document.querySelector("#app-version");
+      const updateState = document.querySelector("#update-state");
+      const updateAppButton = document.querySelector("#update-app");
+      const installLinks = document.querySelectorAll("[data-install-link]");
+      const versionUrl = "./version.json";
+      const versionStorageKey = "liberty-panda-arcade:installed-version";
       let refreshingAfterUpdate = false;
+      let versionInfo = null;
 
       function buildAnimatedWordmark() {
         const text = brandTitle.textContent.trim();
@@ -1310,6 +1341,65 @@
           refreshingAfterUpdate = true;
           window.location.reload();
         });
+      }
+
+      function isStandaloneApp() {
+        return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      }
+
+      async function detectInstalledState() {
+        let installed = isStandaloneApp();
+
+        if (!installed && "getInstalledRelatedApps" in navigator) {
+          try {
+            const relatedApps = await navigator.getInstalledRelatedApps();
+            installed = relatedApps.length > 0;
+          } catch (error) {
+            installed = false;
+          }
+        }
+
+        installState.textContent = installed ? "Yes" : "Not detected";
+
+        if (installed) {
+          installLinks.forEach((link) => {
+            link.textContent = "Installed";
+          });
+        }
+
+        return installed;
+      }
+
+      async function checkAppVersion() {
+        try {
+          const response = await fetch(`${versionUrl}?t=${Date.now()}`, { cache: "no-store" });
+          versionInfo = await response.json();
+          const previousVersion = localStorage.getItem(versionStorageKey);
+          const updateAvailable = Boolean(previousVersion && previousVersion !== versionInfo.version);
+
+          appVersion.textContent = versionInfo.version;
+          updateState.textContent = updateAvailable ? "Available" : "Current";
+          updateAppButton.hidden = !updateAvailable;
+          localStorage.setItem(versionStorageKey, versionInfo.version);
+
+          return updateAvailable;
+        } catch (error) {
+          appVersion.textContent = "Unknown";
+          updateState.textContent = "Offline";
+          return false;
+        }
+      }
+
+      async function refreshApp() {
+        if ("serviceWorker" in navigator) {
+          const registration = await navigator.serviceWorker.getRegistration();
+
+          if (registration) {
+            await registration.update();
+          }
+        }
+
+        window.location.reload();
       }
 
       async function openGameFullscreen() {
@@ -1405,9 +1495,18 @@
       });
 
       window.addEventListener("hashchange", () => showView(window.location.hash));
+      updateAppButton.addEventListener("click", refreshApp);
+      window.addEventListener("appinstalled", () => {
+        installState.textContent = "Yes";
+        installLinks.forEach((link) => {
+          link.textContent = "Installed";
+        });
+      });
       registerUpdatingServiceWorker("./service-worker.js");
       buildAnimatedWordmark();
       showView(window.location.hash);
+      detectInstalledState();
+      checkAppVersion();
     </script>
   </body>
 </html>
