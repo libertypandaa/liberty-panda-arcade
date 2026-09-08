@@ -2,7 +2,7 @@
   "name": "Crystal Front Demo",
   "short_name": "Crystal Front",
   "description": "Запуск Crystal Front Demo через Liberty Panda Arcade.",
-  "start_url": "./?source=phone-shortcut",
+  "start_url": "./?launch=phone-shortcut",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f7fbff",

@@ -320,6 +320,7 @@
       const frame = document.querySelector("#game-frame");
       const closeButton = document.querySelector("#close-game");
       const installButton = document.querySelector("#install-shortcut");
+      const params = new URLSearchParams(window.location.search);
       let installPrompt = null;
       let refreshingAfterUpdate = false;
 
@@ -371,7 +372,7 @@
           installPrompt = null;
           installResult.innerHTML = `
             <strong>Install prompt:</strong> ${choice.outcome}<br>
-            Если ярлык появился на телефоне, он будет открывать страницу Crystal Front в хабе.
+            Если ярлык появился на телефоне, он будет сразу открывать Crystal Front.
           `;
           return;
         }
@@ -380,7 +381,7 @@
           <strong>Install from browser menu</strong><br>
           Android Chrome: открой меню браузера и выбери Add to Home screen или Install app.<br>
           iPhone Safari: нажми Share и выбери Add to Home Screen.<br>
-          Ярлык откроет эту страницу Crystal Front в Liberty Panda Arcade.
+          Ярлык будет сразу открывать Crystal Front.
         `;
       });
 
@@ -415,6 +416,12 @@
       });
 
       closeButton.addEventListener("click", closeGame);
+
+      if (params.has("launch")) {
+        window.addEventListener("load", () => {
+          openGameFullscreen();
+        });
+      }
     </script>
   </body>
 </html>
