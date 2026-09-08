@@ -1,4 +1,4 @@
-const CACHE_VERSION = "liberty-panda-arcade-shell-2026-09-05-1";
+const CACHE_VERSION = "liberty-panda-arcade-shell-2026-09-08-1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,6 +6,8 @@ const APP_SHELL = [
   "./icon-192.png",
   "./icon-512.png",
   "./assets/games/crystal-front-feature.png",
+  "./assets/games/crystal-front-app-icon-192-v2.png",
+  "./assets/games/crystal-front-app-icon-512-v2.png",
   "./assets/games/crystal-front-icon-192.png",
 ];
 

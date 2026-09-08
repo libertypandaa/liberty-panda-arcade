@@ -1,10 +1,12 @@
-const CACHE_VERSION = "crystal-front-shell-2026-09-05-1";
+const CACHE_VERSION = "crystal-front-shell-2026-09-08-1";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./install/",
   "./install/index.html",
   "./manifest.webmanifest",
+  "../../assets/games/crystal-front-app-icon-192-v2.png",
+  "../../assets/games/crystal-front-app-icon-512-v2.png",
   "../../assets/games/crystal-front-icon-192.png",
   "../../assets/games/crystal-front-icon.png",
 ];
