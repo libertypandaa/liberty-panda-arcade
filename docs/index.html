@@ -11,6 +11,9 @@
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./icon-192.png" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="./auth-config.js" defer></script>
+    <script src="./auth.js" defer></script>
     <title>Liberty Panda Arcade</title>
     <style>
       :root {
@@ -636,10 +639,13 @@
         height: 64px;
         border-radius: 8px;
         background: #ecfdf5;
+        background-size: cover;
+        background-position: center;
         display: grid;
         place-items: center;
         color: var(--teal);
         font-size: 28px;
+        font-weight: 820;
       }
 
       .metrics {
@@ -689,6 +695,24 @@
 
       .update-button[hidden] {
         display: none;
+      }
+
+      .auth-actions {
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .auth-actions button[hidden] {
+        display: none;
+      }
+
+      .auth-note {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
       }
 
       .rank-row,
@@ -1184,10 +1208,10 @@
           </div>
           <section class="card profile">
             <div class="profile-top">
-              <span class="avatar">LP</span>
+              <span class="avatar" data-auth-avatar>LP</span>
               <div>
-                <h2>PandaDev</h2>
-                <p class="muted">Тестовый профиль игрока для будущей авторизации.</p>
+                <h2 data-auth-name>Guest player</h2>
+                <p class="muted" data-auth-email>Sign in with Google to sync progress</p>
               </div>
             </div>
             <div class="metrics">
@@ -1195,6 +1219,11 @@
               <div class="metric"><strong>14h</strong><span>Play time</span></div>
               <div class="metric"><strong>#2</strong><span>Rank</span></div>
             </div>
+            <div class="auth-actions">
+              <button class="button primary" type="button" data-auth-action="sign-in">Sign in with Google</button>
+              <button class="button secondary" type="button" data-auth-action="sign-out" hidden>Sign out</button>
+            </div>
+            <p class="auth-note">Auth status: <strong data-auth-status>Checking</strong></p>
           </section>
           <section class="dashboard-grid">
             <article class="card side-card">
@@ -1239,9 +1268,10 @@
           <section class="dashboard-grid">
             <article class="card side-card">
               <h3>Profile settings</h3>
-              <div class="rank-row"><span>Nickname</span><strong>PandaDev</strong></div>
+              <div class="rank-row"><span>Nickname</span><strong data-auth-name>Guest player</strong></div>
               <div class="rank-row"><span>Language</span><strong>Русский</strong></div>
-              <div class="rank-row"><span>Account</span><strong>Guest</strong></div>
+              <div class="rank-row"><span>Account</span><strong data-auth-account>Guest</strong></div>
+              <div class="rank-row"><span>Auth</span><strong data-auth-status>Checking</strong></div>
             </article>
             <article class="card side-card">
               <h3>Game preferences</h3>
