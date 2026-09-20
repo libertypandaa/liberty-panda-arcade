@@ -1223,7 +1223,15 @@
               <button class="button primary" type="button" data-auth-action="sign-in">Sign in with Google</button>
               <button class="button secondary" type="button" data-auth-action="sign-out" hidden>Sign out</button>
             </div>
-            <p class="auth-note">Auth status: <strong data-auth-status>Checking</strong></p>
+            <p class="auth-note" role="status">Auth status: <strong data-auth-status>Checking</strong></p>
+            <form data-profile-form hidden>
+              <label for="profile-nickname">Nickname</label>
+              <div class="auth-actions">
+                <input id="profile-nickname" data-profile-name name="nickname" autocomplete="nickname" minlength="2" maxlength="40" required style="min-width:0;max-width:100%;padding:12px;border:1px solid #cbd5d1;border-radius:6px;font:inherit">
+                <button class="button secondary" type="submit">Save</button>
+              </div>
+            </form>
+            <p class="auth-note" data-profile-status role="status">Sign in to manage your profile</p>
           </section>
           <section class="dashboard-grid">
             <article class="card side-card">
