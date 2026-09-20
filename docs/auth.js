@@ -158,6 +158,7 @@
     if (error) throw error;
     } catch (_) {
       setStatus('Google sign-in unavailable. Please try again later.');
+      window.HubStats?.track('auth_error');
     } finally {
       signInButtons.forEach((button) => { button.disabled = false; });
     }
@@ -201,7 +202,7 @@
       return;
     }
 
-    client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey, {
+    client = window.HubClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey, {
       auth: {
         autoRefreshToken: true,
         persistSession: true,

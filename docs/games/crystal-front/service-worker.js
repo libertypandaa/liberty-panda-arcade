@@ -1,4 +1,4 @@
-const CACHE_VERSION = "crystal-front-shell-2026-09-08-4";
+const CACHE_VERSION = "crystal-front-shell-2026-09-20-1";
 const APP_SHELL = [
   "./",
   "./index.html",

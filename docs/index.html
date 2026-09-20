@@ -14,6 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="./auth-config.js" defer></script>
     <script src="./auth.js" defer></script>
+    <script src="./stats.js" defer></script>
     <title>Liberty Panda Arcade</title>
     <style>
       :root {
@@ -1106,11 +1107,10 @@
                 alt="Crystal Front Demo preview"
               />
               <div class="feature-content">
-                <span class="pill">↻ Last played</span>
+                <span class="pill" data-stats-feature>Featured game</span>
                 <h2>Crystal Front Demo</h2>
                 <p>
-                  Продолжить тактическую кристальную дуэль с того места, где
-                  игрок остановился в прошлый раз.
+                  Тактическая кристальная дуэль. Запусти игру прямо в браузере.
                 </p>
                 <div class="actions">
                   <button class="button primary play-game" type="button">
@@ -1216,9 +1216,9 @@
               </div>
             </div>
             <div class="metrics">
-              <div class="metric"><strong>1,620</strong><span>Points</span></div>
-              <div class="metric"><strong>14h</strong><span>Play time</span></div>
-              <div class="metric"><strong>#2</strong><span>Rank</span></div>
+              <div class="metric"><strong data-stats-launches>—</strong><span>Запуски</span></div>
+              <div class="metric"><strong data-stats-visits>—</strong><span>Посещения</span></div>
+              <div class="metric"><strong>—</strong><span>Rank</span></div>
             </div>
             <div class="auth-actions">
               <button class="button primary" type="button" data-auth-action="sign-in">Sign in with Google</button>
@@ -1238,20 +1238,16 @@
           <section class="dashboard-grid">
             <article class="card side-card">
               <h3>Player status</h3>
-              <div class="rank-row"><span>Last game</span><strong>Crystal Front</strong></div>
+              <div class="rank-row"><span>Last game</span><strong data-stats-last>—</strong></div>
               <div class="rank-row"><span>Session</span><strong>Ready</strong></div>
               <div class="rank-row"><span>Library</span><strong>3 games</strong></div>
             </article>
             <article class="card side-card">
               <h3>Recent achievements</h3>
-              <div class="achievement">
-                <span class="badge">★</span>
-                <div><strong>First Sync</strong><p class="muted">Save your first run</p></div>
-              </div>
-              <div class="achievement">
-                <span class="badge">◆</span>
-                <div><strong>Crystal Signal</strong><p class="muted">Open Crystal Front</p></div>
-              </div>
+              <p class="muted">Достижений пока нет</p>
+              <h3>История запусков</h3>
+              <p data-stats-status role="status">Загрузка статистики</p>
+              <ul data-stats-history></ul>
             </article>
           </section>
         </section>
@@ -1263,10 +1259,7 @@
           </div>
           <section class="card side-card">
             <h3>Crystal Front Demo</h3>
-            <div class="rank-row"><span>1. CrystalFox</span><strong>2450</strong></div>
-            <div class="rank-row"><span>2. PandaDev</span><strong>1620</strong></div>
-            <div class="rank-row"><span>3. FrontRunner</span><strong>1180</strong></div>
-            <div class="rank-row"><span>4. CastleWatch</span><strong>940</strong></div>
+            <p class="muted">Подтверждённых результатов пока нет</p>
           </section>
         </section>
 
@@ -1278,6 +1271,9 @@
           <section class="dashboard-grid">
             <article class="card side-card">
               <h3>Profile settings</h3>
+              <p><label><input type="checkbox" data-stats-consent> Разрешить статистику посещений и запусков</label></p>
+              <button type="button" class="button secondary" data-stats-delete>Удалить мою статистику</button>
+              <p data-stats-status role="status"></p>
               <div class="rank-row"><span>Nickname</span><strong data-auth-name>Guest player</strong></div>
               <div class="rank-row"><span>Language</span><strong>Русский</strong></div>
               <div class="rank-row"><span>Account</span><strong data-auth-account>Guest</strong></div>
@@ -1290,6 +1286,12 @@
               <div class="rank-row"><span>Notifications</span><strong>Later</strong></div>
             </article>
             <article class="card side-card app-health">
+              <section data-stats-admin hidden>
+                <h3>Статистика хаба</h3>
+                <p class="muted">Учитываются согласившиеся посетители. Гость — браузер, аккаунт — пользователь; они не объединяются. Посещения разделены минимум 30 минутами. Возвраты считаются по дням UTC.</p>
+                <button type="button" class="button secondary" data-stats-refresh>Обновить статистику</button>
+                <div data-stats-report></div>
+              </section>
               <h3>App status</h3>
               <div class="rank-row"><span>Installed</span><strong id="install-state">Checking</strong></div>
               <div class="rank-row"><span>Version</span><strong id="app-version">Checking</strong></div>
