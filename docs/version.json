@@ -1,6 +1,6 @@
 {
-  "version": "2026.09.20.4",
-  "build": "consent-based-guest-statistics",
+  "version": "2026.09.20.5",
+  "build": "game-analytics-sdk-v1",
   "releasedAt": "2026-09-20T00:00:00+03:00",
   "name": "Liberty Panda Arcade"
 }

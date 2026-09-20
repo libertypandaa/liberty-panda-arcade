@@ -53,6 +53,14 @@ test('no guest identifier or events before consent', async () => {
   assert.equal(s.storage.has('lpa:guest-secret'), false);
 });
 
+test('old limited consent does not authorize expanded gameplay collection', async () => {
+  const s = setup(new Map([['lpa:analytics-consent','yes']]));
+  s.auth(null); await new Promise(r => setTimeout(r, 10));
+  s.window.HubStats.gameEvent(randomUUID(),'session_start',{}); await flush();
+  assert.equal(s.calls.length,0);
+  assert.equal(s.window.HubStats.enabled(),false);
+});
+
 test('consented guest identity persists across visits', async () => {
   const s = setup(); s.auth(null); s.allow(); await flush();
   const first = s.calls.find(c => c.name === 'record_hub_event');
@@ -64,7 +72,7 @@ test('consented guest identity persists across visits', async () => {
 
 test('opt-out from another tab stops events and updates checkbox', async () => {
   const s = setup(); s.auth(null); s.allow(); await flush();
-  s.listeners.storage({ key: 'lpa:analytics-consent', newValue: 'no' });
+  s.listeners.storage({ key: 'lpa:analytics-consent-v2', newValue: 'no' });
   const count = s.calls.length;
   s.window.HubStats.track('launch'); await flush();
   assert.equal(s.calls.length, count);
@@ -72,21 +80,21 @@ test('opt-out from another tab stops events and updates checkbox', async () => {
 });
 
 test('authenticated events never submit the guest identity', async () => {
-  const s = setup(new Map([['lpa:analytics-consent','yes']]));
+  const s = setup(new Map([['lpa:analytics-consent-v2','yes']]));
   s.auth('account'); await new Promise(r => setTimeout(r, 10));
   assert.equal(s.calls.find(c => c.name === 'record_hub_event').args.p_guest, null);
   assert.equal(s.storage.has('lpa:guest-secret'), false);
 });
 
 test('early launch is counted once when auth initialization finishes', async () => {
-  const s = setup(new Map([['lpa:analytics-consent','yes']]), true);
+  const s = setup(new Map([['lpa:analytics-consent-v2','yes']]), true);
   s.open(); s.auth(null); await new Promise(r => setTimeout(r, 10));
   s.open(); await flush();
   assert.equal(s.calls.filter(c => c.args?.p_kind === 'launch').length, 1);
 });
 
 test('game readiness requires the active iframe source and trusted origin', async () => {
-  const s = setup(new Map([['lpa:analytics-consent','yes']]), true);
+  const s = setup(new Map([['lpa:analytics-consent-v2','yes']]), true);
   s.auth(null); s.open(); await new Promise(r => setTimeout(r, 10));
   const event = { data: { type: 'game_ready' }, source: s.frame.contentWindow, origin: 'https://libertypandaa.github.io' };
   s.listeners.message({ ...event, origin: 'https://other.test' });

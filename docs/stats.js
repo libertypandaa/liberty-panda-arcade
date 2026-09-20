@@ -2,7 +2,7 @@
   const config = window.LIBERTY_PANDA_AUTH_CONFIG;
   if (!config || !window.supabase) return;
   const client = window.HubClient || window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
-  const key = 'lpa:analytics-consent';
+  const key = 'lpa:analytics-consent-v2';
   const guestKey = 'lpa:guest-secret';
   const read = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
   const write = (k, v) => { try { localStorage.setItem(k, v); } catch { /* Session-only choice when storage is unavailable. */ } };
@@ -13,6 +13,9 @@
   let generation = 0;
   let chain = Promise.resolve();
   let lastActor = null;
+  const subscribers = new Set();
+  const notify = () => subscribers.forEach(fn => fn());
+  let pendingGameEvents = 0;
   const game = 'crystal-front-demo';
   const setText = (selector, value) => document.querySelectorAll(selector).forEach(n => { n.textContent = value; });
   function identity() {
@@ -30,6 +33,7 @@
     setText('[data-stats-launches]', '—'); setText('[data-stats-visits]', '—');
     setText('[data-stats-last]', '—');
     document.querySelector('[data-stats-history]')?.replaceChildren();
+    document.querySelector('[data-game-stats]')?.replaceChildren();
   }
   async function refresh() {
     if (!consent || !ready) return;
@@ -51,6 +55,12 @@
       }
     }
     status(userId ? 'Статистика аккаунта' : 'Статистика этого браузера');
+    const output = document.querySelector('[data-game-stats]');
+    if (output) {
+      const result = await client.rpc('my_game_stats', { p_guest: identity() });
+      if (version !== generation || result.error) return;
+      renderGames(output, result.data);
+    }
   }
   function track(kind, gameId = null) {
     if (!consent || !ready) return;
@@ -64,7 +74,43 @@
       await refresh();
     }).catch(() => { status('Статистика временно недоступна'); });
   }
-  window.HubStats = { track };
+  function gameEvent(session, name, data, id = crypto.randomUUID()) {
+    if (!consent || !ready || pendingGameEvents >= 120) return;
+    const version = generation;
+    const args = { p_id: id, p_guest: identity(), p_session: session, p_game: game, p_name: name, p_data: data };
+    pendingGameEvents++;
+    chain = chain.catch(() => {}).then(async () => {
+      if (generation !== version || !consent) return;
+      const result = await client.rpc('record_game_event', args);
+      if (generation !== version) return;
+      if (result.error) { status('Игровое событие не сохранено'); return; }
+      if (['session_end','match_end','achievement'].includes(name)) await refresh();
+    }).catch(() => status('Игровая статистика недоступна')).finally(() => { pendingGameEvents--; });
+  }
+  window.HubStats = { track, gameEvent, enabled: () => consent && ready,
+    context: () => generation, subscribe: fn => subscribers.add(fn) };
+  function renderGames(output, data) {
+    output.replaceChildren();
+    const labels = { players:'Игроки / браузеры',sessions:'Запуски сессий',loaded:'Загруженные сессии',loadRate:'Доля загрузок, %',
+      avgLoadMs:'Средняя загрузка, мс',p95LoadMs:'95-й процентиль загрузки, мс',activeSeconds:'Активное время, сек',
+      avgActiveSeconds:'Среднее активное время сессии, сек',ended:'Закрытые сессии',unfinished:'Сессии без закрытия (>24 ч)',
+      matches:'Начатые матчи',completed:'Завершённые матчи',wins:'Победы',losses:'Поражения',draws:'Ничьи',
+      abandoned:'Прерванные матчи',unresolved:'Матчи без результата (>24 ч)',winRate:'Победы среди завершённых, %',
+      avgScore:'Средний счёт завершённых матчей',achievements:'Открытия достижений',errors:'Ошибки игры' };
+    for (const item of data || []) {
+      const title = document.createElement('h3'); title.textContent = item.game; output.append(title);
+      for (const [key,label] of Object.entries(labels)) {
+        const row = document.createElement('p'); row.textContent = `${label}: ${item[key] ?? 'нет данных'}`; output.append(row);
+      }
+      for (const [key,label] of [['tutorial','Обучение'],['progress','Прогресс'],['custom','Собственные события'],['unlocks','Достижения'],['errorCodes','Коды ошибок']]) {
+        const heading = document.createElement('h4'); heading.textContent = label; output.append(heading);
+        for (const entry of item[key] || []) {
+          const row = document.createElement('p'); row.textContent = Object.entries(entry).map(([k,v]) => `${k}: ${v}`).join(' · '); output.append(row);
+        }
+      }
+    }
+    if (!data?.length) { const row = document.createElement('p'); row.textContent = 'Игровых событий пока нет'; output.append(row); }
+  }
   function visit() {
     if (!ready || !consent) return;
     const actor = userId || identity();
@@ -75,7 +121,7 @@
   notice.setAttribute('aria-label', 'Статистика посещений');
   notice.style.cssText = 'position:fixed;bottom:12px;left:12px;right:12px;z-index:10000;background:white;color:#17212b;border:1px solid #b8cec8;padding:16px;box-shadow:0 4px 20px #0002;max-width:620px;border-radius:6px;font:15px/1.5 system-ui';
   const text = document.createElement('p');
-  text.textContent = 'Разрешить статистику посещений и запусков? Случайный код в браузере помогает узнавать возвращения. Игры доступны и без статистики.';
+  text.textContent = 'Разрешить статистику посещений, запусков и игры: активное время, матчи, прогресс, достижения и игровые события? Данные сохраняются в Supabase. Случайный код узнаёт гостевой браузер. Можно играть без статистики.';
   notice.append(text);
   const privacy = document.createElement('a');
   privacy.href = new URL('privacy/', document.currentScript.src).href;
@@ -87,6 +133,7 @@
     button.style.cssText = 'padding:10px 14px;margin:4px;border:1px solid #08776e;border-radius:4px;background:white;color:#08776e;cursor:pointer';
     button.addEventListener('click', () => {
       consent = enabled; generation++; lastActor = null;
+      notify();
       write(key, enabled ? 'yes' : 'no'); notice.hidden = true;
       document.querySelectorAll('[data-stats-consent]').forEach(n => { n.checked = enabled; });
       if (enabled) { visit(); observeLaunch(); } else { resetDisplay(); status('Статистика отключена'); }
@@ -100,6 +147,7 @@
     n.checked = consent;
     n.addEventListener('change', () => {
       consent = n.checked; generation++; lastActor = null;
+      notify();
       write(key, consent ? 'yes' : 'no'); notice.hidden = true;
       if (consent) { visit(); observeLaunch(); } else { resetDisplay(); status('Статистика отключена'); }
     });
@@ -108,6 +156,7 @@
     if (!ready) return;
     const version = ++generation;
     consent = false; write(key, 'no'); notice.hidden = true;
+    notify();
     document.querySelectorAll('[data-stats-consent]').forEach(n => { n.checked = false; });
     event.target.disabled = true;
     try {
@@ -123,6 +172,7 @@
   window.addEventListener('storage', (event) => {
     if (event.key !== key) return;
     consent = event.newValue === 'yes'; generation++; lastActor = null;
+    notify();
     notice.hidden = event.newValue !== null;
     document.querySelectorAll('[data-stats-consent]').forEach(n => { n.checked = consent; });
     if (consent) { visit(); observeLaunch(); } else { resetDisplay(); status('Статистика отключена'); }
@@ -147,13 +197,17 @@
       output.append(row);
     }
     admin.hidden = false;
+    const games = await client.rpc('admin_game_stats');
+    if (version !== generation || games.error) return;
+    const section = document.createElement('section');
+    renderGames(section, games.data); output.append(section);
   }
   document.querySelector('[data-stats-refresh]')?.addEventListener('click', () => loadAdmin().catch(() => {}));
   client.auth.onAuthStateChange((_event, session) => {
     const next = session?.user?.id || null;
     if (ready && next === userId) return;
     userId = next; ready = true; generation++; resetDisplay();
-    setTimeout(() => { visit(); observeLaunch(); refresh().catch(() => {}); loadAdmin().catch(() => {}); }, 0);
+    setTimeout(() => { notify(); visit(); observeLaunch(); refresh().catch(() => {}); loadAdmin().catch(() => {}); }, 0);
   });
   document.addEventListener('click', event => {
     if (event.target.closest('[data-install-link]')) track('install_click', game);

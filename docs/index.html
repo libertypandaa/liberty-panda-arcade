@@ -15,6 +15,7 @@
     <script src="./auth-config.js" defer></script>
     <script src="./auth.js" defer></script>
     <script src="./stats.js" defer></script>
+    <script src="./game-analytics-host.js" defer></script>
     <title>Liberty Panda Arcade</title>
     <style>
       :root {
@@ -1243,11 +1244,12 @@
               <div class="rank-row"><span>Library</span><strong>3 games</strong></div>
             </article>
             <article class="card side-card">
-              <h3>Recent achievements</h3>
-              <p class="muted">Достижений пока нет</p>
               <h3>История запусков</h3>
               <p data-stats-status role="status">Загрузка статистики</p>
               <ul data-stats-history></ul>
+              <h3>Игровая статистика</h3>
+              <p class="muted">Результаты сообщаются игрой и не являются подтверждённым рейтингом.</p>
+              <div data-game-stats></div>
             </article>
           </section>
         </section>
@@ -1271,7 +1273,7 @@
           <section class="dashboard-grid">
             <article class="card side-card">
               <h3>Profile settings</h3>
-              <p><label><input type="checkbox" data-stats-consent> Разрешить статистику посещений и запусков</label></p>
+              <p><label><input type="checkbox" data-stats-consent> Разрешить статистику хаба и игровых событий</label></p>
               <button type="button" class="button secondary" data-stats-delete>Удалить мою статистику</button>
               <p data-stats-status role="status"></p>
               <div class="rank-row"><span>Nickname</span><strong data-auth-name>Guest player</strong></div>
