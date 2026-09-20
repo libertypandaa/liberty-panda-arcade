@@ -140,8 +140,11 @@
     for (const [k,label] of Object.entries(labels)) {
       const row = document.createElement('p'); row.textContent = `${label}: ${data[k] ?? 0}`; output.append(row);
     }
-    for (const cohort of data.retention || []) {
-      const row = document.createElement('p'); row.textContent = `Возврат D${cohort.day}: ${cohort.returned} / ${cohort.eligible}`; output.append(row);
+    const cohorts = data.retention || [1, 7, 30].map(day => ({ day, eligible: 0, returned: 0 }));
+    for (const cohort of cohorts) {
+      const row = document.createElement('p');
+      row.textContent = `Возврат D${cohort.day}: ${cohort.eligible ? `${cohort.returned} / ${cohort.eligible}` : 'ещё нет данных'}`;
+      output.append(row);
     }
     admin.hidden = false;
   }

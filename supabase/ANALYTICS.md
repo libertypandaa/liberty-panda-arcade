@@ -1,7 +1,12 @@
 # Hub analytics: first stage
 
 Status: database migration applied on 2026-09-20; SQL isolation tests passed.
-Frontend publication and browser verification pending.
+Frontend published to GitHub Pages. Verified the consent notice, disabled
+collection by default, and the owner's aggregate report in Settings in the live
+browser. Nine automated JavaScript tests passed. `tests/analytics.sql` passed
+against Supabase in a rolled-back transaction. Opt-in collection in the user's
+live browser was not enabled: separate permission for that privacy choice is
+pending. Synthetic SQL and JavaScript checks cover event recording.
 
 Run `migrations/20260920_analytics.sql` after the profiles migration.
 The owner account must already exist in Supabase Auth. The migration assigns
