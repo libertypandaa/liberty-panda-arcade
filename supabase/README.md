@@ -26,5 +26,8 @@ Do not execute it against this project: its broader profile policies would
 allow other signed-in users to read profiles. Future migrations must preserve
 the owner-only access rules.
 
-Google publishing status was Testing at the last check. Check Audience in
-Google Cloud before announcing unrestricted registration to all players.
+Google Audience now shows `In production` with user type `External`, verified
+in the Google Cloud dashboard after publishing. Test-user restrictions are removed.
+Branding contains the published homepage, `/privacy/` and `/terms/` URLs on
+`https://libertypandaa.github.io/liberty-panda-arcade/`.
+This confirms OAuth production status, not separate Google brand verification.
