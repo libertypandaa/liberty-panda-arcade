@@ -1,6 +1,5 @@
 {
-  "version": "2026.09.20.5",
-  "build": "game-analytics-sdk-v1",
-  "releasedAt": "2026-09-20T00:00:00+03:00",
-  "name": "Liberty Panda Arcade"
+  "version": "2026.09.27.1",
+  "build": "clutter-cup-hub-v1",
+  "date": "2026-09-27"
 }

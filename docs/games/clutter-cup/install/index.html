@@ -8,10 +8,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0f172a" />
-    <link rel="manifest" href="../manifest.webmanifest?v=crystal-front-icon-v2" />
-    <link rel="icon" href="../../../assets/games/crystal-front-app-icon-192-v2.png" />
-    <link rel="apple-touch-icon" href="../../../assets/games/crystal-front-app-icon-192-v2.png" />
-    <title>Install Crystal Front — Liberty Panda Arcade</title>
+    <link rel="manifest" href="../manifest.webmanifest?v=clutter-cup-icon-v2" />
+    <link rel="icon" href="../../../assets/games/clutter-cup/icon-192.png" />
+    <link rel="apple-touch-icon" href="../../../assets/games/clutter-cup/icon-192.png" />
+    <title>Install Clutter Cup — Liberty Panda Arcade</title>
     <style>
       :root {
         --bg: #f7fbff;
@@ -262,10 +262,10 @@
     <main class="page">
       <section class="card">
         <div class="cover">
-          <img src="../../../assets/games/crystal-front-feature.png" alt="Crystal Front Demo preview" />
+          <img src="../../../assets/games/clutter-cup/cover-1280x720.png" alt="Clutter Cup preview" />
           <div class="cover-content">
             <p class="kicker">Liberty Panda Arcade</p>
-            <h1>Install Crystal Front</h1>
+            <h1>Install Clutter Cup</h1>
             <p>Добавь игру на главный экран телефона и запускай её по прямой ссылке.</p>
           </div>
         </div>
@@ -280,11 +280,12 @@
             Android Chrome: нажми Add to phone. Если системное окно не появится,
             открой меню браузера и выбери Add to Home screen или Install app.
             iPhone Safari: Share → Add to Home Screen.
+            Для загрузки игры нужен интернет. Прогресс хранится только в этом браузере; офлайн-игра не гарантируется.
           </div>
 
           <div class="status" id="status">
             Нажми Add to phone. Если браузер поддерживает установку веб-приложений,
-            появится системное предложение добавить Crystal Front на экран.
+            появится системное предложение добавить Clutter Cup на экран.
             <div class="app-status" aria-label="App install and version status">
               <div class="status-row"><span>Installed</span><strong id="install-state">Checking</strong></div>
               <div class="status-row"><span>Version</span><strong id="app-version">Checking</strong></div>
@@ -294,11 +295,11 @@
         </div>
       </section>
     </main>
-    <section class="game-overlay" id="game-overlay" hidden aria-label="Crystal Front fullscreen player">
+    <section class="game-overlay" id="game-overlay" hidden aria-label="Clutter Cup fullscreen player">
       <div class="game-toolbar"><button class="fullscreen-game" type="button" id="fullscreen-game">Fullscreen</button><button class="close-game" type="button" id="close-game">Close</button></div>
       <iframe
         id="game-frame"
-        title="Crystal Front Demo"
+        title="Clutter Cup"
         allow="fullscreen; autoplay; gamepad"
       ></iframe>
     </section>
@@ -307,7 +308,7 @@
     <script src="../../../game-player.js?v=20260927-1"></script>
     <script src="../../../update-guard.js?v=20260927-1"></script>
     <script>
-      const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
+      const gameUrl = "https://libertypandaa.github.io/clutter-cup-playtest/";
       const statusBox = document.querySelector("#status");
       const installNote = document.querySelector(".note");
       const installButton = document.querySelector("#install-button");
@@ -318,7 +319,7 @@
       const appVersion = document.querySelector("#app-version");
       const updateState = document.querySelector("#update-state");
       const versionUrl = "../../../version.json";
-      const versionStorageKey = "liberty-panda-arcade:installed-version";
+      const versionStorageKey = "liberty-panda-arcade:clutter-cup:installed-version";
       let installPrompt = null;
       let refreshingAfterUpdate = false;
       let updateAvailable = false;
@@ -406,30 +407,8 @@
       }
 
       async function detectInstalledState() {
-        let installed = isStandaloneApp();
-
-        if (!installed && "getInstalledRelatedApps" in navigator) {
-          try {
-            const relatedApps = await navigator.getInstalledRelatedApps();
-            installed = relatedApps.length > 0;
-          } catch (error) {
-            installed = false;
-          }
-        }
-
-        installState.textContent = installed ? "Yes" : "Not detected";
-
-        if (installed) {
-          installButton.textContent = "Installed";
-          installNote.innerHTML = `
-            Crystal Front уже открыта как установленное веб-приложение.
-            Если после публикации появится новая версия, здесь появится кнопка Update app.
-          `;
-          setStatus(`
-            <strong>Crystal Front уже установлена.</strong><br>
-            Можно запускать игру кнопкой Play или ярлыком на главном экране.
-          `);
-        }
+        // A standalone window cannot prove which app ID was installed.
+        installState.textContent = isStandaloneApp() ? 'Standalone window' : 'Not confirmed';
       }
 
       async function checkAppVersion() {
@@ -469,17 +448,17 @@
         installState.textContent = "Yes";
         installButton.textContent = "Installed";
         installNote.innerHTML = `
-          Crystal Front уже добавлена на главный экран.
+          Clutter Cup уже добавлена на главный экран.
           Если после публикации появится новая версия, здесь появится кнопка Update app.
         `;
         setStatus(`
-          <strong>Crystal Front установлена.</strong><br>
+          <strong>Clutter Cup установлена.</strong><br>
           Теперь можно запускать игру с главного экрана телефона.
         `);
       });
 
       function openGameFullscreen(event) {
-        return window.HubPlayer.open(event?.currentTarget?.dataset.gameId || 'crystal-front-demo');
+        return window.HubPlayer.open(event?.currentTarget?.dataset.gameId || 'clutter-cup');
       }
       function closeGame() { return window.HubPlayer.close(); }
 

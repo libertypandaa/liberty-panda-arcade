@@ -1,0 +1,7 @@
+/* Shell controls stay outside the game canvas and touch targets. */
+.game-overlay { position: fixed; inset: 0; z-index: 10001; background: #020617; display: flex; flex-direction: column; height: 100dvh; }
+.game-overlay[hidden] { display: none; }
+.game-toolbar { display: flex; flex: 0 0 auto; justify-content: flex-end; gap: 8px; padding: env(safe-area-inset-top) max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left)); background: #0f172a; }
+.game-toolbar .close-game, .game-toolbar .fullscreen-game { position: static; min-height: 40px; border: 0; border-radius: 4px; padding: 0 14px; font: 700 14px system-ui; color: white; background: #243447; cursor: pointer; }
+.game-overlay #game-frame { display: block; flex: 1 1 0; min-height: 0; width: 100%; height: 0; border: 0; }
+body.game-open { overflow: hidden; }

@@ -1,0 +1,14 @@
+{
+  "name": "liberty-panda-arcade-site",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/auth.test.cjs tests/stats.test.cjs tests/game-analytics.test.cjs tests/player.test.cjs",
+    "test:db": "node tests/database-check.cjs",
+    "test:browser": "node tests/browser-check.cjs",
+    "test:protocol": "node tests/browser-protocol-check.cjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "playwright-core": "1.63.0"
+  }
+}

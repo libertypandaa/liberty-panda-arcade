@@ -12,10 +12,10 @@
     <link rel="icon" href="./icon-192.png" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="./auth-config.js" defer></script>
-    <script src="./auth.js" defer></script>
-    <script src="./stats.js" defer></script>
-    <script src="./game-analytics-host.js" defer></script>
+    <script src="./auth-config.js?v=20260927-1" defer></script>
+    <script src="./auth.js?v=20260927-1" defer></script>
+    <script src="./stats.js?v=20260927-1" defer></script>
+    <script src="./game-analytics-host.js?v=20260927-1" defer></script>
     <title>Liberty Panda Arcade</title>
     <style>
       :root {
@@ -1048,6 +1048,7 @@
       }
 
     </style>
+    <link rel="stylesheet" href="./game-player.css?v=20260927-1" />
   </head>
   <body>
     <main class="app">
@@ -1154,6 +1155,18 @@
                   </div>
                   <button class="button primary play-game" type="button">Play</button>
                   <a class="button secondary" data-install-link href="./games/crystal-front/install/">Add to phone</a>
+                </div>
+              </article>
+
+              <article class="card game-card">
+                <div class="cover"><a href="./games/clutter-cup/"><img src="./assets/games/clutter-cup/cover-1280x720.png" alt="Clutter Cup: машина из кухонных предметов" /></a><span class="status">Playable playtest</span></div>
+                <div class="game-body">
+                  <p class="kicker">Lieberman Games</p>
+                  <h3><a href="./games/clutter-cup/">Clutter Cup</a></h3>
+                  <p class="genre">3D · Construction racing</p>
+                  <p class="muted">Собери машину из кухонных предметов и пройди гонку по огромной кухне. Доставляй груз, покупай детали и открывай достижения.</p>
+                  <button class="button primary play-game" data-game-id="clutter-cup" type="button">Play</button>
+                  <a class="button secondary" data-install-link href="./games/clutter-cup/install/">Add to phone</a>
                 </div>
               </article>
 
@@ -1306,13 +1319,16 @@
 
     </main>
     <section class="game-overlay" id="game-overlay" hidden aria-label="Crystal Front fullscreen player">
-      <button class="close-game" type="button" id="close-game">Close</button>
+      <div class="game-toolbar"><button class="fullscreen-game" type="button" id="fullscreen-game">Fullscreen</button><button class="close-game" type="button" id="close-game">Close</button></div>
       <iframe
         id="game-frame"
         title="Crystal Front Demo"
         allow="fullscreen; autoplay; gamepad"
       ></iframe>
     </section>
+    <script src="./game-registry.js?v=20260927-1"></script>
+    <script src="./game-player.js?v=20260927-1"></script>
+    <script src="./update-guard.js?v=20260927-1"></script>
     <script>
       const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
       const overlay = document.querySelector("#game-overlay");
@@ -1360,6 +1376,7 @@
         window.addEventListener("load", () => {
           navigator.serviceWorker.register(path).then((registration) => {
             registration.update();
+            if (registration.waiting) window.HubUpdates.activate(registration.waiting);
 
             registration.addEventListener("updatefound", () => {
               const worker = registration.installing;
@@ -1370,7 +1387,7 @@
 
               worker.addEventListener("statechange", () => {
                 if (worker.state === "installed" && navigator.serviceWorker.controller) {
-                  worker.postMessage({ type: "SKIP_WAITING" });
+                  window.HubUpdates.activate(worker);
                 }
               });
             });
@@ -1383,7 +1400,7 @@
           }
 
           refreshingAfterUpdate = true;
-          window.location.reload();
+          window.HubUpdates.requestReload();
         });
       }
 
@@ -1405,11 +1422,7 @@
 
         installState.textContent = installed ? "Yes" : "Not detected";
 
-        if (installed) {
-          installLinks.forEach((link) => {
-            link.textContent = "Installed";
-          });
-        }
+        // Hub installation does not imply installation of each game.
 
         return installed;
       }
@@ -1443,30 +1456,13 @@
           }
         }
 
-        window.location.reload();
+        window.HubUpdates.requestReload();
       }
 
-      async function openGameFullscreen() {
-        frame.src = `${gameUrl}?launch=${Date.now()}`;
-        overlay.hidden = false;
-        document.body.classList.add("game-open");
-
-        try {
-          await overlay.requestFullscreen();
-        } catch (error) {
-          // Some mobile browsers reject fullscreen, so the overlay still fills the page.
-        }
+      function openGameFullscreen(event) {
+        return window.HubPlayer.open(event?.currentTarget?.dataset.gameId || 'crystal-front-demo');
       }
-
-      async function closeGame() {
-        frame.src = "about:blank";
-        overlay.hidden = true;
-        document.body.classList.remove("game-open");
-
-        if (document.fullscreenElement) {
-          await document.exitFullscreen().catch(() => {});
-        }
-      }
+      function closeGame() { return window.HubPlayer.close(); }
 
       document.querySelectorAll(".play-game").forEach((button) => {
         button.addEventListener("click", openGameFullscreen);

@@ -1,17 +1,18 @@
-const CACHE_PREFIX = "liberty-panda-arcade-shell-";
+const CACHE_PREFIX = "clutter-cup-shell-";
 const CACHE_VERSION = CACHE_PREFIX + '2026-09-27-1';
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./install/",
   "./manifest.webmanifest",
-  "./icon-192.png",
-  "./icon-512.png",
-  "./game-registry.js?v=20260927-1",
-  "./game-player.js?v=20260927-1",
-  "./game-player.css?v=20260927-1",
-  "./update-guard.js?v=20260927-1",
-  "./stats.js?v=20260927-1",
-  "./game-analytics-host.js?v=20260927-1"
+  "../../assets/games/clutter-cup/icon-192.png",
+  "../../assets/games/clutter-cup/icon-512.png",
+  "../../game-registry.js?v=20260927-1",
+  "../../game-player.js?v=20260927-1",
+  "../../game-player.css?v=20260927-1",
+  "../../update-guard.js?v=20260927-1",
+  "../../stats.js?v=20260927-1",
+  "../../game-analytics-host.js?v=20260927-1"
 ];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL))));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_VERSION).map(key => caches.delete(key))))));

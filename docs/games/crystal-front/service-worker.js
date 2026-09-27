@@ -1,88 +1,26 @@
-const CACHE_VERSION = "crystal-front-shell-2026-09-20-3";
+const CACHE_PREFIX = "crystal-front-shell-";
+const CACHE_VERSION = CACHE_PREFIX + '2026-09-27-1';
 const APP_SHELL = [
   "./",
   "./index.html",
   "./install/",
-  "./install/index.html",
   "./manifest.webmanifest",
-  "../../version.json",
-  "../../assets/games/crystal-front-app-icon-192-v2.png",
-  "../../assets/games/crystal-front-app-icon-512-v2.png",
-  "../../assets/games/crystal-front-icon-192.png",
-  "../../assets/games/crystal-front-icon.png",
+  "../../game-registry.js?v=20260927-1",
+  "../../game-player.js?v=20260927-1",
+  "../../game-player.css?v=20260927-1",
+  "../../update-guard.js?v=20260927-1",
+  "../../stats.js?v=20260927-1",
+  "../../game-analytics-host.js?v=20260927-1"
 ];
-
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_VERSION)
-      .then((cache) => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(
-        keys
-          .filter((key) => key.startsWith("crystal-front-shell-") && key !== CACHE_VERSION)
-          .map((key) => caches.delete(key))
-      ))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
-
-self.addEventListener("fetch", (event) => {
-  const request = event.request;
-
-  if (request.method !== "GET") {
-    return;
-  }
-
-  const url = new URL(request.url);
-
-  if (url.origin !== self.location.origin) {
-    return;
-  }
-
-  const acceptsHtml = request.headers.get("accept")?.includes("text/html");
-  const shouldPreferNetwork =
-    request.mode === "navigate" ||
-    acceptsHtml ||
-    url.pathname.endsWith("/manifest.webmanifest") ||
-    url.pathname.endsWith("/version.json") ||
-    url.pathname.endsWith("/service-worker.js");
-
-  if (shouldPreferNetwork) {
-    event.respondWith(
-      fetch(request, { cache: "no-store" })
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
-          return response;
-        })
-        .catch(() => caches.match(request))
-    );
-    return;
-  }
-
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-
-      return fetch(request).then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
-        return response;
-      });
-    })
-  );
+self.addEventListener('install', event => event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL))));
+self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_VERSION).map(key => caches.delete(key))))));
+// No skipWaiting/clients.claim: old open shells must not be reloaded mid-race.
+// Each shell only caches its own routes and shared hub assets, never game builds.
+self.addEventListener('fetch', event => {
+ const request = event.request, url = new URL(request.url), scope = new URL("./", self.location).pathname;
+ if (request.method !== 'GET' || url.origin !== self.location.origin || !url.pathname.startsWith(scope)) return;
+ event.respondWith(fetch(request, {cache: 'no-store'}).then(response => {
+   if (response.ok) { const copy = response.clone(); event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.put(request,copy))); }
+   return response;
+ }).catch(async () => (await (await caches.open(CACHE_VERSION)).match(request)) || Response.error()));
 });

@@ -16,7 +16,8 @@
   const subscribers = new Set();
   const notify = () => subscribers.forEach(fn => fn());
   let pendingGameEvents = 0;
-  const game = 'crystal-front-demo';
+  const games = window.HubGames;
+  const gameTitle = id => games?.get(id)?.title || id || '—';
   const setText = (selector, value) => document.querySelectorAll(selector).forEach(n => { n.textContent = value; });
   function identity() {
     if (userId) return null;
@@ -43,14 +44,14 @@
     if (error) { status('Статистика временно недоступна'); return; }
     setText('[data-stats-launches]', data.launches);
     setText('[data-stats-visits]', data.visits);
-    setText('[data-stats-last]', data.lastGame === game ? 'Crystal Front' : '—');
-    setText('[data-stats-feature]', data.lastGame === game ? 'Last played' : 'Featured game');
+    setText('[data-stats-last]', gameTitle(data.lastGame));
+    setText('[data-stats-feature]', 'Featured game');
     const history = document.querySelector('[data-stats-history]');
     if (history) {
       history.replaceChildren();
       for (const entry of data.history || []) {
         const row = document.createElement('li');
-        row.textContent = `Crystal Front · ${new Date(entry.created_at).toLocaleString()}`;
+        row.textContent = `${gameTitle(entry.game)} · ${new Date(entry.created_at).toLocaleString()}`;
         history.append(row);
       }
     }
@@ -63,7 +64,7 @@
     }
   }
   function track(kind, gameId = null) {
-    if (!consent || !ready) return;
+    if (!consent || !ready || (gameId !== null && !games?.get(gameId))) return;
     const version = generation;
     const args = { p_id: crypto.randomUUID(), p_guest: identity(), p_kind: kind, p_game: gameId };
     chain = chain.catch(() => {}).then(async () => {
@@ -74,10 +75,10 @@
       await refresh();
     }).catch(() => { status('Статистика временно недоступна'); });
   }
-  function gameEvent(session, name, data, id = crypto.randomUUID()) {
-    if (!consent || !ready || pendingGameEvents >= 120) return;
+  function gameEvent(gameId, session, name, data, id = crypto.randomUUID()) {
+    if (!consent || !ready || !games?.get(gameId) || pendingGameEvents >= 120) return;
     const version = generation;
-    const args = { p_id: id, p_guest: identity(), p_session: session, p_game: game, p_name: name, p_data: data };
+    const args = { p_id: id, p_guest: identity(), p_session: session, p_game: gameId, p_name: name, p_data: data };
     pendingGameEvents++;
     chain = chain.catch(() => {}).then(async () => {
       if (generation !== version || !consent) return;
@@ -98,9 +99,16 @@
       abandoned:'Прерванные матчи',unresolved:'Матчи без результата (>24 ч)',winRate:'Победы среди завершённых, %',
       avgScore:'Средний счёт завершённых матчей',achievements:'Открытия достижений',errors:'Ошибки игры' };
     for (const item of data || []) {
-      const title = document.createElement('h3'); title.textContent = item.game; output.append(title);
+      const title = document.createElement('h3'); title.textContent = gameTitle(item.game);
+      const iconPath = games?.get(item.game)?.icon;
+      if (iconPath) {
+        const icon = document.createElement('img'); icon.src = games.asset(iconPath); icon.alt = '';
+        icon.width = 32; icon.height = 32; icon.style.cssText = 'vertical-align:middle;margin-right:8px;border-radius:6px';
+        title.prepend(icon);
+      }
+      output.append(title);
       for (const [key,label] of Object.entries(labels)) {
-        const row = document.createElement('p'); row.textContent = `${label}: ${item[key] ?? 'нет данных'}`; output.append(row);
+        const row = document.createElement('p'); row.textContent = `${key === 'avgScore' && item.game === 'clutter-cup' ? 'Среднее время финиша, мс (меньше лучше; без abandon)' : label}: ${item[key] ?? 'нет данных'}`; output.append(row);
       }
       for (const [key,label] of [['tutorial','Обучение'],['progress','Прогресс'],['custom','Собственные события'],['unlocks','Достижения'],['errorCodes','Коды ошибок']]) {
         const heading = document.createElement('h4'); heading.textContent = label; output.append(heading);
@@ -210,27 +218,21 @@
     setTimeout(() => { notify(); visit(); observeLaunch(); refresh().catch(() => {}); loadAdmin().catch(() => {}); }, 0);
   });
   document.addEventListener('click', event => {
-    if (event.target.closest('[data-install-link]')) track('install_click', game);
+    const link = event.target.closest('[data-install-link]');
+    const selected = link && games?.forInstall(link.href);
+    if (selected) track('install_click', selected.id);
   });
-  window.addEventListener('beforeinstallprompt', () => track('install_available', location.pathname.includes('/games/') ? game : null));
-  window.addEventListener('appinstalled', () => track('installed', location.pathname.includes('/games/') ? game : null));
-  const overlay = document.querySelector('#game-overlay');
-  const frame = document.querySelector('#game-frame');
-  let active = false, reportedReady = false, reportedLaunch = false;
+  window.addEventListener('beforeinstallprompt', () => track('install_available', games?.forPage()?.id || null));
+  window.addEventListener('appinstalled', () => track('installed', games?.forPage()?.id || null));
+  let reportedLaunch = null;
   function observeLaunch() {
-    if (!overlay) return;
-    if (!overlay.hidden && !active) { active = true; reportedReady = false; reportedLaunch = false; }
-    else if (overlay.hidden) active = false;
-    if (active && !reportedLaunch && ready && consent) { reportedLaunch = true; track('launch', game); }
+    const launch = window.HubPlayer?.current();
+    if (!launch || !ready || !consent) return;
+    const token = generation + ':' + launch.id;
+    if (reportedLaunch === token) return;
+    reportedLaunch = token;
+    track('launch', launch.game.id);
   }
-  if (overlay) {
-    new MutationObserver(observeLaunch).observe(overlay, { attributes: true, attributeFilter: ['hidden'] });
-    observeLaunch();
-  }
-  window.addEventListener('message', event => {
-    if (!active || event.source !== frame?.contentWindow || event.origin !== 'https://libertypandaa.github.io') return;
-    if (event.data?.type === 'game_ready' && !reportedReady) { reportedReady = true; track('game_ready', game); }
-  });
-  frame?.addEventListener('error', () => { if (active) track('launch_error', game); });
+  window.addEventListener('hub:playerchange', observeLaunch);
   if (!consent) status('Статистика отключена');
 })();

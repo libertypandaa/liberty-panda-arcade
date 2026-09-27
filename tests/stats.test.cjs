@@ -8,7 +8,7 @@ const flush = () => new Promise(resolve => setImmediate(resolve));
 
 function setup(storage = new Map(), withOverlay = false) {
   const calls = [], nodes = [], listeners = {};
-  let auth, observe;
+  let auth, observe, current=null;
   const overlay = { hidden: true }, frame = { contentWindow: {}, addEventListener() {} };
   const checkbox = { addEventListener() {}, checked: false };
   const client = {
@@ -19,6 +19,8 @@ function setup(storage = new Map(), withOverlay = false) {
     },
   };
   const window = {
+    HubGames:{get:id=>['crystal-front-demo','clutter-cup'].includes(id)?{id,title:id}:null},
+    HubPlayer:{current:()=>current},
     LIBERTY_PANDA_AUTH_CONFIG: {}, supabase: { createClient: () => client },
     addEventListener(type, fn) { listeners[type] = fn; },
   };
@@ -39,8 +41,8 @@ function setup(storage = new Map(), withOverlay = false) {
       },
     },
   });
-  return { calls, storage, window, checkbox, listeners, frame,
-    open: () => { overlay.hidden = false; observe(); },
+  return { calls, storage, window, checkbox, listeners, frame, client,
+    open: (id='crystal-front-demo',fresh=false) => { if(!current||fresh) current={id:randomUUID(),game:{id}}; listeners['hub:playerchange'](); },
     auth: id => auth('INITIAL_SESSION', id ? { user: { id } } : null),
     allow: () => nodes.find(n => n.tag === 'button').click(),
   };
@@ -93,13 +95,23 @@ test('early launch is counted once when auth initialization finishes', async () 
   assert.equal(s.calls.filter(c => c.args?.p_kind === 'launch').length, 1);
 });
 
-test('game readiness requires the active iframe source and trusted origin', async () => {
-  const s = setup(new Map([['lpa:analytics-consent-v2','yes']]), true);
-  s.auth(null); s.open(); await new Promise(r => setTimeout(r, 10));
-  const event = { data: { type: 'game_ready' }, source: s.frame.contentWindow, origin: 'https://libertypandaa.github.io' };
-  s.listeners.message({ ...event, origin: 'https://other.test' });
-  s.listeners.message({ ...event, source: {} }); await flush();
-  assert.equal(s.calls.filter(c => c.args?.p_kind === 'game_ready').length, 0);
-  s.listeners.message(event); s.listeners.message(event); await flush();
-  assert.equal(s.calls.filter(c => c.args?.p_kind === 'game_ready').length, 1);
+
+test('launches and queued telemetry retain their own game IDs',async()=>{
+ const s=setup(new Map([['lpa:analytics-consent-v2','yes']]),true);s.auth(null);await new Promise(r=>setTimeout(r,15));
+ s.open('crystal-front-demo');s.window.HubStats.gameEvent('crystal-front-demo',randomUUID(),'session_start',{});
+ s.open('clutter-cup',true);s.window.HubStats.gameEvent('clutter-cup',randomUUID(),'session_start',{});await flush();await flush();
+ assert.deepEqual(s.calls.filter(x=>x.name==='record_game_event').map(x=>x.args.p_game),['crystal-front-demo','clutter-cup']);
+ assert.deepEqual(s.calls.filter(x=>x.args?.p_kind==='launch').map(x=>x.args.p_game),['crystal-front-demo','clutter-cup']);
+});
+test('auth change or consent revocation discards unsent events for the old actor',async()=>{
+ const s=setup(new Map([['lpa:analytics-consent-v2','yes']]));s.auth(null);await new Promise(r=>setTimeout(r,15));
+ s.window.HubStats.gameEvent('clutter-cup',randomUUID(),'session_start',{});s.auth('other-account');await flush();
+ assert.equal(s.calls.filter(x=>x.name==='record_game_event').length,0);
+ await new Promise(r=>setTimeout(r,15));
+ s.window.HubStats.gameEvent('clutter-cup',randomUUID(),'session_start',{});s.listeners.storage({key:'lpa:analytics-consent-v2',newValue:'no'});await flush();
+ assert.equal(s.calls.filter(x=>x.name==='record_game_event').length,0);
+});
+test('unregistered game telemetry is never queued',async()=>{
+ const s=setup(new Map([['lpa:analytics-consent-v2','yes']]));s.auth(null);await new Promise(r=>setTimeout(r,15));
+ s.window.HubStats.gameEvent('invented-game',randomUUID(),'session_start',{});await flush();assert.equal(s.calls.filter(x=>x.name==='record_game_event').length,0);
 });

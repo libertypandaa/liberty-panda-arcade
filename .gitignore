@@ -11,3 +11,8 @@ game-hub/.vinext/
 game-hub/.wrangler/
 game-hub/dist/
 game-hub/next-env.d.ts
+
+# Local verification and recovery artifacts
+output/
+.previous-project-git/
+.codex-remote-attachments/

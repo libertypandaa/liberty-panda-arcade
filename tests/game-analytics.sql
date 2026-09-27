@@ -62,3 +62,41 @@ set local role authenticated;
 select public.admin_game_stats() is not null as owner_report;
 rollback;
 select 'PASS: game aggregates, duplicates, session ownership, schema validation, private reports, deletion' as result;
+
+-- Two registered games remain isolated even within the same guest/account.
+begin;
+set local role anon;
+do $$
+declare a uuid:=gen_random_uuid(); b uuid:=gen_random_uuid(); cf uuid:=gen_random_uuid(); cc uuid:=gen_random_uuid(); m uuid:=gen_random_uuid(); abandoned uuid:=gen_random_uuid(); r jsonb; rejected boolean;
+begin
+ perform public.record_game_event(gen_random_uuid(),a,cf,'crystal-front-demo','session_start','{}');
+ perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','session_start','{}');
+ perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','ready','{"load_ms":100}');
+ perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','match_start',jsonb_build_object('match',m,'mode','kitchen_safe'));
+ perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','match_end',jsonb_build_object('match',m,'outcome','win','score',65432));
+ perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','match_end',jsonb_build_object('match',m,'outcome','win','score',65432));
+ perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','match_start',jsonb_build_object('match',abandoned,'mode','kitchen_equal'));
+ perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','match_end',jsonb_build_object('match',abandoned,'outcome','abandon','score',0));
+ select x into r from jsonb_array_elements(public.my_game_stats(a)) x where x->>'game'='clutter-cup';
+ if r->>'completed'<>'1' or r->>'abandoned'<>'1' or (r->>'avgScore')::numeric<>65432 then raise exception 'Finish/dedup/abandon aggregation failed: %',r; end if;
+ select x into r from jsonb_array_elements(public.my_game_stats(a)) x where x->>'game'='crystal-front-demo';
+ if r->>'matches'<>'0' then raise exception 'Clutter events leaked into Crystal Front'; end if;
+ if jsonb_array_length(public.my_game_stats(a))<>2 then raise exception 'Missing isolated game report'; end if;
+ rejected:=false;
+ begin perform public.record_game_event(gen_random_uuid(),a,cf,'clutter-cup','ready','{"load_ms":1}'); exception when others then rejected:=true; end;
+ if not rejected then raise exception 'Cross-game session accepted'; end if;
+ rejected:=false;
+ begin perform public.record_game_event(gen_random_uuid(),b,cc,'clutter-cup','ready','{"load_ms":1}'); exception when others then rejected:=true; end;
+ if not rejected then raise exception 'Cross-guest session accepted'; end if;
+ rejected:=false;
+ begin perform public.record_game_event(gen_random_uuid(),a,cc,'unknown-game','ready','{"load_ms":1}'); exception when others then rejected:=true; end;
+ if not rejected then raise exception 'Unknown game accepted'; end if;
+ rejected:=false;
+ begin perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','custom','{"name":"bomb_used","value":1}'); exception when others then rejected:=true; end;
+ if not rejected then raise exception 'Crystal Front custom event accepted for Clutter Cup'; end if;
+ rejected:=false;
+ begin perform public.record_game_event(gen_random_uuid(),a,cc,'clutter-cup','custom','{"name":"cc_drive_mixer","value":1}'); exception when others then rejected:=true; end;
+ if not rejected then raise exception 'Disabled Clutter custom event accepted'; end if;
+end; $$;
+rollback;
+select 'PASS: two-game isolation, finish milliseconds, abandon exclusion, result dedup, disabled custom' as result;

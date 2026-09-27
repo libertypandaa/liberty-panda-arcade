@@ -10,6 +10,13 @@ begin
   perform public.record_hub_event(gen_random_uuid(),a,'launch','crystal-front-demo');
   if (public.my_hub_stats(a)->>'visits')::int <> 1 then raise exception 'Visit dedup failed'; end if;
   if (public.my_hub_stats(a)->>'launches')::int <> 1 then raise exception 'Launch count failed'; end if;
+  perform public.record_hub_event(gen_random_uuid(),a,'launch','clutter-cup');
+  if (public.my_hub_stats(a)->>'launches')::int <> 2 then raise exception 'Second game launch missing'; end if;
+  if not exists(select 1 from jsonb_array_elements(public.my_hub_stats(a)->'history') h where h->>'game'='clutter-cup') then raise exception 'Clutter Cup history missing'; end if;
+  begin
+    perform public.record_hub_event(gen_random_uuid(),a,'launch','unknown-game');
+    raise exception 'Unknown game accepted';
+  exception when check_violation then null; end;
   if (public.my_hub_stats(b)->>'launches')::int <> 0 then raise exception 'Guest isolation failed'; end if;
   begin
     perform public.hub_admin_stats();

@@ -18,7 +18,7 @@ https://libertypandaa.github.io/liberty-panda-arcade/
 Адрес опубликованного файла:
 https://libertypandaa.github.io/liberty-panda-arcade/game-analytics-sdk.js
 
-Сейчас в хабе и базе зарегистрирована `crystal-front-demo`, источник игры:
+В исходной версии хаба и базы зарегистрирована `crystal-front-demo`, источник игры:
 https://libertypandaa.github.io/crystal-front-demo/
 Другую игру сначала регистрирует разработчик хаба: отдельный game ID,
 разрешённый адрес iframe, запись в проверках базы и разрешённые custom-события.
@@ -164,3 +164,8 @@ Settings → Статистика хаба → Обновить статисти
 - [MDN: безопасный postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
 - [Supabase: функции базы и права выполнения](https://supabase.com/docs/guides/database/functions)
 - [Supabase: Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+
+## Обновление 27 сентября 2026
+
+Хаб поддерживает отдельные сессии Crystal Front и Clutter Cup. Регистрация Clutter Cup в рабочей базе требует новой миграции 20260927_clutter_cup.sql; статус и проверки см. [в отчёте интеграции](./CLUTTER_CUP_RELEASE.md). Игры используют прежний SDK v1 без передачи gameId: выбор игры делает хаб. Собственные события Clutter Cup остаются отключены.
