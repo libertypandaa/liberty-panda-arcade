@@ -1,6 +1,6 @@
 # Передача агенту Crystal Front: аккаунт, статистика и пилот магазина
 
-Дата: 2 октября 2026. **Передача этапа A отдельному агенту игры; release SHA/publication добавляет агент выпуска после проверки.** Account context реализован в SDK 1.1.0; нормативный [ACCOUNT_CONTEXT_CONTRACT.md](../ACCOUNT_CONTEXT_CONTRACT.md) имеет приоритет над ранним аудитом [CRYSTAL_FRONT_PILOT.md](CRYSTAL_FRONT_PILOT.md). Команда сайта не изменяет игровые исходники. Перед началом агент игры сверяет свой HEAD и SDK-релиз с тимлидом; этот документ не разрешает включать реальные продажи или рекламу.
+Дата: 2 октября 2026. **Передача этапа A отдельному агенту игры. SDK 1.1.0: проверенный code commit e9a4b767d95c540385b359d90617c4375a5648dc.** Account context реализован в SDK 1.1.0; нормативный [ACCOUNT_CONTEXT_CONTRACT.md](../ACCOUNT_CONTEXT_CONTRACT.md) имеет приоритет над ранним аудитом [CRYSTAL_FRONT_PILOT.md](CRYSTAL_FRONT_PILOT.md). Команда сайта не изменяет игровые исходники. Перед началом агент игры сверяет свой HEAD и SDK-релиз с тимлидом; этот документ не разрешает включать реальные продажи или рекламу.
 
 Игра: `libertypandaa/cristal-front-2`, локальный проверенный HEAD `d4b57e485c59c67739d698ac7060c8e0c42b24d5`, версия 0.1.32. Публичная сборка: https://libertypandaa.github.io/crystal-front-demo/. Идентификатор LPA **`crystal-front-demo`**, не имя исходного репозитория. Студия **Liberman Games**. Хаб: https://libertypandaa.github.io/liberty-panda-arcade/.
 
@@ -121,4 +121,10 @@ PWA Exit возвращает в оболочку; обещать закрыти
 
 Account namespace этапа A реализован; после проверки опубликованного SDK игровой агент может подключать изолированные локальные сейвы. Обязательные блокеры перед публичным коммерческим пилотом: consume/save revision, утверждённая цена, включённый сервером тестовый/production режим по назначению и доказательство выдачи/расхода. Реальную рекламу блокирует provider+verified intent. Stage B отдельно согласован как план в [ACCOUNT_SAVE_CONTRACT_REVIEW.md](../../supabase/ACCOUNT_SAVE_CONTRACT_REVIEW.md). Физические телефоны/Safari, актуальность установленной PWA и права на аудио не объявлять проверенными.
 
-Публикация игры — отдельный агент по `docs/DEMO_RELEASE.md`: проверенный source SHA → manifest bundle → публичный crystal-front-demo → тесты/Pages → проверка URL. Push в исходный repo сам по себе игру на LPA не обновляет. Передать source/public SHA, SDK-версию, фактические тесты и оставшиеся ограничения. Этот draft сверяется с агентом БД и QA перед включением в release.
+Публикация игры — отдельный агент по `docs/DEMO_RELEASE.md`: проверенный source SHA → manifest bundle → публичный crystal-front-demo → тесты/Pages → проверка URL. Push в исходный repo сам по себе игру на LPA не обновляет. Передать source/public SHA, SDK-версию, фактические тесты и оставшиеся ограничения. Этап A согласован review БД; 104/104 теста пройдены, включая 18 браузерных integration cases. Облачный этап B остаётся проектом.
+
+## Зафиксированный артефакт этапа A
+
+Code commit: e9a4b767d95c540385b359d90617c4375a5648dc. SDK version: 1.1.0. Неизменяемая копия для игры: https://raw.githubusercontent.com/libertypandaa/liberty-panda-arcade/e9a4b767d95c540385b359d90617c4375a5648dc/docs/game-platform-sdk.js . Контракт: https://github.com/libertypandaa/liberty-panda-arcade/blob/e9a4b767d95c540385b359d90617c4375a5648dc/docs/ACCOUNT_CONTEXT_CONTRACT.md . Проверенный source опубликован в main; состояние Pages зафиксировано в ACCOUNT_CONTEXT_RELEASE_2026-10-02.md.
+
+Скопировать SDK из этого commit в исходники игры; подключать только этап A согласно разделу 1. Не менять или удалять crystalFrontProgressV1, не запускать временную игру при недоступном контексте. После await повторно проверять isAccountContextCurrent ДО commit записи. Интеграция SDK в сборку Crystal Front 0.1.32 этим выпуском не выполнена.

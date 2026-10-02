@@ -1,6 +1,6 @@
 # Контекст аккаунта LPA — выпуск 2026.10.02.3
 
-Статус: QA принят, подготовлен проверенный code commit; результат публикации фиксируется отдельным documentation commit. Baseline сайта — `8b9b8a3deb035170188f7e089c855ad7069e7df6`; remote main сверён перед работой. Прежний опубликованный выпуск — `2026.10.02.2`.
+Статус: опубликовано и проверено на публичном GitHub Pages. Baseline сайта — `8b9b8a3deb035170188f7e089c855ad7069e7df6`; remote main сверён перед работой. Прежний опубликованный выпуск — `2026.10.02.2`.
 
 ## Границы
 
@@ -12,14 +12,14 @@
 
 - Проверенная SDK-версия: `LibertyPanda.version === '1.1.0'`.
 - Локальный путь: `C:/Users/liber/OneDrive/Documents/ChatGPT/Сайт/docs/game-platform-sdk.js`.
-- Планируемый публичный URL: `https://libertypandaa.github.io/liberty-panda-arcade/game-platform-sdk.js?v=20261002-3`.
-- Commit и неизменяемый GitHub raw URL будут внесены после проверенного code commit. До этого URL новой версии не является доказательством публикации: query-параметр не закрепляет содержимое.
+- Проверенный публичный URL: `https://libertypandaa.github.io/liberty-panda-arcade/game-platform-sdk.js?v=20261002-3`.
+- Code commit: e9a4b767d95c540385b359d90617c4375a5648dc. Неизменяемый SDK URL: https://raw.githubusercontent.com/libertypandaa/liberty-panda-arcade/e9a4b767d95c540385b359d90617c4375a5648dc/docs/game-platform-sdk.js . Query-параметр Pages не закрепляет содержимое.
 
 Игровому агенту передаётся фиксированная копия SDK из конкретного commit. Подробный account contract и последовательность этапа A находятся в передаче Crystal Front; документ не разрешает использовать непривилегированный контекст как серверное доказательство личности.
 
 ## Приёмка и публикация
 
-Нужны результаты отдельного QA host/SDK, проверка реальных HTML и service worker, проверка состава без sandbox server и восстановленных каталогов. Commit/push выполняется после приёмки координатором. После публикации проверяются публичная версия, доступность host/SDK и совпадение с зафиксированным исходником.
+QA завершён; scoped code commit и обычный push main выполнены. Sandbox server, его README и восстановленные каталоги исключены. GitHub Pages run 37041925152 завершён success: https://github.com/libertypandaa/liberty-panda-arcade/actions/runs/37041925152 . Public version.json возвращает 2026.10.02.3/account-context-v1. SDK, account host, пять HTML entrypoints и три service worker совпадают с проверенными исходниками после нормализации CRLF/LF.
 
 Реальный Google/OTP, физические телефоны/Safari и внедрение в Crystal Front не подтверждаются фикстурами. Полноценный offline account bootstrap и серверные accepted saves не объявляются готовыми.
 
