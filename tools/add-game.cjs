@@ -53,7 +53,7 @@ function page(game, install) {
 <link rel="stylesheet" href="${base}game-player.css">
 <style>body{margin:0;background:#f7fbff;color:#0f172a;font:16px system-ui}main{max-width:780px;margin:auto;padding:24px}img{max-width:100%;border-radius:12px}button,a{min-height:44px;display:inline-flex;align-items:center;margin:6px;padding:8px 16px}button{cursor:pointer}p{line-height:1.6}.game-overlay{position:fixed;inset:0;background:#020617;z-index:50}.game-overlay[hidden]{display:none}.game-overlay iframe{width:100%;height:100%;border:0}body.game-open{overflow:hidden}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-${['game-registry.js','auth-config.js','auth.js','stats.js','account-gate.js','game-player.js','game-analytics-host.js','economy-host.js','update-guard.js'].map(file => `<script src="${base}${file}" defer></script>`).join('\n')}
+${['game-registry.js','auth-config.js','auth.js','stats.js','account-gate.js','game-player.js','account-context-host.js','game-analytics-host.js','economy-host.js','update-guard.js'].map(file => `<script src="${base}${file}" defer></script>`).join('\n')}
 <script src="${own}shell.js" defer></script></head><body>
 <main><a href="${base}">Liberty Panda Arcade</a><h1>${install ? 'Установить ' : ''}${html(game.title)}</h1><p>${html(game.studio)}</p>
 <img src="${base}${game.assets.cover}" alt="${html(game.title)}"><p>${html(game.description)}</p>
@@ -92,7 +92,7 @@ function filesFor(game) {
 })();\n`,
     'service-worker.js': `// Shell cache only; no automatic activation/reload during a game.\nconst PREFIX = ${JSON.stringify('lpa-'+game.id+'-shell-')};
 const CACHE = PREFIX + '1';
-const SHARED = ['game-registry.js','auth-config.js','auth.js','stats.js','account-gate.js','game-player.js','game-player.css','game-analytics-host.js','economy-host.js','update-guard.js'].map(file => new URL('../../'+file, self.location.href).href);
+const SHARED = ['game-registry.js','auth-config.js','auth.js','stats.js','account-gate.js','game-player.js','account-context-host.js','game-player.css','game-analytics-host.js','economy-host.js','update-guard.js'].map(file => new URL('../../'+file, self.location.href).href);
 const ASSETS = ['./', './install/', './shell.js', './manifest.webmanifest', ...SHARED];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS))));
 self.addEventListener('activate', event => {

@@ -46,6 +46,7 @@
       loaded = true;
       if (!trusted(current)) { loaded = false; overlay.classList.remove('game-has-exit'); return; }
       configure();
+      emit('hub:playerready');
     });
     frame.dataset.gameId = game.id; frame.dataset.launchId = launchId; frame.title = game.title;
     overlay.hidden = false; overlay.setAttribute('aria-label', game.title + ' player');

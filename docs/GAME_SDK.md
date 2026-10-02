@@ -9,6 +9,12 @@
 3. Скопировать game-platform-sdk.js в репозиторий игры и включить в публичную сборку фиксированную версию. Не загружать из изменяемого URL во время гонки. Секреты и токены аккаунта не передаются в игру.
 4. Скопировать отдельный game-analytics-sdk.js, если игре нужна добровольная аналитика. Этот SDK не начисляет деньги и не подтверждает честность результата.
 
+## Контекст аккаунта — SDK 1.1.0
+
+Реализованы `getAccountContext()`, `accountContext()`, `onAccountContextChange(callback)` и `isAccountContextCurrent(captured)`. Полный нормативный wire, stable namespace formula, epoch/session fences и условия offline: [ACCOUNT_CONTEXT_CONTRACT.md](ACCOUNT_CONTEXT_CONTRACT.md). Для локальных сохранений и очереди покупок использовать только ready.storageNamespace; transient epoch/contextSessionId/generation никогда не включать в storage key. Unknown/expired не означают новое пустое сохранение. Legacy `crystalFrontProgressV1` не импортировать и не привязывать автоматически; local Rays не серверная валюта.
+
+После async подготовки проверять `isAccountContextCurrent` **до фактической записи**, без await между fence и localStorage.setItem. Старую запись после revoke не завершать даже по прежнему namespace: A1→B→A2 повторно использует стабильный ключ. Для IndexedDB нужны отмена/сериализация с generation до commit. API не передаёт credentials и не предоставляет cloud save/consume/rewarded ads. Экономика остаётся защищена серверной авторизацией независимо от namespace.
+
 ## Выход
 
 После создания видимой кнопки Exit и обработчика сохранения:
