@@ -10,6 +10,9 @@
 
   let client = null;
   let currentUser = null;
+  let resolveAccount;
+  const accountReady = new Promise(resolve => { resolveAccount = resolve; });
+  window.HubAccount = { ready: accountReady, user: () => currentUser };
   let revision = 0;
   const profileForm = document.querySelector('[data-profile-form]');
   const nameInput = document.querySelector('[data-profile-name]');
@@ -29,24 +32,25 @@
       setText(nameNodes, name);
       if (nameInput) nameInput.value = name;
       if (profileForm) profileForm.hidden = false;
-      profileMessage(data ? 'Profile synced' : 'Choose a nickname to create your profile');
+      profileMessage(data ? 'Профиль загружен' : 'Выберите никнейм для профиля');
     } catch (_) {
-      if (requestRevision === revision) profileMessage('Profile unavailable. Please try signing in again later.');
+      if (requestRevision === revision) profileMessage('Профиль недоступен. Попробуйте войти позже.');
     }
   }
 
   function acceptSession(user) {
     const requestRevision = ++revision;
     currentUser = user;
+    resolveAccount(user);
     if (profileForm) profileForm.hidden = true;
     if (!user) {
       if (nameInput) nameInput.value = '';
-      profileMessage('Sign in to manage your profile');
+      profileMessage('Войдите, чтобы изменить профиль');
       renderSignedOut();
       return;
     }
     renderSignedIn(user);
-    profileMessage('Loading profile...');
+    profileMessage('Загружаем профиль…');
     // Keep database calls outside the synchronous Auth event callback.
     setTimeout(() => {
       if (requestRevision === revision) loadProfile(user, requestRevision);
@@ -58,7 +62,7 @@
     if (!currentUser || !nameInput) return;
     const name = nameInput.value.trim();
     if (name.length < 2 || name.length > 40) {
-      profileMessage('Use 2 to 40 characters for your nickname');
+      profileMessage('Никнейм должен содержать от 2 до 40 символов');
       return;
     }
     const requestRevision = revision;
@@ -73,9 +77,9 @@
       if (requestRevision !== revision) return;
       if (error) throw error;
       setText(nameNodes, data.display_name);
-      profileMessage('Profile saved');
+      profileMessage('Профиль сохранён');
     } catch (_) {
-      if (requestRevision === revision) profileMessage('Could not save your profile. Please try again.');
+      if (requestRevision === revision) profileMessage('Не удалось сохранить профиль. Попробуйте ещё раз.');
     } finally {
       button.disabled = false;
     }
@@ -109,11 +113,11 @@
     return user?.user_metadata?.avatar_url || "";
   }
 
-  function renderSignedOut(message = "Not signed in") {
+  function renderSignedOut(message = "Вход не выполнен") {
     setStatus(message);
-    setText(nameNodes, "Guest player");
-    setText(emailNodes, "Sign in with Google to sync progress");
-    setText(accountNodes, "Guest");
+    setText(nameNodes, "Войдите в аккаунт");
+    setText(emailNodes, "Войдите через Google или код на почту");
+    setText(accountNodes, "Не выполнен вход");
     setHidden(signInButtons, false);
     setHidden(signOutButtons, true);
 
@@ -127,10 +131,10 @@
     const displayName = displayNameFor(user);
     const avatarUrl = avatarFor(user);
 
-    setStatus("Signed in");
+    setStatus("Вы вошли");
     setText(nameNodes, displayName);
-    setText(emailNodes, user.email || "Google account");
-    setText(accountNodes, "Google");
+    setText(emailNodes, user.email || "Аккаунт Google");
+    setText(accountNodes, user.app_metadata?.provider === "email" ? "Email" : "Google");
     setHidden(signInButtons, true);
     setHidden(signOutButtons, false);
 
@@ -142,12 +146,12 @@
 
   async function signIn() {
     if (!client) {
-      renderSignedOut("Auth not configured");
+      renderSignedOut("Вход пока не настроен");
       return;
     }
 
     signInButtons.forEach((button) => { button.disabled = true; });
-    setStatus('Connecting to Google...');
+    setStatus('Подключаемся к Google…');
     try {
     const { error } = await client.auth.signInWithOAuth({
       provider: "google",
@@ -157,7 +161,7 @@
     });
     if (error) throw error;
     } catch (_) {
-      setStatus('Google sign-in unavailable. Please try again later.');
+      setStatus('Вход через Google недоступен. Попробуйте позже.');
       window.HubStats?.track('auth_error');
     } finally {
       signInButtons.forEach((button) => { button.disabled = false; });
@@ -174,7 +178,7 @@
       if (error) throw error;
       acceptSession(null);
     } catch (_) {
-      setStatus('Could not sign out. Please try again.');
+      setStatus('Не удалось выйти. Попробуйте ещё раз.');
     }
   }
 
@@ -189,16 +193,18 @@
     });
 
     if (!isConfigured()) {
-      renderSignedOut("Auth setup needed");
+      resolveAccount(null);
+      renderSignedOut("Вход пока не настроен");
       signInButtons.forEach((button) => {
         button.disabled = true;
-        button.textContent = "Auth setup needed";
+        button.textContent = "Вход пока не настроен";
       });
       return;
     }
 
     if (!window.supabase?.createClient) {
-      renderSignedOut("Auth SDK unavailable");
+      resolveAccount(null);
+      renderSignedOut("Не удалось загрузить модуль входа");
       return;
     }
 
@@ -216,5 +222,5 @@
 
   }
 
-  initAuth().catch(() => renderSignedOut('Connection unavailable. Please reload to try again.'));
+  initAuth().catch(() => { resolveAccount(null); renderSignedOut('Подключение недоступно. Попробуйте обновить страницу.'); });
 })();

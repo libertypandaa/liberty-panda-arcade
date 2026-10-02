@@ -2,6 +2,13 @@
 
 Project: `brvrlbahysbslkqntesl` (Liberty panda arcade).
 
+Current read-only MCP verification, 2 October 2026: [LIVE_AUDIT_2026-10-02.md](LIVE_AUDIT_2026-10-02.md).
+The account below is historical. The live database now also contains analytics
+tables and functions. Its migration history table is absent; Clutter Cup is
+still rejected by the live game constraints and RPC. No production changes
+were made during the new audit. Auth dashboard settings remain unverified
+because the local browser session expired.
+
 On 2026-09-20 the paused project was restored. Google OAuth was configured
 with a web client in Google Cloud project `project-a329768b-12c7-4029-b55`.
 The client secret is stored in Supabase Auth settings only.

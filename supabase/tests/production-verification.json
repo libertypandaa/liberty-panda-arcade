@@ -1,0 +1,728 @@
+{
+  "projectId": "brvrlbahysbslkqntesl",
+  "verifiedAt": "2026-10-02T16:04:39Z",
+  "verification": {
+    "games": [
+      {
+        "id": "clutter-cup",
+        "economyEnabled": false
+      },
+      {
+        "id": "crystal-front-demo",
+        "economyEnabled": false
+      }
+    ],
+    "counts": {
+      "lots": 0,
+      "audit": 0,
+      "grants": 0,
+      "ledger": 0,
+      "orders": 0,
+      "prices": 0,
+      "wallets": 0,
+      "products": 0,
+      "allocations": 0,
+      "entitlements": 0
+    },
+    "constraints": [
+      {
+        "name": "game_sessions_registered_game",
+        "table": "game_analytics_sessions",
+        "definition": "FOREIGN KEY (game) REFERENCES lpa_private.games(game_id)"
+      },
+      {
+        "name": "hub_events_registered_game",
+        "table": "hub_events",
+        "definition": "FOREIGN KEY (game) REFERENCES lpa_private.games(game_id)"
+      }
+    ],
+    "functionACLs": [
+      {
+        "anon": false,
+        "name": "capabilities",
+        "schema": "lpa_api",
+        "definer": true,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "catalog",
+        "schema": "lpa_api",
+        "definer": true,
+        "arguments": "p_game_id text",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "games",
+        "schema": "lpa_api",
+        "definer": true,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "inventory",
+        "schema": "lpa_api",
+        "definer": true,
+        "arguments": "p_game_id text",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "purchase",
+        "schema": "lpa_api",
+        "definer": true,
+        "arguments": "p_game_id text, p_product_id text, p_request_id uuid, p_price_version integer",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "purchase_status",
+        "schema": "lpa_api",
+        "definer": true,
+        "arguments": "p_request_id uuid",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "require_actor",
+        "schema": "lpa_api",
+        "definer": false,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "wallet",
+        "schema": "lpa_api",
+        "definer": true,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "immutable_row",
+        "schema": "lpa_private",
+        "definer": false,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "product_identity_fixed",
+        "schema": "lpa_private",
+        "definer": false,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "record_verified_credit",
+        "schema": "lpa_private",
+        "definer": true,
+        "arguments": "p_account_id uuid, p_namespace text, p_source_id text, p_kind text, p_units bigint",
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "register_game",
+        "schema": "lpa_private",
+        "definer": true,
+        "arguments": "p_game_id text, p_title text, p_url text, p_score_unit text",
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "register_product",
+        "schema": "lpa_private",
+        "definer": true,
+        "arguments": "p_game_id text, p_item_id text, p_kind text, p_product_id text, p_title text, p_price bigint, p_quantity integer, p_reason text",
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "reprice_product",
+        "schema": "lpa_private",
+        "definer": true,
+        "arguments": "p_product_id text, p_price bigint, p_quantity integer, p_reason text, p_title text",
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "set_account_controls",
+        "schema": "lpa_private",
+        "definer": true,
+        "arguments": "p_account_id uuid, p_enabled boolean, p_status text, p_reason text",
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "set_game_economy",
+        "schema": "lpa_private",
+        "definer": true,
+        "arguments": "p_game_id text, p_enabled boolean, p_reason text",
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "set_product_active",
+        "schema": "lpa_private",
+        "definer": true,
+        "arguments": "p_product_id text, p_active boolean, p_reason text",
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "lpa_capabilities",
+        "schema": "public",
+        "definer": false,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_catalog",
+        "schema": "public",
+        "definer": false,
+        "arguments": "p_game_id text",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_games",
+        "schema": "public",
+        "definer": false,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_inventory",
+        "schema": "public",
+        "definer": false,
+        "arguments": "p_game_id text",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_purchase",
+        "schema": "public",
+        "definer": false,
+        "arguments": "p_game_id text, p_product_id text, p_request_id uuid, p_price_version integer",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_purchase_status",
+        "schema": "public",
+        "definer": false,
+        "arguments": "p_request_id uuid",
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_wallet",
+        "schema": "public",
+        "definer": false,
+        "arguments": "",
+        "serviceRole": false,
+        "authenticated": true
+      }
+    ]
+  },
+  "tableACLs": [
+    {
+      "nspname": "lpa_private",
+      "relname": "games",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "wallets",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "items",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "products",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "prices",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "ledger",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "credit_lots",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "debit_allocations",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "inventory_grants",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "entitlements",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "store_orders",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    },
+    {
+      "nspname": "lpa_private",
+      "relname": "economy_audit",
+      "relrowsecurity": true,
+      "anon_access": false,
+      "auth_access": false,
+      "service_access": false
+    }
+  ],
+  "migrations": [
+    {
+      "version": "20261002155351",
+      "name": "register_clutter_cup"
+    },
+    {
+      "version": "20261002155606",
+      "name": "lpa_registry_core"
+    },
+    {
+      "version": "20261002160240",
+      "name": "lpa_registry_acl_hardening"
+    },
+    {
+      "version": "20261002160305",
+      "name": "lpa_economy_core"
+    }
+  ],
+  "advisors": {
+    "result": {
+      "lints": [
+        {
+          "name": "rls_enabled_no_policy",
+          "title": "RLS Enabled No Policy",
+          "level": "INFO",
+          "facing": "EXTERNAL",
+          "categories": [
+            "SECURITY"
+          ],
+          "description": "Detects cases where row level security (RLS) has been enabled on a table but no RLS policies have been created.",
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+          "count": 17,
+          "findings": [
+            {
+              "detail": "Table \\`lpa_private.credit_lots\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "credit_lots",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.debit_allocations\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "debit_allocations",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.economy_audit\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "economy_audit",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.entitlements\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "entitlements",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.games\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "games",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.inventory_grants\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "inventory_grants",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.items\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "items",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.ledger\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "ledger",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.prices\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "prices",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.products\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "products",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.store_orders\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "store_orders",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`lpa_private.wallets\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "wallets",
+                "type": "table",
+                "schema": "lpa_private"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`public.game_analytics_custom\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "game_analytics_custom",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`public.game_analytics_events\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "game_analytics_events",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`public.game_analytics_sessions\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "game_analytics_sessions",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`public.hub_analytics_admins\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "hub_analytics_admins",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Table \\`public.hub_events\\` has RLS enabled, but no policies exist",
+              "metadata": {
+                "name": "hub_events",
+                "type": "table",
+                "schema": "public"
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            }
+          ]
+        },
+        {
+          "name": "anon_security_definer_function_executable",
+          "title": "Public Can Execute SECURITY DEFINER Function",
+          "level": "WARN",
+          "facing": "EXTERNAL",
+          "categories": [
+            "SECURITY"
+          ],
+          "description": "Detects `SECURITY DEFINER` functions that are callable without signing in. Revoke `EXECUTE`, switch the function to `SECURITY INVOKER`, or move it out of your exposed API schema if it is not meant to be public.",
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable",
+          "count": 5,
+          "findings": [
+            {
+              "detail": "Function `public.delete_my_hub_stats(p_guest uuid)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/delete_my_hub_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "delete_my_hub_stats",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "p_guest uuid",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.my_game_stats(p_guest uuid)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/my_game_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "my_game_stats",
+                "schema": "public",
+                "language": "sql",
+                "arguments": "p_guest uuid",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.my_hub_stats(p_guest uuid)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/my_hub_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "my_hub_stats",
+                "schema": "public",
+                "language": "sql",
+                "arguments": "p_guest uuid",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.record_game_event(p_id uuid, p_guest uuid, p_session uuid, p_game text, p_name text, p_data jsonb)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/record_game_event`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "record_game_event",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "p_id uuid, p_guest uuid, p_session uuid, p_game text, p_name text, p_data jsonb",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.record_hub_event(p_id uuid, p_guest uuid, p_kind text, p_game text)` can be executed by the `anon` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/record_hub_event`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "record_hub_event",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "p_id uuid, p_guest uuid, p_kind text, p_game text",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            }
+          ]
+        },
+        {
+          "name": "authenticated_security_definer_function_executable",
+          "title": "Signed-In Users Can Execute SECURITY DEFINER Function",
+          "level": "WARN",
+          "facing": "EXTERNAL",
+          "categories": [
+            "SECURITY"
+          ],
+          "description": "Detects `SECURITY DEFINER` functions that are callable by signed-in users. Revoke `EXECUTE`, switch the function to `SECURITY INVOKER`, or move it out of your exposed API schema if signed-in users should not call it.",
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+          "count": 7,
+          "findings": [
+            {
+              "detail": "Function `public.admin_game_stats()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/admin_game_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "admin_game_stats",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.delete_my_hub_stats(p_guest uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/delete_my_hub_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "delete_my_hub_stats",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "p_guest uuid",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.hub_admin_stats()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/hub_admin_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "hub_admin_stats",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.my_game_stats(p_guest uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/my_game_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "my_game_stats",
+                "schema": "public",
+                "language": "sql",
+                "arguments": "p_guest uuid",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.my_hub_stats(p_guest uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/my_hub_stats`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "my_hub_stats",
+                "schema": "public",
+                "language": "sql",
+                "arguments": "p_guest uuid",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.record_game_event(p_id uuid, p_guest uuid, p_session uuid, p_game text, p_name text, p_data jsonb)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/record_game_event`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "record_game_event",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "p_id uuid, p_guest uuid, p_session uuid, p_game text, p_name text, p_data jsonb",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            },
+            {
+              "detail": "Function `public.record_hub_event(p_id uuid, p_guest uuid, p_kind text, p_game text)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/record_hub_event`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+              "metadata": {
+                "name": "record_hub_event",
+                "schema": "public",
+                "language": "plpgsql",
+                "arguments": "p_id uuid, p_guest uuid, p_kind text, p_game text",
+                "security_definer": true
+              },
+              "observed_at": "2026-10-02T16:03:31.022Z"
+            }
+          ]
+        },
+        {
+          "name": "auth_leaked_password_protection",
+          "title": "Leaked Password Protection Disabled",
+          "level": "WARN",
+          "facing": "EXTERNAL",
+          "categories": [
+            "SECURITY"
+          ],
+          "description": "Leaked password protection is currently disabled.",
+          "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection",
+          "count": 1,
+          "findings": [
+            {
+              "detail": "Supabase Auth prevents the use of compromised passwords by checking against HaveIBeenPwned.org. Enable this feature to enhance security.",
+              "metadata": {
+                "type": "auth",
+                "entity": "Auth"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

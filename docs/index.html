@@ -12,10 +12,13 @@
     <link rel="icon" href="./icon-192.png" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="./auth-config.js?v=20260927-1" defer></script>
-    <script src="./auth.js?v=20260927-1" defer></script>
-    <script src="./stats.js?v=20260927-1" defer></script>
-    <script src="./game-analytics-host.js?v=20260927-1" defer></script>
+    <script src="./auth-config.js?v=20261002-2" defer></script>
+    <script src="./auth.js?v=20261002-2" defer></script>
+    <script src="./auth-email.js?v=20261002-2" defer></script>
+    <script src="./stats.js?v=20261002-2" defer></script>
+    <script src="./player-account.js?v=20261002-2" defer></script>
+    <script src="./player-wallet.js?v=20261002-2" defer></script>
+    <script src="./game-analytics-host.js?v=20261002-2" defer></script>
     <title>Liberty Panda Arcade</title>
     <style>
       :root {
@@ -553,6 +556,7 @@
       }
 
       .cover {
+        display: block;
         position: relative;
         aspect-ratio: 1.72 / 1;
         overflow: hidden;
@@ -1047,8 +1051,18 @@
         }
       }
 
+      [hidden] { display: none !important; }
+      .game-card { height: auto; min-height: 0; }
+      @media (max-width: 640px) {
+        .game-card { display: flex; flex-direction: column; }
+        .game-card .cover { width: 100%; height: 190px; min-height: 0; flex: none; }
+        .library-head { flex-direction: column; gap: 12px; }
+        .library-head .button { width: auto; min-height: 44px; }
+        .game-card .game-body { min-width: 0; height: auto; }
+        .game-card .genre, .game-card .muted { overflow: visible; }
+      }
     </style>
-    <link rel="stylesheet" href="./game-player.css?v=20260927-1" />
+    <link rel="stylesheet" href="./game-player.css?v=20261002-2" />
   </head>
   <body>
     <main class="app">
@@ -1081,18 +1095,17 @@
         </div>
 
         <nav class="nav" aria-label="Main navigation" aria-hidden="true">
-          <a class="active" href="#home"><span>⌂</span>Home</a>
-          <a href="#library"><span>▦</span>Library</a>
-          <a href="#profile"><span>◉</span>Profile</a>
-          <a href="#leaderboard"><span>▥</span>Leaderboard</a>
-          <a href="#settings"><span>⚙</span>Settings</a>
+          <a class="active" href="#home"><span>⌂</span>Главная</a>
+          <a href="#library"><span>▦</span>Мои игры</a>
+          <a href="#profile"><span>◉</span>Профиль</a>
+          <a href="#settings"><span>⚙</span>Настройки</a>
         </nav>
 
         <section class="studio-card">
-          <img src="./assets/lieberman-games-logo.png" alt="Lieberman Games lighthouse logo" />
-          <p class="studio-kicker">Studio</p>
-          <h2>Lieberman Games</h2>
-          <p><a href="./privacy/">Privacy</a> · <a href="./terms/">Terms</a></p>
+          <img src="./assets/lieberman-games-logo.png" alt="Liberman Games lighthouse logo" />
+          <p class="studio-kicker">Студия</p>
+          <h2>Liberman Games</h2>
+          <p><a href="./privacy/">Конфиденциальность</a> · <a href="./terms/">Условия</a></p>
           <p class="muted">
             Маяк — знак студии. Liberty Panda Arcade остается отдельным
             игроковым хабом.
@@ -1101,204 +1114,93 @@
       </aside>
 
       <section class="main">
+        <header class="account-banner" style="margin-bottom:20px"><strong data-auth-greeting>Добро пожаловать!</strong> <a href="#profile" data-account-link>Войти или зарегистрироваться</a></header>
         <section id="home" class="view-panel is-active">
-          <section class="feature-grid" aria-label="Last played game">
-            <article class="feature">
-              <img
-                src="./assets/games/crystal-front-feature.png"
-                alt="Crystal Front Demo preview"
-              />
-              <div class="feature-content">
-                <span class="pill" data-stats-feature>Featured game</span>
-                <h2>Crystal Front Demo</h2>
-                <p>
-                  Тактическая кристальная дуэль. Запусти игру прямо в браузере.
-                </p>
-                <div class="actions">
-                  <button class="button primary play-game" type="button">
-                    ▶ Play
-                  </button>
-                  <a class="button secondary" data-install-link href="./games/crystal-front/install/">Add to phone</a>
-                </div>
-              </div>
-            </article>
-          </section>
-
-          <section id="library" class="library">
-            <div class="library-head">
-              <div>
-                <p class="kicker">Library</p>
-                <h2>Recommended for you</h2>
-              </div>
-              <a href="#library" class="kicker">All games →</a>
-            </div>
-
-            <div class="games">
-              <article class="card game-card">
-                <div class="cover">
-                  <img
-                    src="./assets/games/crystal-front-feature.png"
-                    alt="Crystal Front Demo cover"
-                  />
-                  <span class="status">Playable demo</span>
-                </div>
-                <div class="game-body">
-                  <p class="kicker">Lieberman Games</p>
-                  <h3>Crystal Front Demo</h3>
-                  <p class="genre">Strategy · Tactical</p>
-                  <p class="muted">
-                    Тактическая кристальная дуэль и первый тайтл хаба.
-                  </p>
-                  <div class="progress">
-                    <div class="progress-row"><span>Hub readiness</span><span>60%</span></div>
-                    <div class="bar"><div class="fill" style="width: 60%"></div></div>
-                  </div>
-                  <button class="button primary play-game" type="button">Play</button>
-                  <a class="button secondary" data-install-link href="./games/crystal-front/install/">Add to phone</a>
-                </div>
-              </article>
-
-              <article class="card game-card">
-                <div class="cover"><a href="./games/clutter-cup/"><img src="./assets/games/clutter-cup/cover-1280x720.png" alt="Clutter Cup: машина из кухонных предметов" /></a><span class="status">Playable playtest</span></div>
-                <div class="game-body">
-                  <p class="kicker">Lieberman Games</p>
-                  <h3><a href="./games/clutter-cup/">Clutter Cup</a></h3>
-                  <p class="genre">3D · Construction racing</p>
-                  <p class="muted">Собери машину из кухонных предметов и пройди гонку по огромной кухне. Доставляй груз, покупай детали и открывай достижения.</p>
-                  <button class="button primary play-game" data-game-id="clutter-cup" type="button">Play</button>
-                  <a class="button secondary" data-install-link href="./games/clutter-cup/install/">Add to phone</a>
-                </div>
-              </article>
-
-              <article class="card game-card">
-                <div class="cover">
-                  <img src="./assets/games/fightern-cover.png" alt="Fightern cover" />
-                  <span class="status">Concept slot</span>
-                </div>
-                <div class="game-body">
-                  <p class="kicker">Lieberman Games</p>
-                  <h3>Fightern</h3>
-                  <p class="genre">Action · Arena</p>
-                  <p class="muted">
-                    Арена для коротких боевых сессий в будущей библиотеке.
-                  </p>
-                  <div class="progress">
-                    <div class="progress-row"><span>Hub readiness</span><span>20%</span></div>
-                    <div class="bar"><div class="fill" style="width: 20%"></div></div>
-                  </div>
-                  <span class="planned-label">Planned</span>
-                </div>
-              </article>
-
-              <article class="card game-card">
-                <div class="cover">
-                  <img
-                    src="./assets/games/castle-siege-cover.png"
-                    alt="Осада замка cover"
-                  />
-                  <span class="status">Concept slot</span>
-                </div>
-                <div class="game-body">
-                  <p class="kicker">Lieberman Games</p>
-                  <h3>Осада замка</h3>
-                  <p class="genre">Strategy · Defense</p>
-                  <p class="muted">
-                    Средневековая защита крепости и развитие обороны.
-                  </p>
-                  <div class="progress">
-                    <div class="progress-row"><span>Hub readiness</span><span>35%</span></div>
-                    <div class="bar"><div class="fill" style="width: 35%"></div></div>
-                  </div>
-                  <span class="planned-label">Planned</span>
-                </div>
-              </article>
-            </div>
-          </section>
+          <div class="page-title"><p class="kicker">Liberman Games</p><h2>Найдите свою игру</h2><p class="muted">Играйте в браузере или добавьте игру на телефон. Для запуска нужен аккаунт.</p></div>
+          <label for="catalog-search">Поиск игр</label>
+          <input id="catalog-search" type="search" placeholder="Название игры" style="width:100%;padding:14px;margin:10px 0 22px;border:1px solid var(--line);border-radius:8px;font:inherit">
+          <div class="games" data-game-catalog></div>
+          <p data-catalog-empty hidden>Ничего не найдено. Попробуйте другое название.</p>
+        </section>
+        <section id="library" class="library view-panel">
+          <div class="library-head"><div><p class="kicker">Библиотека</p><h2>Мои игры</h2></div><a class="button secondary" href="#home">Найти игру</a></div>
+          <p class="muted" data-library-status>Войдите, чтобы увидеть игры из вашей истории.</p>
+          <a href="#profile" class="button primary" data-library-login>Войти</a>
+          <div class="games" data-game-library></div>
         </section>
 
         <section id="profile" class="view-panel dashboard-panel">
           <div class="page-title">
-            <p class="kicker">Player</p>
-            <h2>Profile</h2>
+            <p class="kicker">Игрок</p>
+            <h2>Профиль</h2>
           </div>
           <section class="card profile">
             <div class="profile-top">
               <span class="avatar" data-auth-avatar>LP</span>
               <div>
-                <h2 data-auth-name>Guest player</h2>
-                <p class="muted" data-auth-email>Sign in with Google to sync progress</p>
+                <h2 data-auth-name>Войдите в аккаунт</h2>
+                <p class="muted" data-auth-email>Войдите через Google или код на почту</p>
               </div>
-            </div>
-            <div class="metrics">
-              <div class="metric"><strong data-stats-launches>—</strong><span>Запуски</span></div>
-              <div class="metric"><strong data-stats-visits>—</strong><span>Посещения</span></div>
-              <div class="metric"><strong>—</strong><span>Rank</span></div>
             </div>
             <div class="auth-actions">
-              <button class="button primary" type="button" data-auth-action="sign-in">Sign in with Google</button>
-              <button class="button secondary" type="button" data-auth-action="sign-out" hidden>Sign out</button>
+              <button class="button primary" type="button" data-auth-action="sign-in">Войти через Google</button>
+              <button class="button secondary" type="button" data-auth-action="sign-out" hidden>Выйти</button>
             </div>
-            <p class="auth-note"><a href="./privacy/">Privacy</a> · <a href="./terms/">Terms</a></p>
-            <p class="auth-note" role="status">Auth status: <strong data-auth-status>Checking</strong></p>
-            <form data-profile-form hidden>
-              <label for="profile-nickname">Nickname</label>
-              <div class="auth-actions">
-                <input id="profile-nickname" data-profile-name name="nickname" autocomplete="nickname" minlength="2" maxlength="40" required style="min-width:0;max-width:100%;padding:12px;border:1px solid #cbd5d1;border-radius:6px;font:inherit">
-                <button class="button secondary" type="submit">Save</button>
-              </div>
-            </form>
-            <p class="auth-note" data-profile-status role="status">Sign in to manage your profile</p>
-          </section>
-          <section class="dashboard-grid">
-            <article class="card side-card">
-              <h3>Player status</h3>
-              <div class="rank-row"><span>Last game</span><strong data-stats-last>—</strong></div>
-              <div class="rank-row"><span>Session</span><strong>Ready</strong></div>
-              <div class="rank-row"><span>Library</span><strong>3 games</strong></div>
-            </article>
-            <article class="card side-card">
-              <h3>История запусков</h3>
-              <p data-stats-status role="status">Загрузка статистики</p>
-              <ul data-stats-history></ul>
-              <h3>Игровая статистика</h3>
-              <p class="muted">Результаты сообщаются игрой и не являются подтверждённым рейтингом.</p>
-              <div data-game-stats></div>
-            </article>
-          </section>
-        </section>
+            <a class="button primary" data-auth-continue hidden>Продолжить</a>
+            <details data-email-auth>
+              <summary style="cursor:pointer;padding:12px 0">Или войти по коду на почту</summary>
+              <form style="display:grid;gap:12px;max-width:100%">
+                <label for="login-email">Электронная почта</label>
+                <input id="login-email" data-email-address type="email" autocomplete="email" maxlength="254" required style="min-width:0;width:100%;box-sizing:border-box;padding:12px;font:inherit">
+                <div data-email-code-panel hidden>
+                  <label for="login-code">Код из письма</label>
+                  <input id="login-code" data-email-code type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" maxlength="10" style="display:block;min-width:0;width:100%;box-sizing:border-box;padding:12px;font:inherit">
+                  <div class="auth-actions">
+                    <button class="button secondary" data-email-resend type="button">Отправить повторно</button>
+                    <button class="button secondary" data-email-change type="button">Изменить адрес</button>
+                  </div>
+                </div>
+                <button class="button secondary" data-email-submit type="submit">Получить код</button>
+                <p class="auth-note" data-email-status role="status" aria-live="polite"></p>
+                <p class="auth-note">Пароль не нужен. После подтверждения почты аккаунт создастся автоматически, если его ещё нет.</p>
+              </form>
+            </details>
+            <p class="auth-note"><a href="./privacy/">Конфиденциальность</a> · <a href="./terms/">Условия</a></p>
 
-        <section id="leaderboard" class="view-panel dashboard-panel">
-          <div class="page-title">
-            <p class="kicker">Competition</p>
-            <h2>Leaderboard</h2>
-          </div>
-          <section class="card side-card">
-            <h3>Crystal Front Demo</h3>
-            <p class="muted">Подтверждённых результатов пока нет</p>
+          </section>
+          <section class="card side-card" data-economy-panel hidden></section>
+          <section class="card side-card" data-player-summary hidden>
+            <h3>Ваши игры</h3>
+            <p data-player-summary-status>Загрузка…</p>
+            <div data-player-games></div>
+            <p class="muted">Общий кошелёк, бонусы и подтверждённый рейтинг ещё не подключены.</p>
           </section>
         </section>
 
         <section id="settings" class="view-panel dashboard-panel">
           <div class="page-title">
-            <p class="kicker">Account</p>
-            <h2>Settings</h2>
+            <p class="kicker">Аккаунт</p>
+            <h2>Настройки</h2>
           </div>
           <section class="dashboard-grid">
             <article class="card side-card">
-              <h3>Profile settings</h3>
-              <p><label><input type="checkbox" data-stats-consent> Разрешить статистику хаба и игровых событий</label></p>
-              <button type="button" class="button secondary" data-stats-delete>Удалить мою статистику</button>
-              <p data-stats-status role="status"></p>
-              <div class="rank-row"><span>Nickname</span><strong data-auth-name>Guest player</strong></div>
-              <div class="rank-row"><span>Language</span><strong>Русский</strong></div>
-              <div class="rank-row"><span>Account</span><strong data-auth-account>Guest</strong></div>
-              <div class="rank-row"><span>Auth</span><strong data-auth-status>Checking</strong></div>
+              <h3>Аккаунт</h3>
+                          <form data-profile-form hidden>
+              <label for="profile-nickname">Никнейм</label>
+              <div class="auth-actions">
+                <input id="profile-nickname" data-profile-name name="nickname" autocomplete="nickname" minlength="2" maxlength="40" required style="min-width:0;max-width:100%;padding:12px;border:1px solid #cbd5d1;border-radius:6px;font:inherit">
+                <button class="button secondary" type="submit">Сохранить</button>
+              </div>
+            </form>
+            <p class="auth-note" data-profile-status role="status">Войдите, чтобы настроить профиль</p>
+              <button class="button secondary" type="button" data-auth-action="sign-out" hidden>Выйти из аккаунта</button>
+              <p class="muted">Чтобы сменить аккаунт, выйдите и войдите другим способом или адресом.</p>
             </article>
             <article class="card side-card">
-              <h3>Game preferences</h3>
-              <div class="rank-row"><span>Fullscreen launch</span><strong>On</strong></div>
-              <div class="rank-row"><span>Phone install</span><strong>Enabled</strong></div>
-              <div class="rank-row"><span>Notifications</span><strong>Later</strong></div>
+              <h3>Конфиденциальность</h3>
+              <p><label><input type="checkbox" data-stats-consent> Разрешить необязательную аналитику игры и сайта</label></p>
+              <button type="button" class="button secondary" data-stats-delete>Удалить мою статистику</button>
+              <p data-stats-status role="status"></p>
             </article>
             <article class="card side-card app-health">
               <section data-stats-admin hidden>
@@ -1307,18 +1209,18 @@
                 <button type="button" class="button secondary" data-stats-refresh>Обновить статистику</button>
                 <div data-stats-report></div>
               </section>
-              <h3>App status</h3>
-              <div class="rank-row"><span>Installed</span><strong id="install-state">Checking</strong></div>
-              <div class="rank-row"><span>Version</span><strong id="app-version">Checking</strong></div>
-              <div class="rank-row"><span>Update</span><strong id="update-state">Checking</strong></div>
-              <button class="button update-button" type="button" id="update-app" hidden>Update app</button>
+              <h3>Версия сайта</h3>
+              <div class="rank-row"><span>Режим открытия</span><strong id="install-state">Проверка…</strong></div>
+              <div class="rank-row"><span>Версия</span><strong id="app-version">Проверка…</strong></div>
+              <div class="rank-row"><span>Обновление</span><strong id="update-state">Проверка…</strong></div>
+              <button class="button update-button" type="button" id="update-app" hidden>Обновить сайт</button>
             </article>
           </section>
         </section>
       </section>
 
     </main>
-    <section class="game-overlay" id="game-overlay" hidden aria-label="Crystal Front fullscreen player">
+    <section class="game-overlay" id="game-overlay" hidden aria-label="Игра">
       <div class="game-toolbar"><button class="fullscreen-game" type="button" id="fullscreen-game">Fullscreen</button><button class="close-game" type="button" id="close-game">Close</button></div>
       <iframe
         id="game-frame"
@@ -1326,9 +1228,11 @@
         allow="fullscreen; autoplay; gamepad"
       ></iframe>
     </section>
-    <script src="./game-registry.js?v=20260927-1"></script>
-    <script src="./game-player.js?v=20260927-1"></script>
-    <script src="./update-guard.js?v=20260927-1"></script>
+    <script src="./game-registry.js?v=20261002-2"></script>
+    <script src="./account-gate.js?v=20261002-2"></script>
+<script src="./game-player.js?v=20261002-2"></script>
+    <script src="./economy-host.js?v=20261002-2"></script>
+    <script src="./update-guard.js?v=20261002-2"></script>
     <script>
       const gameUrl = "https://libertypandaa.github.io/crystal-front-demo/";
       const overlay = document.querySelector("#game-overlay");
@@ -1435,14 +1339,14 @@
           const updateAvailable = Boolean(previousVersion && previousVersion !== versionInfo.version);
 
           appVersion.textContent = versionInfo.version;
-          updateState.textContent = updateAvailable ? "Available" : "Current";
+          updateState.textContent = updateAvailable ? "Доступно" : "Актуальная";
           updateAppButton.hidden = !updateAvailable;
           localStorage.setItem(versionStorageKey, versionInfo.version);
 
           return updateAvailable;
         } catch (error) {
-          appVersion.textContent = "Unknown";
-          updateState.textContent = "Offline";
+          appVersion.textContent = "Неизвестно";
+          updateState.textContent = "Нет связи";
           return false;
         }
       }
@@ -1464,15 +1368,16 @@
       }
       function closeGame() { return window.HubPlayer.close(); }
 
-      document.querySelectorAll(".play-game").forEach((button) => {
-        button.addEventListener("click", openGameFullscreen);
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest(".play-game[data-game-id]");
+        if (button) window.HubPlayer.open(button.dataset.gameId);
       });
 
       closeButton.addEventListener("click", closeGame);
 
       function showView(hash) {
-        const target = hash || "#home";
-        const viewId = target === "#library" ? "home" : target.slice(1);
+        const target = hash === "#leaderboard" ? "#profile" : (hash || "#home");
+        const viewId = target.slice(1);
         const activePanel = document.getElementById(viewId) || document.getElementById("home");
 
         viewPanels.forEach((panel) => {
@@ -1485,7 +1390,7 @@
         });
 
         if (target === "#library") {
-          document.getElementById("library").scrollIntoView({ behavior: "smooth", block: "start" });
+          window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
@@ -1538,9 +1443,7 @@
       updateAppButton.addEventListener("click", refreshApp);
       window.addEventListener("appinstalled", () => {
         installState.textContent = "Yes";
-        installLinks.forEach((link) => {
-          link.textContent = "Installed";
-        });
+        // Hub installation does not prove individual games are installed.
       });
       registerUpdatingServiceWorker("./service-worker.js");
       buildAnimatedWordmark();

@@ -2,15 +2,16 @@
 <html lang="ru">
   <head>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="../../../auth-config.js?v=20260927-1" defer></script>
-    <script src="../../../stats.js?v=20260927-1" defer></script>
-    <script src="../../../game-analytics-host.js?v=20260927-1" defer></script>
+    <script src="../../../auth-config.js?v=20261002-2" defer></script>
+<script src="../../../auth.js?v=20261002-2" defer></script>
+    <script src="../../../stats.js?v=20261002-2" defer></script>
+    <script src="../../../game-analytics-host.js?v=20261002-2" defer></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0f172a" />
     <link rel="manifest" href="../manifest.webmanifest?v=clutter-cup-icon-v2" />
-    <link rel="icon" href="../../../assets/games/clutter-cup/icon-192.png" />
-    <link rel="apple-touch-icon" href="../../../assets/games/clutter-cup/icon-192.png" />
+    <link rel="icon" href="../../../assets/games/clutter-cup/icon-192.png?v=20261001-1" />
+    <link rel="apple-touch-icon" href="../../../assets/games/clutter-cup/icon-192.png?v=20261001-1" />
     <title>Install Clutter Cup — Liberty Panda Arcade</title>
     <style>
       :root {
@@ -256,13 +257,15 @@
 
       }
     </style>
-    <link rel="stylesheet" href="../../../game-player.css?v=20260927-1" />
-  </head>
+    <link rel="stylesheet" href="../../../game-player.css?v=20261002-2" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="../../../auth-config.js?v=20261002-2" defer></script>
+</head>
   <body>
     <main class="page">
       <section class="card">
         <div class="cover">
-          <img src="../../../assets/games/clutter-cup/cover-1280x720.png" alt="Clutter Cup preview" />
+          <img src="../../../assets/games/clutter-cup/cover-1280x720.png?v=20261001-1" alt="Clutter Cup preview" />
           <div class="cover-content">
             <p class="kicker">Liberty Panda Arcade</p>
             <h1>Install Clutter Cup</h1>
@@ -304,9 +307,11 @@
       ></iframe>
     </section>
 
-    <script src="../../../game-registry.js?v=20260927-1"></script>
-    <script src="../../../game-player.js?v=20260927-1"></script>
-    <script src="../../../update-guard.js?v=20260927-1"></script>
+    <script src="../../../game-registry.js?v=20261002-2"></script>
+    <script src="../../../account-gate.js?v=20261002-2"></script>
+<script src="../../../game-player.js?v=20261002-2"></script>
+    <script src="../../../economy-host.js?v=20261002-2"></script>
+    <script src="../../../update-guard.js?v=20261002-2"></script>
     <script>
       const gameUrl = "https://libertypandaa.github.io/clutter-cup-playtest/";
       const statusBox = document.querySelector("#status");

@@ -1,0 +1,38 @@
+{
+  "projectId": "brvrlbahysbslkqntesl",
+  "canonicalization": "CRLF to LF; trim trailing whitespace only",
+  "migrations": [
+    {
+      "name": "register_clutter_cup",
+      "remoteVersion": "20261002155351",
+      "file": "supabase/migrations/20260927_clutter_cup.sql",
+      "sourceSha256": "850b43da17eed8da7fc80be4700986a20f16da7660dd3453b92fa54ea47ecbfb",
+      "canonicalSqlSha256": "e2079a8f4052d210b45695a94035b5269cab559e3fccdec12e1dd39c55c3d775",
+      "matchesRemoteStatements": true
+    },
+    {
+      "name": "lpa_registry_core",
+      "remoteVersion": "20261002155606",
+      "file": "supabase/migrations/20261002152159_lpa_registry_core.sql",
+      "sourceSha256": "fa6adbd326e0af49bba9b61267dc38e32e23fe10e1b365e330daf5dca395c7d7",
+      "canonicalSqlSha256": "70059654f5573795321f907c3f23b50a146e389a23551ca0bf64fd82e518e3b8",
+      "matchesRemoteStatements": true
+    },
+    {
+      "name": "lpa_registry_acl_hardening",
+      "remoteVersion": "20261002160240",
+      "file": "supabase/migrations/20261002155750_lpa_registry_acl_hardening.sql",
+      "sourceSha256": "e2a9cddeb25e2f0f13c8eb25f312e22c784a19b62a422d4c80ee10690b81d1fc",
+      "canonicalSqlSha256": "699815237be931eb9c5a749f589739edb71f1487913d719bee4db6e667589b4e",
+      "matchesRemoteStatements": true
+    },
+    {
+      "name": "lpa_economy_core",
+      "remoteVersion": "20261002160305",
+      "file": "supabase/migrations/20261002152509_lpa_economy_core.sql",
+      "sourceSha256": "765890859281a27ca614ddfa2c6301200d1200f2cc55c6ec76f0ddb5e243c56e",
+      "canonicalSqlSha256": "5ac2b4039e8feb33138ad1b76c501f8e4e0e3b7b7b8e6cda6651dfcee329b83c",
+      "matchesRemoteStatements": true
+    }
+  ]
+}

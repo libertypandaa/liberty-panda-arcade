@@ -133,6 +133,6 @@ test('registry rejects wrong path, origin and embedded credentials',()=>{
 test('updated pages bypass the old worker cache for the telemetry and player bundle',()=>{
  for(const p of ['docs/index.html','docs/games/crystal-front/index.html','docs/games/crystal-front/install/index.html','docs/games/clutter-cup/index.html','docs/games/clutter-cup/install/index.html']){
   const html=fs.readFileSync(p,'utf8');
-  for(const name of ['stats.js','game-analytics-host.js','game-player.js','game-registry.js','update-guard.js'])assert.ok(html.includes(name+'?v=20260927-1'),p+' must not use the old cached '+name);
+  for(const name of ['stats.js','game-analytics-host.js','game-player.js','game-registry.js','update-guard.js'])assert.ok(html.includes(name+'?v=20261002-2'),p+' must not use the old cached '+name);
  }
 });

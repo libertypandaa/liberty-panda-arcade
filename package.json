@@ -2,10 +2,15 @@
   "name": "liberty-panda-arcade-site",
   "private": true,
   "scripts": {
-    "test": "node --test tests/auth.test.cjs tests/stats.test.cjs tests/game-analytics.test.cjs tests/player.test.cjs",
+    "test": "node --test tests/*.test.cjs",
     "test:db": "node tests/database-check.cjs",
     "test:browser": "node tests/browser-check.cjs",
-    "test:protocol": "node tests/browser-protocol-check.cjs"
+    "test:protocol": "node tests/browser-protocol-check.cjs",
+    "test:player-ui": "node tests/player-ui-check.cjs",
+    "game:add": "node tools/add-game.cjs",
+    "test:monetization": "node --test server/monetization/*.test.cjs",
+    "test:economy": "node supabase/tests/economy-check.cjs",
+    "test:db-agent": "node supabase/tests/db-agent-check.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.8",

@@ -1,5 +1,12 @@
 # Game Hub Roadmap
 
+> Historical roadmap. The agreed platform scope as of 30 September 2026 is in
+> [PLATFORM_SPEC.md](docs/PLATFORM_SPEC.md), with the current
+> [implementation plan](docs/PLATFORM_IMPLEMENTATION_PLAN.md) and
+> [game agent contract](docs/GAME_PLATFORM_CONTRACT.md).
+> These supersede the guest mode and independent result/reward assumptions below.
+> Planned SDK methods in this historical document are not evidence of implemented APIs.
+
 ## Research Notes
 
 - PWA installability requires a web app manifest, HTTPS or localhost, app icons, a start URL, and standalone/browser display settings.

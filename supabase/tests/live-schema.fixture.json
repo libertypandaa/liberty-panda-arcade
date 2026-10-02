@@ -1,0 +1,300 @@
+{
+  "grants": [
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "INSERT",
+      "with_hierarchy": "NO"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "SELECT",
+      "with_hierarchy": "YES"
+    },
+    {
+      "grantee": "authenticated",
+      "grantor": "postgres",
+      "table_name": "profiles",
+      "is_grantable": "NO",
+      "table_schema": "public",
+      "table_catalog": "postgres",
+      "privilege_type": "UPDATE",
+      "with_hierarchy": "NO"
+    }
+  ],
+  "indexes": [
+    {
+      "indexdef": "CREATE UNIQUE INDEX hub_analytics_admins_pkey ON public.hub_analytics_admins USING btree (user_id)",
+      "indexname": "hub_analytics_admins_pkey",
+      "tablename": "hub_analytics_admins",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)",
+      "indexname": "profiles_pkey",
+      "tablename": "profiles",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX hub_events_pkey ON public.hub_events USING btree (id)",
+      "indexname": "hub_events_pkey",
+      "tablename": "hub_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE INDEX hub_events_actor_time ON public.hub_events USING btree (actor, created_at)",
+      "indexname": "hub_events_actor_time",
+      "tablename": "hub_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE INDEX hub_events_time ON public.hub_events USING btree (created_at)",
+      "indexname": "hub_events_time",
+      "tablename": "hub_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX game_analytics_sessions_pkey ON public.game_analytics_sessions USING btree (id)",
+      "indexname": "game_analytics_sessions_pkey",
+      "tablename": "game_analytics_sessions",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE INDEX game_sessions_actor ON public.game_analytics_sessions USING btree (actor, started_at)",
+      "indexname": "game_sessions_actor",
+      "tablename": "game_analytics_sessions",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX game_analytics_events_pkey ON public.game_analytics_events USING btree (id)",
+      "indexname": "game_analytics_events_pkey",
+      "tablename": "game_analytics_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE INDEX game_events_session ON public.game_analytics_events USING btree (session, name)",
+      "indexname": "game_events_session",
+      "tablename": "game_analytics_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX game_events_once ON public.game_analytics_events USING btree (session, name) WHERE (name = ANY (ARRAY['session_start'::text, 'ready'::text, 'session_end'::text]))",
+      "indexname": "game_events_once",
+      "tablename": "game_analytics_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX game_match_once ON public.game_analytics_events USING btree (session, name, ((data ->> 'match'::text))) WHERE (name = ANY (ARRAY['match_start'::text, 'match_end'::text]))",
+      "indexname": "game_match_once",
+      "tablename": "game_analytics_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX game_achievement_once ON public.game_analytics_events USING btree (session, ((data ->> 'achievement'::text))) WHERE (name = 'achievement'::text)",
+      "indexname": "game_achievement_once",
+      "tablename": "game_analytics_events",
+      "schemaname": "public",
+      "tablespace": null
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX game_analytics_custom_pkey ON public.game_analytics_custom USING btree (game, name)",
+      "indexname": "game_analytics_custom_pkey",
+      "tablename": "game_analytics_custom",
+      "schemaname": "public",
+      "tablespace": null
+    }
+  ],
+  "policies": [
+    {
+      "cmd": "UPDATE",
+      "qual": "(( SELECT auth.uid() AS uid) = id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "update own profile",
+      "schemaname": "public",
+      "with_check": "(( SELECT auth.uid() AS uid) = id)"
+    },
+    {
+      "cmd": "INSERT",
+      "qual": null,
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "insert own profile",
+      "schemaname": "public",
+      "with_check": "(( SELECT auth.uid() AS uid) = id)"
+    },
+    {
+      "cmd": "SELECT",
+      "qual": "(( SELECT auth.uid() AS uid) = id)",
+      "roles": [
+        "authenticated"
+      ],
+      "tablename": "profiles",
+      "permissive": "PERMISSIVE",
+      "policyname": "read own profile",
+      "schemaname": "public",
+      "with_check": null
+    }
+  ],
+  "functions": [
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.handle_new_user_profile()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$ begin insert into public.profiles (id, display_name, avatar_url) values (new.id, left(coalesce(nullif(new.raw_user_meta_data ->> 'full_name', ''), nullif(new.raw_user_meta_data ->> 'name', ''), 'Player'), 100), new.raw_user_meta_data ->> 'avatar_url') on conflict (id) do nothing; return new; end; $function$\n",
+      "name": "handle_new_user_profile"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.hub_actor(p_guest uuid)\n RETURNS text\n LANGUAGE sql\n STABLE\n SET search_path TO ''\nAS $function$\r\n select case when auth.uid() is not null then 'u:'||auth.uid()::text\r\n when p_guest is not null then 'g:'||encode(sha256(convert_to(p_guest::text,'UTF8')),'hex') else null end;\r\n$function$\n",
+      "name": "hub_actor"
+    },
+    {
+      "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.record_hub_event(p_id uuid, p_guest uuid, p_kind text, p_game text DEFAULT NULL::text)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\ndeclare v_actor text:=public.hub_actor(p_guest);\r\nbegin\r\n if v_actor is null or p_id is null then raise exception 'Identity required'; end if;\r\n if (select count(*) from public.hub_events where actor=v_actor and created_at>now()-interval '1 day')>=500 then raise exception 'Daily event limit reached'; end if;\r\n if p_kind='visit' and exists(select 1 from public.hub_events where actor=v_actor and kind='visit' and created_at>now()-interval '30 minutes') then return; end if;\r\n insert into public.hub_events(id,actor,user_id,kind,game) values(p_id,v_actor,auth.uid(),p_kind,p_game) on conflict(id) do nothing;\r\nend;\r\n$function$\n",
+      "name": "record_hub_event"
+    },
+    {
+      "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.my_hub_stats(p_guest uuid)\n RETURNS jsonb\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\n select jsonb_build_object('visits',count(*) filter(where kind='visit'),'launches',count(*) filter(where kind='launch'),'firstSeen',min(created_at),\r\n 'lastGame',(select game from public.hub_events where actor=public.hub_actor(p_guest) and kind='launch' order by created_at desc limit 1),\r\n 'history',(select coalesce(jsonb_agg(row_to_json(h)),'[]'::jsonb) from (select game,created_at from public.hub_events where actor=public.hub_actor(p_guest) and kind='launch' order by created_at desc limit 10) h))\r\n from public.hub_events where actor=public.hub_actor(p_guest);\r\n$function$\n",
+      "name": "my_hub_stats"
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.hub_admin_stats()\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\ndeclare result jsonb;\r\nbegin\r\n if not exists(select 1 from public.hub_analytics_admins where user_id=auth.uid()) then raise exception 'Not authorized' using errcode='42501'; end if;\r\n select jsonb_build_object(\r\n 'daily',count(distinct actor) filter(where created_at>=now()-interval '1 day'),\r\n 'weekly',count(distinct actor) filter(where created_at>=now()-interval '7 days'),\r\n 'monthly',count(distinct actor) filter(where created_at>=now()-interval '30 days'),\r\n 'guestBrowsers',count(distinct actor) filter(where user_id is null),'accounts',count(distinct actor) filter(where user_id is not null),\r\n 'visits',count(*) filter(where kind='visit'),'launches',count(*) filter(where kind='launch'),'ready',count(*) filter(where kind='game_ready'),\r\n 'installClicks',count(*) filter(where kind='install_click'),'installAvailable',count(*) filter(where kind='install_available'),'installed',count(*) filter(where kind='installed'),\r\n 'errors',count(*) filter(where kind in ('launch_error','auth_error')),\r\n 'returning',(select count(*) from (select actor from public.hub_events where kind='visit' group by actor having count(distinct (created_at at time zone 'UTC')::date)>1) r),\r\n 'registrations',(select count(*) from auth.users where created_at>=now()-interval '30 days'),\r\n 'retention',(select jsonb_agg(jsonb_build_object('day',n,'eligible',eligible,'returned',returned)) from (\r\n select n,count(*) filter(where first_day<=(now() at time zone 'UTC')::date-n) eligible,\r\n count(*) filter(where first_day<=(now() at time zone 'UTC')::date-n and exists(select 1 from public.hub_events e where e.actor=f.actor and e.kind='visit' and (e.created_at at time zone 'UTC')::date=f.first_day+n)) returned\r\n from (select actor,min((created_at at time zone 'UTC')::date) first_day from public.hub_events where kind='visit' group by actor) f\r\n cross join (values(1),(7),(30)) d(n) group by n order by n) cohorts)\r\n ) into result from public.hub_events;\r\n return result;\r\nend;\r\n$function$\n",
+      "name": "hub_admin_stats"
+    },
+    {
+      "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.record_game_event(p_id uuid, p_guest uuid, p_session uuid, p_game text, p_name text, p_data jsonb)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\ndeclare a text:=public.hub_actor(p_guest); s public.game_analytics_sessions; allowed text[]; required text[]; k text; secs integer;\r\nbegin\r\n if a is null or p_id is null or p_session is null or p_game is distinct from 'crystal-front-demo' then raise exception 'Invalid identity or game'; end if;\r\n if p_data is null or jsonb_typeof(p_data)<>'object' or octet_length(p_data::text)>512 then raise exception 'Invalid payload'; end if;\r\n case p_name\r\n when 'session_start','session_end' then allowed:=array[]::text[];\r\n when 'ready' then allowed:=array['load_ms'];\r\n when 'active_time' then allowed:=array['seconds'];\r\n when 'match_start' then allowed:=array['match','mode'];\r\n when 'match_end' then allowed:=array['match','outcome','score'];\r\n when 'tutorial' then allowed:=array['step','state'];\r\n when 'progress' then allowed:=array['level','percent'];\r\n when 'achievement' then allowed:=array['achievement'];\r\n when 'error' then allowed:=array['code'];\r\n when 'custom' then allowed:=array['name','value'];\r\n else raise exception 'Unknown event'; end case;\r\n if not(p_data ?& allowed) or exists(select 1 from jsonb_object_keys(p_data) t(key) where not(key=any(allowed))) then raise exception 'Invalid fields'; end if;\r\n foreach k in array allowed loop\r\n if k=any(array['load_ms','seconds','score','percent','value']) then\r\n if jsonb_typeof(p_data->k)<>'number' or abs((p_data->>k)::numeric)>1000000 then raise exception 'Invalid number'; end if;\r\n elsif jsonb_typeof(p_data->k)<>'string' or not((p_data->>k) ~ '^[a-z0-9][a-z0-9_.-]{0,63}$') then raise exception 'Invalid code'; end if;\r\n end loop;\r\n if p_name='ready' and (p_data->>'load_ms')::numeric not between 0 and 600000 then raise exception 'Invalid load time'; end if;\r\n if p_name='active_time' and ((p_data->>'seconds')::numeric not between 1 and 30 or (p_data->>'seconds')::numeric<>trunc((p_data->>'seconds')::numeric)) then raise exception 'Invalid active time'; end if;\r\n if p_name='match_end' and p_data->>'outcome' not in ('win','loss','draw','abandon') then raise exception 'Invalid outcome'; end if;\r\n if p_name='tutorial' and p_data->>'state' not in ('start','complete') then raise exception 'Invalid tutorial state'; end if;\r\n if p_name='progress' and (p_data->>'percent')::numeric not between 0 and 100 then raise exception 'Invalid progress'; end if;\r\n if p_name='custom' and not exists(select 1 from public.game_analytics_custom where game=p_game and name=p_data->>'name') then raise exception 'Unregistered custom event'; end if;\r\n perform pg_advisory_xact_lock(hashtextextended(a,0));\r\n if exists(select 1 from public.game_analytics_events where id=p_id) then return; end if;\r\n if (select count(*) from public.game_analytics_events e join public.game_analytics_sessions x on x.id=e.session where x.actor=a and e.created_at>now()-interval '1 day')>=4000 then raise exception 'Daily telemetry limit'; end if;\r\n if p_name='session_start' then insert into public.game_analytics_sessions(id,actor,user_id,game) values(p_session,a,auth.uid(),p_game) on conflict(id) do nothing; end if;\r\n select * into s from public.game_analytics_sessions where id=p_session for update;\r\n if s.id is null or s.actor<>a or s.game<>p_game then raise exception 'Session not owned'; end if;\r\n if s.ended_at is not null then return; end if;\r\n if p_name='match_end' and not exists(select 1 from public.game_analytics_events where session=p_session and name='match_start' and data->>'match'=p_data->>'match') then raise exception 'Match not started'; end if;\r\n if p_name='achievement' and exists(select 1 from public.game_analytics_events e join public.game_analytics_sessions x on x.id=e.session where x.actor=a and x.game=p_game and e.name='achievement' and e.data->>'achievement'=p_data->>'achievement') then return; end if;\r\n if p_name='active_time' then\r\n if not exists(select 1 from public.game_analytics_events where session=p_session and name='ready') then raise exception 'Game not ready'; end if;\r\n secs:=(p_data->>'seconds')::integer;\r\n if s.active_seconds+secs>extract(epoch from now()-s.started_at)+2 then raise exception 'Active time exceeds session'; end if;\r\n end if;\r\n insert into public.game_analytics_events(id,session,name,data) values(p_id,p_session,p_name,p_data) on conflict do nothing;\r\n if found then update public.game_analytics_sessions set last_event_at=now(),active_seconds=active_seconds+coalesce(secs,0),ended_at=case when p_name='session_end' then now() else null end where id=p_session; end if;\r\nend; $function$\n",
+      "name": "record_game_event"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.game_stats_for(p_actor text)\n RETURNS jsonb\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$\r\nwith s as (select * from public.game_analytics_sessions where p_actor is null or actor=p_actor),\r\ne as (select e.*,s.actor,s.game from public.game_analytics_events e join s on s.id=e.session),\r\ng as (select game,count(*) sessions,count(distinct actor) players,sum(active_seconds) active_seconds,round(avg(active_seconds),1) avg_active,count(*) filter(where ended_at is not null) ended,count(*) filter(where ended_at is null and last_event_at<now()-interval '24 hours') unfinished from s group by game)\r\nselect coalesce(jsonb_agg(jsonb_build_object(\r\n'game',g.game,'sessions',sessions,'players',players,'activeSeconds',active_seconds,'avgActiveSeconds',avg_active,'ended',ended,'unfinished',unfinished,\r\n'loaded',(select count(*) from e where game=g.game and name='ready'),\r\n'loadRate',(select round(100.0*count(*)/nullif(g.sessions,0),1) from e where game=g.game and name='ready'),\r\n'avgLoadMs',(select round(avg((data->>'load_ms')::numeric),1) from e where game=g.game and name='ready'),\r\n'p95LoadMs',(select percentile_cont(0.95) within group(order by (data->>'load_ms')::numeric) from e where game=g.game and name='ready'),\r\n'matches',(select count(*) from e where game=g.game and name='match_start'),\r\n'completed',(select count(*) from e where game=g.game and name='match_end' and data->>'outcome'<>'abandon'),\r\n'wins',(select count(*) from e where game=g.game and name='match_end' and data->>'outcome'='win'),\r\n'losses',(select count(*) from e where game=g.game and name='match_end' and data->>'outcome'='loss'),\r\n'draws',(select count(*) from e where game=g.game and name='match_end' and data->>'outcome'='draw'),\r\n'abandoned',(select count(*) from e where game=g.game and name='match_end' and data->>'outcome'='abandon'),\r\n'unresolved',(select count(*) from e start where start.game=g.game and start.name='match_start' and start.created_at<now()-interval '24 hours' and not exists(select 1 from e finish where finish.session=start.session and finish.name='match_end' and finish.data->>'match'=start.data->>'match')),\r\n'winRate',(select round(100.0*count(*) filter(where data->>'outcome'='win')/nullif(count(*) filter(where data->>'outcome'<>'abandon'),0),1) from e where game=g.game and name='match_end'),\r\n'avgScore',(select round(avg((data->>'score')::numeric),1) from e where game=g.game and name='match_end' and data->>'outcome'<>'abandon'),\r\n'achievements',(select count(*) from e where game=g.game and name='achievement'),\r\n'errors',(select count(*) from e where game=g.game and name='error'),\r\n'tutorial',(select coalesce(jsonb_agg(t),'[]') from (select data->>'step' step,count(distinct actor) filter(where data->>'state'='start') started,count(distinct actor) filter(where data->>'state'='complete') completed from e where game=g.game and name='tutorial' group by data->>'step' order by data->>'step') t),\r\n'progress',(select coalesce(jsonb_agg(t),'[]') from (select level,count(*) players,round(avg(percent),1) average_best_percent from (select actor,data->>'level' level,max((data->>'percent')::numeric) percent from e where game=g.game and name='progress' group by actor,data->>'level') best group by level order by level) t),\r\n'unlocks',(select coalesce(jsonb_agg(t),'[]') from (select data->>'achievement' achievement,count(distinct actor) players from e where game=g.game and name='achievement' group by data->>'achievement' order by data->>'achievement') t),\r\n'errorCodes',(select coalesce(jsonb_agg(t),'[]') from (select data->>'code' code,count(*) occurrences from e where game=g.game and name='error' group by data->>'code' order by data->>'code') t),\r\n'custom',(select coalesce(jsonb_agg(t),'[]') from (select data->>'name' name,count(*) events,sum((data->>'value')::numeric) total,round(avg((data->>'value')::numeric),2) average from e where game=g.game and name='custom' group by data->>'name' order by data->>'name') t)\r\n)),'[]'::jsonb) from g; $function$\n",
+      "name": "game_stats_for"
+    },
+    {
+      "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.my_game_stats(p_guest uuid)\n RETURNS jsonb\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$ select public.game_stats_for(coalesce(public.hub_actor(p_guest),'invalid')); $function$\n",
+      "name": "my_game_stats"
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.admin_game_stats()\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$ begin\r\nif not exists(select 1 from public.hub_analytics_admins where user_id=auth.uid()) then raise exception 'Not authorized' using errcode='42501'; end if;\r\nreturn public.game_stats_for(null); end; $function$\n",
+      "name": "admin_game_stats"
+    },
+    {
+      "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "ddl": "CREATE OR REPLACE FUNCTION public.delete_my_hub_stats(p_guest uuid)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$ begin\r\ndelete from public.hub_events where actor=public.hub_actor(p_guest);\r\ndelete from public.game_analytics_sessions where actor=public.hub_actor(p_guest);\r\nend; $function$\n",
+      "name": "delete_my_hub_stats"
+    }
+  ],
+  "constraints": [
+    {
+      "name": "profiles_display_name_check",
+      "table": "profiles",
+      "definition": "CHECK (((char_length(display_name) >= 1) AND (char_length(display_name) <= 100)))"
+    },
+    {
+      "name": "profiles_pkey",
+      "table": "profiles",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "profiles_id_fkey",
+      "table": "profiles",
+      "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "hub_events_kind_check",
+      "table": "hub_events",
+      "definition": "CHECK ((kind = ANY (ARRAY['visit'::text, 'launch'::text, 'install_click'::text, 'install_available'::text, 'installed'::text, 'game_ready'::text, 'launch_error'::text, 'auth_error'::text])))"
+    },
+    {
+      "name": "hub_events_game_check",
+      "table": "hub_events",
+      "definition": "CHECK (((game IS NULL) OR (game = 'crystal-front-demo'::text)))"
+    },
+    {
+      "name": "hub_events_pkey",
+      "table": "hub_events",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "hub_events_user_id_fkey",
+      "table": "hub_events",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "hub_analytics_admins_pkey",
+      "table": "hub_analytics_admins",
+      "definition": "PRIMARY KEY (user_id)"
+    },
+    {
+      "name": "hub_analytics_admins_user_id_fkey",
+      "table": "hub_analytics_admins",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "game_analytics_sessions_game_check",
+      "table": "game_analytics_sessions",
+      "definition": "CHECK ((game = 'crystal-front-demo'::text))"
+    },
+    {
+      "name": "game_analytics_sessions_pkey",
+      "table": "game_analytics_sessions",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "game_analytics_sessions_user_id_fkey",
+      "table": "game_analytics_sessions",
+      "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "game_analytics_events_pkey",
+      "table": "game_analytics_events",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "game_analytics_events_session_fkey",
+      "table": "game_analytics_events",
+      "definition": "FOREIGN KEY (session) REFERENCES game_analytics_sessions(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "game_analytics_custom_name_check",
+      "table": "game_analytics_custom",
+      "definition": "CHECK ((name ~ '^[a-z0-9][a-z0-9_.-]{0,63}$'::text))"
+    },
+    {
+      "name": "game_analytics_custom_pkey",
+      "table": "game_analytics_custom",
+      "definition": "PRIMARY KEY (game, name)"
+    }
+  ],
+  "migration_history": null
+}

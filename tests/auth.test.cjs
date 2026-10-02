@@ -56,7 +56,7 @@ test('ignores a profile response arriving after sign-out', async () => {
   const s = setup();
   s.event(user); s.timers.shift()(); s.event(null);
   s.resolve({ data: { display_name: 'Stale' } }); await flush();
-  assert.equal(s.node('[data-auth-name]').textContent, 'Guest player');
+  assert.equal(s.node('[data-auth-name]').textContent, 'Войдите в аккаунт');
   assert.equal(s.node('[data-profile-form]').hidden, true);
 });
 
@@ -64,8 +64,8 @@ test('failed sign-out keeps the account and failed OAuth restores button', async
   const s = setup(); s.event(user);
   await s.node("[data-auth-action='sign-out']").click();
   assert.equal(s.node('[data-auth-name]').textContent, 'Player');
-  assert.match(s.node('[data-auth-status]').textContent, /Could not sign out/);
+  assert.match(s.node('[data-auth-status]').textContent, /Не удалось выйти/);
   await s.node("[data-auth-action='sign-in']").click();
   assert.equal(s.node("[data-auth-action='sign-in']").disabled, false);
-  assert.match(s.node('[data-auth-status]').textContent, /unavailable/);
+  assert.match(s.node('[data-auth-status]').textContent, /недоступен/);
 });

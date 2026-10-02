@@ -64,11 +64,11 @@
     }
   }
   function track(kind, gameId = null) {
-    if (!consent || !ready || (gameId !== null && !games?.get(gameId))) return;
+    if (!consent || !ready || (gameId !== null && (!games?.get(gameId) || games.get(gameId).analyticsEnabled === false))) return;
     const version = generation;
     const args = { p_id: crypto.randomUUID(), p_guest: identity(), p_kind: kind, p_game: gameId };
     chain = chain.catch(() => {}).then(async () => {
-      if (generation !== version || !consent) return;
+      if (generation !== version || !consent || (gameId !== null && games?.get(gameId)?.analyticsEnabled === false)) return;
       const { error } = await client.rpc('record_hub_event', args);
       if (generation !== version) return;
       if (error) { status('Событие не сохранено: нет связи со статистикой'); return; }
@@ -76,12 +76,12 @@
     }).catch(() => { status('Статистика временно недоступна'); });
   }
   function gameEvent(gameId, session, name, data, id = crypto.randomUUID()) {
-    if (!consent || !ready || !games?.get(gameId) || pendingGameEvents >= 120) return;
+    if (!consent || !ready || (!games?.get(gameId) || games.get(gameId).analyticsEnabled === false) || pendingGameEvents >= 120) return;
     const version = generation;
     const args = { p_id: id, p_guest: identity(), p_session: session, p_game: gameId, p_name: name, p_data: data };
     pendingGameEvents++;
     chain = chain.catch(() => {}).then(async () => {
-      if (generation !== version || !consent) return;
+      if (generation !== version || !consent || (gameId !== null && games?.get(gameId)?.analyticsEnabled === false)) return;
       const result = await client.rpc('record_game_event', args);
       if (generation !== version) return;
       if (result.error) { status('Игровое событие не сохранено'); return; }
@@ -108,7 +108,7 @@
       }
       output.append(title);
       for (const [key,label] of Object.entries(labels)) {
-        const row = document.createElement('p'); row.textContent = `${key === 'avgScore' && item.game === 'clutter-cup' ? 'Среднее время финиша, мс (меньше лучше; без abandon)' : label}: ${item[key] ?? 'нет данных'}`; output.append(row);
+        const row = document.createElement('p'); row.textContent = `${key === 'avgScore' && games?.get(item.game)?.scoreUnit === 'milliseconds' ? 'Среднее время финиша, мс (меньше лучше; без abandon)' : label}: ${item[key] ?? 'нет данных'}`; output.append(row);
       }
       for (const [key,label] of [['tutorial','Обучение'],['progress','Прогресс'],['custom','Собственные события'],['unlocks','Достижения'],['errorCodes','Коды ошибок']]) {
         const heading = document.createElement('h4'); heading.textContent = label; output.append(heading);

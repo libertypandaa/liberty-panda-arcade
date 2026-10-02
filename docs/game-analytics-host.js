@@ -31,7 +31,7 @@
   }
   function sync() {
     if (session && (context !== stats.context() || !stats.enabled() || !validDocument())) stop();
-    if (!session && loaded && validDocument() && stats.enabled()) {
+    if (!session && loaded && validDocument() && bound.game.analyticsEnabled !== false && stats.enabled()) {
       session = crypto.randomUUID(); context = stats.context(); ready = false;
       seen = new Set(); matches = new Set(); finished = new Set();
       messages = 0; windowStart = performance.now();
