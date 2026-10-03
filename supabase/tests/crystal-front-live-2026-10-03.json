@@ -1,0 +1,611 @@
+{
+  "projectId": "brvrlbahysbslkqntesl",
+  "readOnly": true,
+  "acceptance": {
+    "games": [
+      {
+        "id": "clutter-cup",
+        "active": true,
+        "events": 0,
+        "sessions": 0,
+        "hubEvents": 0,
+        "scoreUnit": "milliseconds",
+        "eventCounts": null,
+        "latestEvent": null,
+        "firstSession": null,
+        "guestSessions": 0,
+        "latestSession": null,
+        "matchOutcomes": null,
+        "economyEnabled": false,
+        "latestActivity": null,
+        "latestHubEvent": null,
+        "analyticsEnabled": true,
+        "eventsTodayIsrael": 0,
+        "sessionsTodayIsrael": 0,
+        "authenticatedSessions": 0
+      },
+      {
+        "id": "crystal-front-demo",
+        "active": true,
+        "events": 4,
+        "sessions": 2,
+        "hubEvents": 4,
+        "scoreUnit": "points",
+        "eventCounts": [
+          {
+            "name": "match_start",
+            "count": 1,
+            "latest": "2026-10-02T21:11:47.268734+00:00"
+          },
+          {
+            "name": "ready",
+            "count": 1,
+            "latest": "2026-10-02T21:11:11.880469+00:00"
+          },
+          {
+            "name": "session_start",
+            "count": 2,
+            "latest": "2026-10-02T21:11:07.059848+00:00"
+          }
+        ],
+        "latestEvent": "2026-10-02T21:11:47.268734+00:00",
+        "firstSession": "2026-09-28T09:05:03.9517+00:00",
+        "guestSessions": 1,
+        "latestSession": "2026-10-02T21:11:07.059848+00:00",
+        "matchOutcomes": null,
+        "economyEnabled": false,
+        "latestActivity": "2026-10-02T21:11:47.268734+00:00",
+        "latestHubEvent": "2026-10-02T21:11:11.667922+00:00",
+        "analyticsEnabled": true,
+        "eventsTodayIsrael": 3,
+        "sessionsTodayIsrael": 1,
+        "authenticatedSessions": 1
+      }
+    ],
+    "integrity": {
+      "orphanEvents": 0,
+      "unregisteredHubGame": 0,
+      "duplicateMatchEvents": 0,
+      "unregisteredSessions": 0,
+      "eventsWithBuildMetadata": 0
+    },
+    "tableACLs": [
+      {
+        "rls": true,
+        "table": "credit_lots",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "debit_allocations",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "economy_audit",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "entitlements",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "games",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "inventory_grants",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "items",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "ledger",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "prices",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "products",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "store_orders",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "wallets",
+        "schema": "lpa_private",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": false
+      },
+      {
+        "rls": true,
+        "table": "game_analytics_custom",
+        "schema": "public",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": true
+      },
+      {
+        "rls": true,
+        "table": "game_analytics_events",
+        "schema": "public",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": true
+      },
+      {
+        "rls": true,
+        "table": "game_analytics_sessions",
+        "schema": "public",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": true
+      },
+      {
+        "rls": true,
+        "table": "hub_events",
+        "schema": "public",
+        "anonAccess": false,
+        "authAccess": false,
+        "serviceAccess": true
+      },
+      {
+        "rls": true,
+        "table": "profiles",
+        "schema": "public",
+        "anonAccess": false,
+        "authAccess": true,
+        "serviceAccess": true
+      }
+    ],
+    "migrations": [
+      {
+        "name": "register_clutter_cup",
+        "version": "20261002155351"
+      },
+      {
+        "name": "lpa_registry_core",
+        "version": "20261002155606"
+      },
+      {
+        "name": "lpa_registry_acl_hardening",
+        "version": "20261002160240"
+      },
+      {
+        "name": "lpa_economy_core",
+        "version": "20261002160305"
+      }
+    ],
+    "constraints": [
+      {
+        "name": "game_analytics_events_session_fkey",
+        "definition": "FOREIGN KEY (session) REFERENCES game_analytics_sessions(id) ON DELETE CASCADE"
+      },
+      {
+        "name": "game_sessions_registered_game",
+        "definition": "FOREIGN KEY (game) REFERENCES lpa_private.games(game_id)"
+      },
+      {
+        "name": "hub_events_registered_game",
+        "definition": "FOREIGN KEY (game) REFERENCES lpa_private.games(game_id)"
+      }
+    ],
+    "snapshotUTC": "2026-10-03T07:22:51.323928+00:00",
+    "functionACLs": [
+      {
+        "anon": false,
+        "name": "capabilities",
+        "schema": "lpa_api",
+        "definer": true,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "catalog",
+        "schema": "lpa_api",
+        "definer": true,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "games",
+        "schema": "lpa_api",
+        "definer": true,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "inventory",
+        "schema": "lpa_api",
+        "definer": true,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "purchase",
+        "schema": "lpa_api",
+        "definer": true,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "purchase_status",
+        "schema": "lpa_api",
+        "definer": true,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "require_actor",
+        "schema": "lpa_api",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "wallet",
+        "schema": "lpa_api",
+        "definer": true,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "immutable_row",
+        "schema": "lpa_private",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "product_identity_fixed",
+        "schema": "lpa_private",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "record_verified_credit",
+        "schema": "lpa_private",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "register_game",
+        "schema": "lpa_private",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "register_product",
+        "schema": "lpa_private",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "reprice_product",
+        "schema": "lpa_private",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "set_account_controls",
+        "schema": "lpa_private",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "set_game_economy",
+        "schema": "lpa_private",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "set_product_active",
+        "schema": "lpa_private",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "admin_game_stats",
+        "schema": "public",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "game_stats_for",
+        "schema": "public",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": false
+      },
+      {
+        "anon": false,
+        "name": "hub_admin_stats",
+        "schema": "public",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_capabilities",
+        "schema": "public",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_catalog",
+        "schema": "public",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_games",
+        "schema": "public",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_inventory",
+        "schema": "public",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_purchase",
+        "schema": "public",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_purchase_status",
+        "schema": "public",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": false,
+        "name": "lpa_wallet",
+        "schema": "public",
+        "definer": false,
+        "serviceRole": false,
+        "authenticated": true
+      },
+      {
+        "anon": true,
+        "name": "my_game_stats",
+        "schema": "public",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": true
+      },
+      {
+        "anon": true,
+        "name": "record_game_event",
+        "schema": "public",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": true
+      },
+      {
+        "anon": true,
+        "name": "record_hub_event",
+        "schema": "public",
+        "definer": true,
+        "serviceRole": true,
+        "authenticated": true
+      }
+    ],
+    "economyCounts": {
+      "grants": 0,
+      "ledger": 0,
+      "orders": 0,
+      "wallets": 1,
+      "products": 0
+    },
+    "analyticsGuards": {
+      "strictFields": true,
+      "registeredGame": true,
+      "sessionOwnerGame": true
+    },
+    "databaseVersion": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+    "profilePolicies": [
+      {
+        "name": "read own profile",
+        "check": null,
+        "using": "(( SELECT auth.uid() AS uid) = id)",
+        "command": "SELECT"
+      },
+      {
+        "name": "insert own profile",
+        "check": "(( SELECT auth.uid() AS uid) = id)",
+        "using": null,
+        "command": "INSERT"
+      },
+      {
+        "name": "update own profile",
+        "check": "(( SELECT auth.uid() AS uid) = id)",
+        "using": "(( SELECT auth.uid() AS uid) = id)",
+        "command": "UPDATE"
+      }
+    ]
+  },
+  "detail": {
+    "wallets": {
+      "count": 1,
+      "blocked": 0,
+      "enabled": 0,
+      "nonzero": 0
+    },
+    "snapshotUTC": "2026-10-03T07:23:30.699517+00:00",
+    "sessionSummary": [
+      {
+        "events": 1,
+        "endedAt": null,
+        "matchEnds": 0,
+        "startedAt": "2026-09-28T09:05:03.9517+00:00",
+        "matchStarts": 0,
+        "activeSeconds": 0,
+        "authenticated": false,
+        "latestActivity": "2026-09-28T09:05:03.9517+00:00"
+      },
+      {
+        "events": 3,
+        "endedAt": null,
+        "matchEnds": 0,
+        "startedAt": "2026-10-02T21:11:07.059848+00:00",
+        "matchStarts": 1,
+        "activeSeconds": 0,
+        "authenticated": true,
+        "latestActivity": "2026-10-02T21:11:47.268734+00:00"
+      }
+    ],
+    "cloudConsumptionObjects": null,
+    "eventsSinceAcceptanceStart": 0,
+    "matchesSinceAcceptanceStart": 0,
+    "stageBCapabilitiesDefinition": "CREATE OR REPLACE FUNCTION lpa_api.capabilities()\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\ndeclare actor uuid:=lpa_api.require_actor(); enabled boolean; begin\n select economy_enabled and status='active' into enabled from lpa_private.wallets where account_id=actor;\n return jsonb_build_object('contractVersion',1,'registry',true,'economy',true,'providers',false,'cloudSaves',false,'spendEnabled',coalesce(enabled,false));\nend; $function$\n"
+  },
+  "advisors": [
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "count": 17,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+    },
+    {
+      "name": "anon_security_definer_function_executable",
+      "level": "WARN",
+      "count": 5,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable"
+    },
+    {
+      "name": "authenticated_security_definer_function_executable",
+      "level": "WARN",
+      "count": 7,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+    },
+    {
+      "name": "auth_leaked_password_protection",
+      "level": "WARN",
+      "count": 1,
+      "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+    }
+  ],
+  "availableSupabaseMcpTools": [
+    "mcp__codex_apps__supabase_apply_migration",
+    "mcp__codex_apps__supabase_confirm_cost",
+    "mcp__codex_apps__supabase_create_branch",
+    "mcp__codex_apps__supabase_create_project",
+    "mcp__codex_apps__supabase_delete_branch",
+    "mcp__codex_apps__supabase_deploy_edge_function",
+    "mcp__codex_apps__supabase_execute_sql",
+    "mcp__codex_apps__supabase_generate_typescript_types",
+    "mcp__codex_apps__supabase_get_advisors",
+    "mcp__codex_apps__supabase_get_cost",
+    "mcp__codex_apps__supabase_get_edge_function",
+    "mcp__codex_apps__supabase_get_organization",
+    "mcp__codex_apps__supabase_get_project",
+    "mcp__codex_apps__supabase_get_project_url",
+    "mcp__codex_apps__supabase_get_publishable_keys",
+    "mcp__codex_apps__supabase_list_branches",
+    "mcp__codex_apps__supabase_list_edge_functions",
+    "mcp__codex_apps__supabase_list_extensions",
+    "mcp__codex_apps__supabase_list_migrations",
+    "mcp__codex_apps__supabase_list_organizations",
+    "mcp__codex_apps__supabase_list_projects",
+    "mcp__codex_apps__supabase_list_tables",
+    "mcp__codex_apps__supabase_merge_branch",
+    "mcp__codex_apps__supabase_pause_project",
+    "mcp__codex_apps__supabase_query_logs",
+    "mcp__codex_apps__supabase_rebase_branch",
+    "mcp__codex_apps__supabase_reset_branch",
+    "mcp__codex_apps__supabase_restore_project",
+    "mcp__codex_apps__supabase_search_docs"
+  ]
+}
