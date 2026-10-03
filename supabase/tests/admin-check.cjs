@@ -1,0 +1,42 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{randomUUID}=require('node:crypto');
+let PGlite;try{({PGlite}=require('@electric-sql/pglite'));}catch{({PGlite}=require('../../output/qa/electric-sql-pglite/package'));}
+const root=path.resolve(__dirname,'../..');
+(async()=>{const db=new PGlite(),q=(s,a=[])=>db.query(s,a),cases=[];const pass=s=>{cases.push(s);console.log('PASS '+s)};
+const actor=async(id,role='authenticated')=>{await db.exec('reset role');await q("select set_config('request.jwt.claim.sub',$1,false)",[id||'']);await db.exec('set role '+role)};
+const fail=async(s,a,re)=>{let err;try{await q(s,a)}catch(e){err=e}assert.ok(err);assert.match(err.message,re)};
+const analytics=async(game=null,from='2026-10-03',to='2026-10-03')=>(await q('select public.lpa_admin_analytics($1,$2,$3) r',[game,from,to])).rows[0].r;
+try{
+ await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key,email text,raw_user_meta_data jsonb default '{}',created_at timestamptz default now());create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated;grant execute on function auth.uid() to anon,authenticated;`);
+ for(const f of ['20260920_profiles.sql','20260920_analytics.sql','20260920_game_analytics.sql'])await db.exec(fs.readFileSync(path.join(root,'supabase/migrations',f),'utf8'));
+ for(const fn of JSON.parse(fs.readFileSync(path.join(__dirname,'live-schema.fixture.json'),'utf8')).functions)await db.exec(fn.ddl);
+ await db.exec('alter default privileges in schema public grant execute on functions to anon,authenticated,service_role');
+ const files=fs.readdirSync(path.join(root,'supabase/migrations')).filter(f=>/_lpa_((registry|economy)_core|registry_acl_hardening|admin_analytics)\.sql$/.test(f)).sort();
+ for(const f of ['20260927_clutter_cup.sql',...files])await db.exec(fs.readFileSync(path.join(root,'supabase/migrations',f),'utf8'));
+ assert.equal((await q('select count(*) n from public.hub_analytics_admins')).rows[0].n,0);
+ const A=randomUUID(),B=randomUUID();for(const id of [A,B])await q("insert into auth.users(id,raw_user_meta_data) values($1,'{\"admin\":true,\"role\":\"owner\"}')",[id]);
+ await actor(null,'anon');await fail('select public.lpa_admin_access()',[],/permission denied/);await fail("select public.lpa_admin_analytics(null,'2026-10-03','2026-10-03')",[],/permission denied/);
+ await actor(B);await fail('select public.lpa_admin_access()',[],/admin_forbidden/);await fail("select public.lpa_admin_analytics(null,'2026-10-03','2026-10-03')",[],/admin_forbidden/);await fail('select public.admin_game_stats()',[],/Not authorized/);await fail('select public.hub_admin_stats()',[],/Not authorized/);await fail('select * from public.hub_analytics_admins',[],/permission denied/);await fail('insert into public.hub_analytics_admins(user_id) values($1)',[B],/permission denied/);
+ await actor(null);await fail('select public.lpa_admin_access()',[],/authentication_required/);
+ await actor(null,'service_role');await fail('select public.lpa_admin_access()',[],/permission denied/);
+ pass('No membership assignment by migration; anon/ordinary/metadata owner spoof/service browser path denied; existing admin RPCs still deny ordinary player');
+ await actor(null,'postgres');await q('insert into public.hub_analytics_admins(user_id) values($1)',[A]);
+ const sessions=[{id:randomUUID(),actor:A,game:'crystal-front-demo',start:'2026-10-02T23:59:00Z'},{id:randomUUID(),actor:B,game:'crystal-front-demo',start:'2026-10-03T12:00:00Z'},{id:randomUUID(),actor:B,game:'clutter-cup',start:'2026-10-03T13:00:00Z'}];
+ for(const s of sessions)await q('insert into public.game_analytics_sessions(id,actor,user_id,game,started_at,last_event_at,active_seconds) values($1,$2,$3,$4,$5,$5,999)',[s.id,'u:'+s.actor,s.actor,s.game,s.start]);
+ const event=async(si,name,data,time)=>q('insert into public.game_analytics_events(id,session,name,data,created_at) values($1,$2,$3,$4,$5)',[randomUUID(),sessions[si].id,name,data,time]);
+ await event(0,'match_start',{match:'fixture1',mode:'test'},'2026-10-02T23:59:30Z');await event(0,'match_end',{match:'fixture1',outcome:'win',score:100},'2026-10-03T00:01:00Z');await event(0,'active_time',{seconds:15},'2026-10-03T00:00:30Z');
+ await event(1,'session_start',{},'2026-10-03T12:00:00Z');await event(1,'match_end',{match:'fixture2',outcome:'abandon',score:999},'2026-10-03T12:02:00Z');
+ await event(2,'session_start',{},'2026-10-03T13:00:00Z');await event(2,'match_end',{match:'fixture3',outcome:'loss',score:10000},'2026-10-03T13:02:00Z');await event(2,'error',{code:'fixture'},'2026-10-03T13:03:00Z');await event(2,'active_time',{seconds:30},'2026-10-04T00:00:00Z');
+ await actor(A);const access=(await q('select public.lpa_admin_access() r')).rows[0].r;assert.deepEqual(access,{contractVersion:1,access:{allowed:true},permissions:['analytics:read']});
+ const all=await analytics();assert.equal(all.summary.players,2);assert.equal(all.summary.sessions,2);assert.equal(all.summary.activeSeconds,15);assert.equal(all.summary.matches,3);assert.equal(all.summary.completedMatches,2);assert.equal(all.summary.abandons,1);assert.equal(all.summary.errors,1);assert.equal(all.summary.installations,null);assert.equal(all.activity.length,2);
+ const cf=all.results.find(x=>x.gameId==='crystal-front-demo'),cc=all.results.find(x=>x.gameId==='clutter-cup');assert.equal(cf.meanScore,100);assert.equal(cf.scoreUnit,'points');assert.equal(cc.meanScore,10000);assert.equal(cc.scoreUnit,'milliseconds');for(const v of all.versions){assert.equal(v.version,null);assert.equal(v.buildId,null);assert.equal(v.sourceCommit,null)};
+ const only=await analytics('crystal-front-demo');assert.equal(only.summary.players,2);assert.equal(only.summary.matches,2);assert.equal(only.activity.length,1);assert.equal(only.games.length,2);assert.equal(only.results.length,1);
+ const empty=await analytics('clutter-cup','2026-10-01','2026-10-01');assert.equal(empty.summary.sessions,0);assert.equal(empty.summary.players,0);assert.equal(empty.results[0].meanScore,null);assert.deepEqual(empty.versions,[]);assert.equal(empty.activity.length,1);
+ assert.equal(JSON.stringify(all).includes(A),false);assert.equal(JSON.stringify(all).includes(B),false);assert.equal(all.limitations.serverValidatedResults,false);
+ pass('UTC inclusive date filter and game separation; distinct players, cross-midnight matches, event seconds not lifetime sum; points/ms and unknown version/null installation honest');
+ for(const [g,from,to,re] of [[null,null,'2026-10-03',/invalid_date_range/],[null,'infinity','infinity',/invalid_date_range/],[null,'2026-10-04','2026-10-03',/invalid_date_range/],[null,'2026-01-01','2026-10-03',/invalid_date_range/],['unknown-game','2026-10-03','2026-10-03',/game_unavailable/]])await fail('select public.lpa_admin_analytics($1,$2,$3)',[g,from,to],re);
+ await actor(null,'postgres');const acl=(await q("select p.proname,has_function_privilege('anon',p.oid,'execute') anon,has_function_privilege('authenticated',p.oid,'execute') auth,p.prosecdef from pg_proc p join pg_namespace n on n.oid=p.pronamespace where p.proname in ('lpa_admin_access','lpa_admin_analytics','require_admin')")).rows;for(const f of acl){assert.equal(f.anon,false);assert.equal(f.auth,f.proname!=='require_admin');if(f.proname.startsWith('lpa_'))assert.equal(f.prosecdef,false)};
+ await q('delete from public.hub_analytics_admins where user_id=$1',[A]);await actor(A);await fail('select public.lpa_admin_access()',[],/admin_forbidden/);await fail("select public.lpa_admin_analytics(null,'2026-10-03','2026-10-03')",[],/admin_forbidden/);
+ pass('Range validation, least privilege ACLs and per-request membership recheck after revocation; no raw user identifiers');
+ fs.writeFileSync(path.join(root,'output/admin-check.json'),JSON.stringify({passed:true,production:false,cases,migrations:files},null,2));
+}finally{await db.close()}
+})().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="same-origin">
+  <title>Кабинет владельца · Panda Arcade</title>
+  <link rel="stylesheet" href="./admin.css?v=20261003-1">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
+  <script defer src="../auth-config.js"></script>
+  <script defer src="../auth.js"></script>
+  <script defer src="../auth-email.js"></script>
+  <script defer src="./admin.js?v=20261003-1"></script>
+</head>
+<body>
+<header><a class="brand" href="../">Panda Arcade</a><span>Кабинет владельца</span><a href="../">На сайт игрока ↗</a></header>
+<main>
+  <div class="intro"><p class="eyebrow">LIBERMAN GAMES · УПРАВЛЕНИЕ</p><h1>Как играют в наши игры</h1><p>Отдельный кабинет статистики. На игровом сайте этот же аккаунт остаётся обычным игроком.</p></div>
+  <section class="card" aria-labelledby="account-heading">
+    <h2 id="account-heading">Доступ к кабинету</h2>
+    <p data-auth-status role="status">Загружаем модуль входа…</p>
+    <p data-auth-email></p>
+    <div class="actions"><button data-auth-action="sign-in">Войти через Google</button><button data-admin-open disabled>Открыть кабинет</button><button class="secondary" data-admin-close hidden>Закрыть кабинет</button><button class="secondary" data-auth-action="sign-out" hidden>Выйти из аккаунта</button></div>
+    <details data-email-auth>
+      <summary>Войти кодом на почту</summary>
+      <form class="email-form">
+        <label for="login-email">Электронная почта</label><input id="login-email" data-email-address type="email" autocomplete="email" maxlength="254" required>
+        <div data-email-code-panel hidden><label for="login-code">Код из письма</label><input id="login-code" data-email-code type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" maxlength="10"></div>
+        <div class="actions"><button data-email-submit type="submit">Отправить код</button><button data-email-resend type="button" class="secondary">Повторить отправку</button><button data-email-change type="button" class="secondary">Другая почта</button></div>
+        <p data-email-status role="status"></p>
+      </form>
+    </details>
+    <p class="muted">Вход в аккаунт сам по себе не даёт прав владельца. Сервер проверяет доступ при каждом запросе.</p>
+    <p data-admin-status role="status" aria-live="polite">Войдите, затем откройте кабинет.</p>
+  </section>
+  <section data-admin-dashboard hidden aria-labelledby="report-heading">
+    <div class="section-heading"><h2 id="report-heading">Обзор игр</h2><span data-admin-updated class="muted"></span></div>
+    <form data-admin-filters class="card filters">
+      <label>Игра<select data-admin-game><option value="">Все игры</option></select></label>
+      <label>С даты (UTC)<input data-admin-from type="date" required></label>
+      <label>По дату (UTC)<input data-admin-to type="date" required></label>
+      <button type="submit">Обновить</button>
+    </form>
+    <p class="muted">Только события, полученные сервером. Отсутствие событий не доказывает отсутствие игры: офлайн и отказ от необязательной аналитики ограничивают полноту данных.</p>
+    <div data-admin-metrics class="metrics"></div>
+    <section class="card"><h3>Активность по дням</h3><div data-admin-daily class="table-wrap"></div></section>
+    <section class="card"><h3>Версии запущенных игр</h3><p class="muted">Это версии, сообщённые при запуске, а не список установленных приложений. Старые записи могут не содержать версию.</p><div data-admin-versions class="table-wrap"></div></section>
+    <section class="card"><h3>Результаты и ошибки</h3><p class="muted">Результаты сообщены игрой. Это аналитика, а не серверная проверка рейтинга или основание для награды.</p><div class="table-wrap" data-admin-results></div><p data-admin-errors></p></section>
+  </section>
+  <noscript><p class="card">Для входа и загрузки статистики включите JavaScript. Данные кабинета не включены в эту страницу.</p></noscript>
+</main>
+<footer>Только просмотр · Балансы, покупки и прогресс игроков здесь не изменяются.</footer>
+</body>
+</html>

@@ -1,0 +1,219 @@
+{
+  "projectId": "brvrlbahysbslkqntesl",
+  "migration": {
+    "name": "lpa_admin_analytics",
+    "remoteVersion": "20261003170928",
+    "file": "supabase/migrations/20261003154904_lpa_admin_analytics.sql",
+    "sourceSha256": "a559cf295edcd3403eb0eefcbf12a7f545b0d1461f51cf9a831adb18e9856442",
+    "canonicalSqlSha256": "43d691adcd9aec5dca2e8f1d9f787edc7e9f54baffdd737a15d281cd36d27bc3",
+    "matchesRemoteStatements": true
+  },
+  "ownerCheck": {
+    "membershipCount": 1,
+    "matchesExistingPublicOwnerContact": "yes",
+    "emailconfirmed": "yes",
+    "newMembershipAssigned": false
+  },
+  "liveVerification": {
+    "all_assertions_passed": true,
+    "existing_nonmember_used": false,
+    "aggregate": {
+      "games": [
+        {
+          "id": "clutter-cup",
+          "title": "Clutter Cup",
+          "scoreUnit": "milliseconds"
+        },
+        {
+          "id": "crystal-front-demo",
+          "title": "Crystal Front Demo",
+          "scoreUnit": "points"
+        }
+      ],
+      "access": {
+        "allowed": true
+      },
+      "filter": {
+        "dateTo": "2026-10-03",
+        "gameId": null,
+        "dateFrom": "2026-10-03",
+        "timeZone": "UTC"
+      },
+      "results": [
+        {
+          "wins": 0,
+          "draws": 0,
+          "gameId": "clutter-cup",
+          "losses": 0,
+          "matches": 0,
+          "abandons": 0,
+          "meanScore": null,
+          "scoreUnit": "milliseconds",
+          "completedMatches": 0
+        },
+        {
+          "wins": 1,
+          "draws": 0,
+          "gameId": "crystal-front-demo",
+          "losses": 0,
+          "matches": 1,
+          "abandons": 0,
+          "meanScore": 50,
+          "scoreUnit": "points",
+          "completedMatches": 1
+        }
+      ],
+      "summary": {
+        "wins": 1,
+        "draws": 0,
+        "errors": 0,
+        "losses": 0,
+        "matches": 1,
+        "players": 1,
+        "abandons": 0,
+        "sessions": 2,
+        "activeSeconds": 128,
+        "installations": null,
+        "completedMatches": 1
+      },
+      "activity": [
+        {
+          "date": "2026-10-03",
+          "wins": 0,
+          "draws": 0,
+          "errors": 0,
+          "gameId": "clutter-cup",
+          "losses": 0,
+          "matches": 0,
+          "players": 0,
+          "abandons": 0,
+          "sessions": 0,
+          "activeSeconds": 0,
+          "completedMatches": 0
+        },
+        {
+          "date": "2026-10-03",
+          "wins": 1,
+          "draws": 0,
+          "errors": 0,
+          "gameId": "crystal-front-demo",
+          "losses": 0,
+          "matches": 1,
+          "players": 1,
+          "abandons": 0,
+          "sessions": 2,
+          "activeSeconds": 128,
+          "completedMatches": 1
+        }
+      ],
+      "versions": [
+        {
+          "gameId": "crystal-front-demo",
+          "buildId": null,
+          "version": null,
+          "sessions": 2,
+          "sourceCommit": null
+        }
+      ],
+      "generatedAt": "2026-10-03T17:10:30.990043+00:00",
+      "limitations": {
+        "buildMetadata": "unavailable",
+        "installations": "unavailable",
+        "economyEnabled": false,
+        "serverValidatedResults": false
+      },
+      "contractVersion": 1
+    },
+    "verification_method": "SQL role/claim simulation, not owner browser login; no membership mutation"
+  },
+  "functionAcl": [
+    {
+      "schema": "lpa_api",
+      "proname": "admin_analytics",
+      "security_definer": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true,
+      "service_execute": false
+    },
+    {
+      "schema": "public",
+      "proname": "lpa_admin_access",
+      "security_definer": false,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true,
+      "service_execute": false
+    },
+    {
+      "schema": "public",
+      "proname": "lpa_admin_analytics",
+      "security_definer": false,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true,
+      "service_execute": false
+    },
+    {
+      "schema": "lpa_private",
+      "proname": "require_admin",
+      "security_definer": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": false,
+      "service_execute": false
+    },
+    {
+      "schema": "lpa_api",
+      "proname": "admin_access",
+      "security_definer": true,
+      "proconfig": [
+        "search_path=\"\""
+      ],
+      "anon_execute": false,
+      "authenticated_execute": true,
+      "service_execute": false
+    }
+  ],
+  "tableRlsAndAcl": [
+    {
+      "relname": "game_analytics_events",
+      "relrowsecurity": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "authenticated_insert": false
+    },
+    {
+      "relname": "game_analytics_sessions",
+      "relrowsecurity": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "authenticated_insert": false
+    },
+    {
+      "relname": "hub_analytics_admins",
+      "relrowsecurity": true,
+      "anon_select": false,
+      "authenticated_select": false,
+      "authenticated_insert": false
+    }
+  ],
+  "revocation": {
+    "method": "Uncommitted membership deletion in explicit transaction; access and aggregate reject; ROLLBACK; membership count verified 1",
+    "passed": true
+  },
+  "limitations": [
+    "SQL role/claim simulation is not a real browser owner login.",
+    "No existing nonmember auth user: live deny test used unassigned UUID; disposable tests use real fixture users.",
+    "No Stage B or metadata migrations applied.",
+    "Existing advisor findings retained; new index initially reported unused; see markdown report."
+  ]
+}

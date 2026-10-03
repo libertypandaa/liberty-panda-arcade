@@ -33,6 +33,14 @@
       "sourceSha256": "765890859281a27ca614ddfa2c6301200d1200f2cc55c6ec76f0ddb5e243c56e",
       "canonicalSqlSha256": "5ac2b4039e8feb33138ad1b76c501f8e4e0e3b7b7b8e6cda6651dfcee329b83c",
       "matchesRemoteStatements": true
+    },
+    {
+      "name": "lpa_admin_analytics",
+      "remoteVersion": "20261003170928",
+      "file": "supabase/migrations/20261003154904_lpa_admin_analytics.sql",
+      "sourceSha256": "a559cf295edcd3403eb0eefcbf12a7f545b0d1461f51cf9a831adb18e9856442",
+      "canonicalSqlSha256": "43d691adcd9aec5dca2e8f1d9f787edc7e9f54baffdd737a15d281cd36d27bc3",
+      "matchesRemoteStatements": true
     }
   ]
 }
